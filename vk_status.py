@@ -4,44 +4,58 @@ from datetime import datetime
 from math import floor
 from bs4 import BeautifulSoup
 
-vk_l = 'https://api.vk.com/method/'
-stApi = 'http://api.steampowered.com/'
+vk_token = '2c4edb33b0fb9816c8710aa07689736c65bbfa5a7f39198477f84a8ad01824633fef3433e0a28fa3be3b9'
 
-vk_t = '&access_token=' + '2c4edb33b0fb9816c8710aa07689736c65bbfa5a7f39198477f84a8ad01824633fef3433e0a28fa3be3b9' + '&v=' + '5.52'
+lastfm_user = 'bionic_leha'
+lastfm_token = '7c4df306bed3b7aacc413e3b17584c1a'
 
-lfm_api = "http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=bionic_leha&api_key=7c4df306bed3b7aacc413e3b17584c1a&format=json"
+steam_user = '76561198118803413'
+steam_api_key = 'C9A4A291E1DC1FF91EA8AC964E73D443'
 
-stGetUsr = 'ISteamUser/GetPlayerSummaries/v0002/'
-stKey = '?key=' + 'C9A4A291E1DC1FF91EA8AC964E73D443'
-stUsr = '&steamids=' + '76561198118803413'
-stName = 'Steam: '
-stStatus = ['не в сети', 'в сети', 'не беспокоить', 'нет на месте', 'спит', 'хочет обменяться', 'хочет играть'];
-vkStat = ''
-vkStatOld = ''
+vkStatus = ''
 
 def setStatus(stat):
+	vk_l = 'https://api.vk.com/method/'
+	token = '&access_token=' + vk_token + '&v=' + '5.52'
 	try:
-		r = requests.get(vk_l + 'status.set?text=' + stat + vk_t).json()
+		r = requests.get(vk_l + 'status.set?text=' + stat + token).json()
 		try:
 			if r['response'] == 1:
 				print('Статус установлен успешно')
 		except:
 			try:
-				print("Ошибка на стороне VK: " + r['error']['error_msg'])
+				print("VK отдал ошибку: " + r['error']['error_msg'])
 			except:
-				print(r)
+				print('Запрос к ВК вернул: ' + r)
 	except:
 		print('Ошибка подключения к VK')
+		
+def getLastFm():
+	lfm_api = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=' + lastfm_user + '&api_key=' + lastfm_token + '&format=json'
+	try:
+		lfm = requests.get(lfm_api).json()
+		if lfm['recenttracks']['track'][0]['@attr']['nowplaying'] == 'true':
+			firstTrack = lfm['recenttracks']['track'][0]
+			lfm_track = " | 🎧 " + str(firstTrack['artist']['#text']) + " — " + str(firstTrack['name'])
+			lfm_track = lfm_track.replace('&', '%26')
+			lfm_track = lfm_track.replace('#', '%23')
+			return lfm_track
+	except:
+		print('Ошибка подключения к LastFM')
+		return ' ошибка LastFM'
 
 def getSteam():
-	global vkStat
-	global vkStatOld
 	try:
+		stApi = 'http://api.steampowered.com/'
+		stGetUsr = 'ISteamUser/GetPlayerSummaries/v0002/'
+		stKey = '?key=' + steam_api_key
+		stUsr = '&steamids=' + steam_user
+		stStatus = 'Steam: '
 		steamInfo = requests.get(stApi + stGetUsr + stKey + stUsr).json()
+		stStates = ['не в сети', 'в сети', 'не беспокоить', 'нет на месте', 'спит', 'хочет обменяться', 'хочет играть'];
 		userInfo = steamInfo['response']['players'][0]
 		lastLogOff = userInfo['lastlogoff']
 		state = userInfo['personastate']
-		#print(userInfo)
 		
 		jar = requests.cookies.RequestsCookieJar()
 		jar.set('steamCountry', 'UA%7C7e6eab972569ec77b5d70baea9be6f58')
@@ -53,12 +67,10 @@ def getSteam():
 		stHeader = stHeader[37:stHeader.find("</div>")]
 		stGame = stGame[35:stGame.find("</div>")]
 
-
-		vkStat = stName + stStatus[state]
+		stStatus = 'Steam: ' + stStates[state]
 
 		if len(stGame) > 1:
-			#vkStat = '🎮 ' + userInfo['gameextrainfo']
-			vkStat = '🎮 ' + stGame
+			stStatus = '🎮 ' + stGame
 
 		if state == 0:
 			lastOnline = datetime.fromtimestamp(int(lastLogOff)).strftime('%H:%M:%S %d-%m-%Y')
@@ -81,29 +93,17 @@ def getSteam():
 			if timeString[3] > 0 and timeString[2] == 0:
 				timeStr = timeStr + str(timeString[3]) + ' сек. '
 
-			vkStat = stName + ' был в сети ' + timeStr + 'назад'
+			stStatus = 'Steam: ' + 'был в сети ' + timeStr + 'назад'
 			
-		try:
-			lfm = requests.get(lfm_api).json()
-			if lfm['recenttracks']['track'][0]['@attr']['nowplaying'] == 'true':
-				firstTrack = lfm['recenttracks']['track'][0]
-				vkStat += " | 🎧 " + str(firstTrack['artist']['#text']) + " — " + str(firstTrack['name'])
-		except:
-			pass
-			
-		vkStat = vkStat.replace('&', '%26')
-		vkStat = vkStat.replace('#', '%23')
-
-		if vkStat != vkStatOld:
-			print(vkStat)
-			setStatus(vkStat)
-			vkStatOld = vkStat
+		return stStatus
 
 	except:
 		print('Ошибка подключения к steam')
-
-print(stApi + stGetUsr + stKey + stUsr)
+		return ' ошибка Steam'
 
 while True:
-	getSteam()
+	status = getSteam() + getLastFm()
+	if status != vkStatus:
+		print(vkStatus)
+		setStatus(vkStatus)
 	time.sleep(3)
