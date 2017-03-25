@@ -1,1 +1,1 @@
-worker: python app.py
+worker: python vk_status.py
