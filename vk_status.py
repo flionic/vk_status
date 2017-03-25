@@ -4,6 +4,7 @@ from datetime import datetime
 from math import floor
 from bs4 import BeautifulSoup
 
+
 ''' CHANGE THIS '''
 vk_token = '2c4edb33b0fb9816c8710aa07689736c65bbfa5a7f39198477f84a8ad01824633fef3433e0a28fa3be3b9'
 
@@ -82,7 +83,6 @@ def getSteam():
 			timeString.insert(2, floor(timeLeft / 60) - timeString[1]*60)
 			timeString.insert(3, floor(timeLeft) - timeString[1]*3600 - timeString[2]*60)
 			timeStr = ''
-			#TEST
 			if timeString[0] > 0:
 				timeStr = timeStr + str(timeString[0]) + ' дн. '
 
