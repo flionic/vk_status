@@ -4,6 +4,7 @@ from datetime import datetime
 from math import floor
 from bs4 import BeautifulSoup
 
+''' CHANGE THIS '''
 vk_token = '2c4edb33b0fb9816c8710aa07689736c65bbfa5a7f39198477f84a8ad01824633fef3433e0a28fa3be3b9'
 
 lastfm_user = 'bionic_leha'
@@ -11,9 +12,9 @@ lastfm_token = '7c4df306bed3b7aacc413e3b17584c1a'
 
 steam_user = '76561198118803413'
 steam_api_key = 'C9A4A291E1DC1FF91EA8AC964E73D443'
+''' DONT CHANGE CODE BELOW '''
 
 vkStatus = ''
-
 def setStatus(stat):
 	vk_l = 'https://api.vk.com/method/'
 	token = '&access_token=' + vk_token + '&v=' + '5.52'
@@ -42,7 +43,7 @@ def getLastFm():
 			return lfm_track
 	except:
 		print('Ошибка подключения к LastFM')
-		return ' ошибка LastFM'
+		return ' | ошибка LastFM'
 
 def getSteam():
 	try:
@@ -99,7 +100,7 @@ def getSteam():
 
 	except:
 		print('Ошибка подключения к steam')
-		return ' ошибка Steam'
+		return 'Ошибка Steam'
 
 while True:
 	status = getSteam() + getLastFm()
