@@ -4,7 +4,6 @@ from datetime import datetime
 from math import floor
 from bs4 import BeautifulSoup
 
-
 ''' CHANGE THIS '''
 vk_token = '2c4edb33b0fb9816c8710aa07689736c65bbfa5a7f39198477f84a8ad01824633fef3433e0a28fa3be3b9'
 
@@ -65,7 +64,6 @@ def getSteam():
 
 		stHeader = str(soup.find_all("div", class_="profile_in_game_header"))
 		stGame = str(soup.find_all("div", class_="profile_in_game_name"))
-
 		stHeader = stHeader[37:stHeader.find("</div>")]
 		stGame = stGame[35:stGame.find("</div>")]
 
@@ -98,7 +96,6 @@ def getSteam():
 			stStatus = 'Steam: ' + 'был в сети ' + timeStr + 'назад'
 			
 		return stStatus
-
 	except:
 		print('Ошибка подключения к steam')
 		return 'Ошибка Steam'
