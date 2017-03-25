@@ -21,7 +21,7 @@ def setStatus(stat):
 		r = requests.get(vk_l + 'status.set?text=' + stat + token).json()
 		try:
 			if r['response'] == 1:
-				print('Статус установлен успешно')
+				print('Статус установлен')
 		except:
 			try:
 				print("VK отдал ошибку: " + r['error']['error_msg'])
@@ -104,6 +104,7 @@ def getSteam():
 while True:
 	status = getSteam() + getLastFm()
 	if status != vkStatus:
-		print(vkStatus)
-		setStatus(vkStatus)
+		print(status + '\n')
+		setStatus(status)
+		vkStatus = status
 	time.sleep(3)
