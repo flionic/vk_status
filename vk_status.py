@@ -104,7 +104,7 @@ def getSteam():
 while True:
 	status = getSteam() + getLastFm()
 	if status != vkStatus:
-		print(status + '\n')
 		setStatus(status)
 		vkStatus = status
+		print(status + '\n')
 	time.sleep(3)
