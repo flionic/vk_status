@@ -82,6 +82,7 @@ def getSteam():
 			timeString.insert(2, floor(timeLeft / 60) - timeString[1]*60)
 			timeString.insert(3, floor(timeLeft) - timeString[1]*3600 - timeString[2]*60)
 			timeStr = ''
+			
 			if timeString[0] > 0:
 				timeStr = timeStr + str(timeString[0]) + ' дн. '
 
