@@ -1,0 +1,19 @@
+{
+  "name": "vk_status",
+  "version": "1.0.0",
+  "description": "VK Status (Steam + Lastfm)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bionic-Leha/vk_status.git"
+  },
+  "author": "Bionic Leha",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bionic-Leha/vk_status/issues"
+  },
+  "homepage": "https://github.com/Bionic-Leha/vk_status#readme"
+}
