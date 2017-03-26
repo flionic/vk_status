@@ -1,10 +1,8 @@
-var express = require('express');
-var path = require('path');
-var app = express();
+var app = require('express')();
+var server = require('http').Server(app);
+server.listen(80);
 
-// viewed at http://localhost:8080
-app.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname + '/index.html'));
+app.get('/', function (req, res) {
+  res.sendfile(__dirname + '/index.html');
 });
-
-app.listen(8080);
+console.log('Express server started on port %s', server.address().port);
