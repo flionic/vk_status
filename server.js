@@ -1,9 +1,12 @@
-var http = require('http');
-var static = require('node-static');
-var file = new static.Server('.');
+var express = require("express");
+var app = express();
+app.use(express.logger());
 
-http.createServer(function(req, res) {
-  file.serve(req, res);
-}).listen(8080);
+app.get('/', function(request, response) {
+  response.send('Hello World!');
+});
 
-console.log('Server running on port 8080');
+var port = process.env.PORT || 5000;
+app.listen(port, function() {
+  console.log("Listening on " + port);
+});
