@@ -14,10 +14,10 @@ steam_api_key = 'C9A4A291E1DC1FF91EA8AC964E73D443'
 DONT CHANGE CODE BELOW '''
 
 vk_token = os.environ.get('vktoken')
-lastfm_user = os.environ.get('vktoken')
-lastfm_token = os.environ.get('vktoken')
-steam_user = os.environ.get('vktoken')
-steam_api_key = os.environ.get('vktoken')
+lastfm_user = os.environ.get('lfm_user')
+lastfm_token = os.environ.get('lfm_token')
+steam_user = os.environ.get('steam_user')
+steam_api_key = os.environ.get('steam_key')
 
 vkStatus = ''
 def setStatus(stat):
@@ -83,23 +83,23 @@ def getSteam():
 		if state == 0:
 			lastOnline = datetime.fromtimestamp(int(lastLogOff)).strftime('%H:%M:%S %d-%m-%Y')
 			timeLeft = round(time.time()) - lastLogOff
-			timeString = []
-			timeString.insert(0, floor(timeLeft / 86400))
-			timeString.insert(1, floor(timeLeft / 3600) - timeString[0]*86400)
-			timeString.insert(2, floor(timeLeft / 60) - timeString[1]*60)
-			timeString.insert(3, floor(timeLeft) - timeString[1]*3600 - timeString[2]*60)
+			timeInt = []
+			timeInt.insert(0, floor(timeLeft / 86400))
+			timeInt.insert(1, floor(timeLeft / 3600) - timeInt[0]*86400)
+			timeInt.insert(2, floor(timeLeft / 60) - timeInt[1]*60)
+			timeInt.insert(3, floor(timeLeft) - timeInt[1]*3600 - timeInt[2]*60)
 			timeStr = ''
-			if timeString[0] > 0:
-				timeStr = timeStr + str(timeString[0]) + ' дн. '
+			if timeInt[0] > 0:
+				timeStr += str(timeInt[0]) + ' дн. '
 
-			if timeString[1] > 0:
-				timeStr = timeStr + str(timeString[1]) + ' ч. '
+			if timeInt[1] > 0:
+				timeStr += str(timeInt[1]) + ' ч. '
 
-			if timeString[2] > 0 and timeString[0] == 0:
-				timeStr = timeStr + str(timeString[2]) + ' мин. '
+			if timeInt[2] > 0 and timeInt[0] == 0:
+				timeStr += str(timeInt[2]) + ' мин. '
 
-			if timeString[3] > 0 and timeString[2] == 0:
-				timeStr = timeStr + str(timeString[3]) + ' сек. '
+			if timeInt[3] > 0 and timeInt[2] == 0 and timeInt[1] == 0:
+				timeStr += str(timeInt[3]) + ' сек. '
 
 			stStatus = 'Steam: ' + 'был в сети ' + timeStr + 'назад'
 			
