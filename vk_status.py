@@ -35,15 +35,16 @@ def getLastFm():
 	lfm_api = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=' + lastfm_user + '&api_key=' + lastfm_token + '&format=json'
 	try:
 		lfm = requests.get(lfm_api).json()
-		if lfm['recenttracks']['track'][0]['@attr']['nowplaying'] == 'true':
-			firstTrack = lfm['recenttracks']['track'][0]
-			lfm_track = "🎧 " + str(firstTrack['artist']['#text']) + " — " + str(firstTrack['name'])
-			lfm_track = lfm_track.replace('&', '%26')
-			lfm_track = lfm_track.replace('#', '%23')
-			return lfm_track
+		try:
+			if lfm['recenttracks']['track'][0]['@attr']['nowplaying'] == 'true':
+				firstTrack = lfm['recenttracks']['track'][0]
+				lfm_track = " | 🎧 " + str(firstTrack['artist']['#text']) + " — " + str(firstTrack['name'])
+				lfm_track = lfm_track.replace('&', '%26')
+				lfm_track = lfm_track.replace('#', '%23')
+				return lfm_track
 	except:
 		print('Ошибка подключения к LastFM')
-		return 'ошибка LastFM'
+		return ' | ошибка LastFM'
 
 def getSteam():
 	try:
@@ -101,7 +102,7 @@ def getSteam():
 		return 'Ошибка Steam'
 
 while True:
-	status = getSteam() + " | " + getLastFm()
+	status = getSteam() + getLastFm()
 	if status != vkStatus:
 		setStatus(status)
 		vkStatus = status
