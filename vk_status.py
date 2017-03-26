@@ -1,11 +1,13 @@
 import requests
 import time
+import os
 from datetime import datetime
 from math import floor
 from bs4 import BeautifulSoup
 
 ''' CHANGE THIS '''
-vk_token = '2c4edb33b0fb9816c8710aa07689736c65bbfa5a7f39198477f84a8ad01824633fef3433e0a28fa3be3b9'
+#vk_token = '2c4edb33b0fb9816c8710aa07689736c65bbfa5a7f39198477f84a8ad01824633fef3433e0a28fa3be3b9'
+vk_token = os.environ.get('vktoken')
 
 lastfm_user = 'bionic_leha'
 lastfm_token = '7c4df306bed3b7aacc413e3b17584c1a'
