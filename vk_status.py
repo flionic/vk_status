@@ -42,6 +42,8 @@ def getLastFm():
 				lfm_track = lfm_track.replace('&', '%26')
 				lfm_track = lfm_track.replace('#', '%23')
 				return lfm_track
+		except:
+			pass
 	except:
 		print('Ошибка подключения к LastFM')
 		return ' | ошибка LastFM'
