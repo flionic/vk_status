@@ -1,8 +1,15 @@
-var app = require('express')();
-var server = require('http').Server(app);
-server.listen(80);
+var express = require('express');
+var app = express();
 
-app.get('/', function (req, res) {
-  res.sendfile('/index.html');
+var oneDay = 86400000;
+
+app.use(express.compress());
+app.use(express.static(__dirname + '/public', { maxAge: oneDay }));
+app.use(express.bodyParser());
+
+app.listen(process.env.PORT);
+
+app.post('/', function(req, res){
+  var result = req.rawBody;
+  res.send("hello there world data is " + result);
 });
-console.log('Express server started on port %s', server.address().port);
