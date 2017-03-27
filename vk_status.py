@@ -77,7 +77,7 @@ def getSteam():
 			timeLeft = round(time.time()) - lastLogOff
 			timeInt = []
 			timeInt.insert(0, floor(timeLeft / 86400))
-			timeInt.insert(1, floor(timeLeft / 3600) - timeInt[0]*86400)
+			timeInt.insert(1, floor(timeLeft / 3600) - timeInt[0]*24)
 			timeInt.insert(2, floor(timeLeft / 60) - timeInt[1]*60)
 			timeInt.insert(3, floor(timeLeft) - timeInt[1]*3600 - timeInt[2]*60)
 			timeStr = ''
