@@ -258,15 +258,15 @@ def tgmSubs(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
     writeSubsDB(update.message.chat_id)
 	
-def tgmUnsub(bot, update):
-    bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-	delSubsDB(update.message.chat_id)
+#def tgmUnsub(bot, update):
+#    bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
+#	delSubsDB(update.message.chat_id)
 	
 dispatcher.add_handler(CommandHandler('start', tgmStart))
 dispatcher.add_handler(CommandHandler('help', tgmHelp))
 dispatcher.add_handler(CommandHandler('get_offers', tgmGetOffers))
 dispatcher.add_handler(CommandHandler('subscribe', tgmSubs))
-dispatcher.add_handler(CommandHandler('unsubscribe', tgmUnsub))
+#dispatcher.add_handler(CommandHandler('unsubscribe', tgmUnsub))
 
 updater.start_polling()
 subs = readSubsDB()
