@@ -18,7 +18,7 @@ bot = telegram.Bot(token=tg_token)
 getBot = bot.getMe();
 print('Telegram auth: {} as {}, id: {}'.format(getBot.first_name, getBot.username, getBot.id))
 
-vk_token = os.environ.get('vk_token')
+vk_token = os.environ.get('vktoken')
 lastfm_user = os.environ.get('lfm_user')
 lastfm_token = os.environ.get('lfm_token')
 steam_user = os.environ.get('steam_user')
@@ -125,7 +125,7 @@ def parseFeed(force=False):
 	global rssUpdDate, lastPostId
 	rss = ET.fromstring(requests.get('https://freelance.ua/orders/rss').text.encode('utf-8'))
 	locale.setlocale(locale.LC_TIME, "en_US.UTF-8")
-	rssPubDate = datetime.strptime(rss[0][5].text, '%a, %d %b %Y %H:%M:%S %z').timestamp()
+	rssPubDate = datetime.strptime(rss[0][5].text, '%a, %d %b %Y %H:%M:%S %z').timestamp() - 60
 	if (rssPubDate > rssUpdDate) or force:
 		print('Parsing freelance.ua...')
 		soup = BeautifulSoup(session.get('https://freelance.ua/').text, "lxml")
