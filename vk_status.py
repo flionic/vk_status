@@ -24,7 +24,7 @@ for row in cur:
 #print(cur.description)
 #print()
 
-cur.execute("INSERT INTO `users` (`id`) VALUES (1111111111111)")
+cur.execute("INSERT INTO `users` (`id`) VALUES ('111222333')")
 
 cur.close()
 conn.close()
