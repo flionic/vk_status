@@ -124,11 +124,19 @@ session = requests.Session()
 rssUpdDate = 0
 lastPostId = 0
 
-'''
+
 def readSysDB():
 	#global rssUpdDate, lastPostId
 	try:
-		with sqldb.cursor() as cursor:
+		with connection.cursor() as cursor:
+			# Read a single record
+			sql = "SELECT `name`, `value` FROM `sysvars`"
+			cursor.execute(sql)
+			result = cursor.fetchone()
+			print(result)
+			for row in cursor:
+			    print(str(row))
+		with sqldbc.cursor() as cursor:
 			cursor.execute("SELECT `name`, `value` FROM `sysvars`")
 			#ids = []
 			for row in cursor:
@@ -136,24 +144,24 @@ def readSysDB():
 			    #ids.append(str(row))
 			#return ids
 	finally:
-		sqldb.close()
+		sqldbc.close()
 		
 def updateSysDB(name, value):
 	try:
-		with sqldb.cursor() as cursor:
+		with sqldbc.cursor() as cursor:
 			cursor.execute("UPDATE `sysvars` SET `name`=lastPostId WHERE `value`=1")
 	finally:
-		sqldb.close()
+		sqldbc.close()
 		
 def createSysDB(name, value):
 	try:
-		with sqldb.cursor() as cursor:
+		with sqldbc.cursor() as cursor:
 			cursor.execute("INSERT INTO sysvars (name, value) VALUES ('" + name + "', '" + value + "');")
 	finally:
-		sqldb.close()
+		sqldbc.close()
 		
 #updateSysDB('lastPostId', '1')
-'''
+
 
 def addSubsDB(uid):
 	try:
