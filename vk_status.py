@@ -136,6 +136,7 @@ def parseFeed():
 					if item.find('link').text == i.find('a').get('href'):
 						categ = item.find('category').text
 						pdate = item.find('pubDate').text
+						locale.setlocale(locale.LC_TIME, "en_US.UTF-8")
 						postTime = datetime.strptime(pdate, '%a, %d %b %Y %H:%M:%S %z')
 						postTimeStamp = int(postTime.timestamp())
 						locale.setlocale(locale.LC_TIME, "ru_RU.UTF-8")
