@@ -4,6 +4,7 @@ import os
 from datetime import datetime
 from math import floor
 from bs4 import BeautifulSoup
+import xml.etree.ElementTree as ET
 
 vk_token = os.environ.get('vktoken')
 lastfm_user = os.environ.get('lfm_user')
@@ -99,6 +100,43 @@ def getSteam():
 	except:
 		print('Ошибка подключения к steam')
 		return 'Ошибка Steam'
+		
+session = requests.Session()
+lastCheck = 0
+
+def parseFeed():
+	global lastCheck
+	global name, link, categ, pdate, price, desc
+	nowTime = int(datetime.today().timestamp())
+	
+	if nowTime > (lastCheck + 300):
+		print('Updating RSS feed...')
+		rss = ET.fromstring(requests.get('https://freelance.ua/orders/rss').text.encode('utf-8'))
+		rp = session.get('https://freelance.ua/')
+		soup = BeautifulSoup(rp.text, "lxml")
+		orders = soup.find_all("li", class_="j-order")
+		
+		for i in reversed(orders):
+			if not i.find_all('i', class_='fa fa-thumb-tack c-icon-fixed'):
+				print()
+				name = i.find('a').text
+				link = i.find('a').get('href')
+				for item in rss.iter('item'):
+					if item.find('link').text == i.find('a').get('href'):
+						categ = item.find('category').text
+						pdate = item.find('pubDate').text
+						postTimeStamp = int(datetime.strptime(item.find('pubDate').text, '%a, %d %b %Y %H:%M:%S %z').timestamp())
+				price = i.find('span').text
+				desc = i.find('p').text
+				if postTimeStamp > lastCheck:
+					msg = name + "\n\n" + link + "\n\n" + categ + "\n\n" + pdate + "\n\n" + price + "\n\n" + desc
+					sendMsg(msg)
+					print(msg)
+		print()
+		lastCheck = datetime.now().timestamp()
+		
+def sendMsg(msg):
+	response = session.get('https://api.telegram.org/bot214670545:AAGrL2TckiAs1tbaIvP0Tx70nb3Ty-e8KMU/sendMessage?text=' + msg + '&chat_id=37772301').json()
 
 while True:
 	status = getSteam() + getLastFm()
@@ -106,4 +144,5 @@ while True:
 		setStatus(status)
 		vkStatus = status
 		print(status + '\n')
+	parseFeed()
 	time.sleep(3)
