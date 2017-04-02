@@ -170,13 +170,8 @@ def readSubsDB():
 	try:
 		with sqldbc.cursor() as cursor:
 			cursor.execute("SELECT id FROM users;")
-			for row in cursor:
-			    print(str(row))
-		with sqldb.cursor() as cursor:
-			cursor.execute("SELECT id FROM users;")
 			ids = []
-			for row in cursor:
-			    ids.append(str(row[0]))
+			[ids.append(str(row['id'])) for row in cursor]
 			return ids
 	except:
 		print('Error reading subs from db')
@@ -195,46 +190,47 @@ print('Telegram auth: {} as {}, id: {}'.format(getBot.first_name, getBot.usernam
 
 def parseFeed(force=False, fid=''):
 	global rssUpdDate, lastPostId
-	rss = ET.fromstring(requests.get('https://freelance.ua/orders/rss').text.encode('utf-8'))
-	locale.setlocale(locale.LC_TIME, "en_US.UTF-8")
-	rssPubDate = datetime.strptime(rss[0][5].text, '%a, %d %b %Y %H:%M:%S %z').timestamp() - 60
-	if (rssPubDate > rssUpdDate) or force:
-		print('Parsing freelance.ua...')
-		soup = BeautifulSoup(session.get('https://freelance.ua/').text, "lxml")
-		orders = soup.find_all("li", class_="j-order")
-		
-		for i in reversed(orders):
-			if not i.find_all('i', class_='fa fa-thumb-tack c-icon-fixed'):
-				name = i.find('a').text
-				link = i.find('a').get('href')
-				for item in rss.iter('item'):
-					if item.find('link').text == i.find('a').get('href'):
-						categ = item.find('category').text
-						pdate = item.find('pubDate').text
-						locale.setlocale(locale.LC_TIME, "en_US.UTF-8")
-						postTime = datetime.strptime(pdate, '%a, %d %b %Y %H:%M:%S %z')
-						postTimeStamp = int(postTime.timestamp())
-						locale.setlocale(locale.LC_TIME, "ru_RU.UTF-8")
-						date = postTime.strftime('%a, %d %b %Y %H:%M:%S')
-				price = i.find('span').text
-				desc = i.find('p').text
-				pid = int(link[link.find('orders/')+7:link.find('-')])
-				if (pid > lastPostId) or force:
-					msg = '🔗 [{}]({})\n\n💵 {}\n\n🆔 {}\n🗃 {}\n🕒️ {}\n\n📝 {}'.format(name, link, price, pid, categ, date, desc)
-					if not force:
-						for id in subs:
-							try:
-								bot.sendMessage(chat_id=id, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
-							except:
-								pass
-						print('New offer: ' + name)
-						lastPostId = pid
-						rssUpdDate = rssPubDate
-						updateSysDB('lastPostId', lastPostId)
-						updateSysDB('rssUpdDate', rssUpdDate)
-					if force:
-						bot.sendMessage(chat_id=fid, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
-
+	try:
+		rss = ET.fromstring(requests.get('https://freelance.ua/orders/rss').text.encode('utf-8'))
+		locale.setlocale(locale.LC_TIME, "en_US.UTF-8")
+		rssPubDate = datetime.strptime(rss[0][5].text, '%a, %d %b %Y %H:%M:%S %z').timestamp()
+		print(str(rssPubDate > rssUpdDate))
+		print(str(rssPubDate))
+		print(str(rssUpdDate))
+		if (rssPubDate > rssUpdDate) or force:
+			print('Parsing freelance.ua...')
+			soup = BeautifulSoup(session.get('https://freelance.ua/').text, "lxml")
+			orders = soup.find_all("li", class_="j-order")
+			
+			for i in reversed(orders):
+				if not i.find_all('i', class_='fa fa-thumb-tack c-icon-fixed'):
+					name = i.find('a').text
+					link = i.find('a').get('href')
+					for item in rss.iter('item'):
+						if item.find('link').text == i.find('a').get('href'):
+							categ = item.find('category').text
+							pdate = item.find('pubDate').text
+							locale.setlocale(locale.LC_TIME, "en_US.UTF-8")
+							postTime = datetime.strptime(pdate, '%a, %d %b %Y %H:%M:%S %z')
+							postTimeStamp = int(postTime.timestamp())
+							locale.setlocale(locale.LC_TIME, "ru_RU.UTF-8")
+							date = postTime.strftime('%a, %d %b %Y %H:%M:%S')
+					price = i.find('span').text
+					desc = i.find('p').text
+					pid = int(link[link.find('orders/')+7:link.find('-')])
+					if (pid > lastPostId) or force:
+						msg = '🔗 [{}]({})\n\n💵 {}\n\n🆔 {}\n🗃 {}\n🕒️ {}\n\n📝 {}'.format(name, link, price, pid, categ, date, desc)
+						if not force:
+							[bot.sendMessage(chat_id=id, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True) for id in subs]
+							print('New offer: ' + name)
+							lastPostId = pid
+							rssUpdDate = rssPubDate
+							updateSysDB('lastPostId', lastPostId)
+							updateSysDB('rssUpdDate', rssUpdDate)
+						if force:
+							bot.sendMessage(chat_id=fid, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
+	except:
+		pass
 # Telegram Updater
 updater = Updater(token=tg_token)
 dispatcher = updater.dispatcher
