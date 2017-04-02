@@ -25,7 +25,7 @@ steam_user = os.environ.get('steam_user')
 steam_api_key = os.environ.get('steam_key')
 
 os.environ["tg_users"] = '[{37772301: {login: bionic_leha, pass: 123}}]'
-bot_users = ast.literal_eval(os.environ.get("tg_users").read())
+bot_users = ast.literal_eval(os.environ.get("tg_users"))
 
 vkStatus = ''
 def setStatus(stat):
