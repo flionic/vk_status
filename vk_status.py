@@ -160,6 +160,7 @@ def createSysDB(name, value):
 	finally:
 		sqldbc.close()
 		
+readSysDB()
 #updateSysDB('lastPostId', '1')
 
 
