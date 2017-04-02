@@ -18,13 +18,13 @@ bot = telegram.Bot(token=tg_token)
 getBot = bot.getMe();
 print('Telegram auth: {} as {}, id: {}'.format(getBot.first_name, getBot.username, getBot.id))
 
-vk_token = os.environ.get('vktoken')
+vk_token = os.environ.get('vk_token')
 lastfm_user = os.environ.get('lfm_user')
 lastfm_token = os.environ.get('lfm_token')
 steam_user = os.environ.get('steam_user')
 steam_api_key = os.environ.get('steam_key')
 
-#os.environ['tg_users'] = '[{\'id\': \'37772301\', \'login\': \'bionic_leha\', \'pass\': \'123\'}]'
+os.environ['tg_users'] = '[{\'id\': \'37772301\', \'login\': \'bionic_leha\', \'pass\': \'123\'}]'
 bot_users = ast.literal_eval(os.environ.get('tg_users'))
 #print(bot_users[0])
 print(str(bot_users))
@@ -151,7 +151,7 @@ def parseFeed(force=False):
 					msg = '🔗 [{}]({})\n\n💵 {}\n\n🆔 {}\n🗃 {}\n🕒️ {}\n\n📝 {}'.format(name, link, price, pid, categ, date, desc)
 					bot.sendMessage(chat_id=tg_admin, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
 					if not force:
-						print('Новый заказ: ' + name)
+						print('New offer: ' + name)
 						lastPostId = pid
 						rssUpdDate = rssPubDate
 
