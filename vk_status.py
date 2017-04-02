@@ -14,14 +14,17 @@ conn = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f58
 cur = conn.cursor()
 
 cur.execute("SELECT id FROM users;")
+
+#cur.execute("INSERT INTO `users` (`id`) VALUES ('111222333')")
 #print(cur.description)
 #print()
+
+print(str(cur))
 
 for row in cur:
     print(row)
 
-cur.execute("INSERT INTO users VALUES ('1488228')")
-#cur.execute("INSERT INTO `users` (`id`) VALUES ('111222333')")
+#cur.execute("INSERT INTO users VALUES ('1488228')")
 #cur.execute("DELETE FROM users WHERE id='122734122'")
 
 cur.close()
