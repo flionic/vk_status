@@ -120,7 +120,8 @@ def parseFeed(force=False):
 	rss = ET.fromstring(requests.get('https://freelance.ua/orders/rss').text.encode('utf-8'))
 	locale.setlocale(locale.LC_TIME, "en_US.UTF-8")
 	rssPubDate = datetime.strptime(rss[0][5].text, '%a, %d %b %Y %H:%M:%S %z').timestamp()
-	if rssPubDate > rssUpdDate or force:
+	print(str(force))
+	if (rssPubDate > rssUpdDate) or force:
 		print('Parsing freelance.ua...')
 		soup = BeautifulSoup(session.get('https://freelance.ua/').text, "lxml")
 		orders = soup.find_all("li", class_="j-order")
@@ -164,9 +165,9 @@ def tgmGetOffers(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
     parseFeed(force=True)
 	
-dispatcher.addHandler(CommandHandler('start', tgmStart))
-dispatcher.addHandler(CommandHandler('help', tgmHelp))
-dispatcher.addHandler(CommandHandler('getOffers', tgmGetOffers))
+dispatcher.add_handler(CommandHandler('start', tgmStart))
+dispatcher.add_handler(CommandHandler('help', tgmHelp))
+dispatcher.add_handler(CommandHandler('getOffers', tgmGetOffers))
 
 updater.start_polling()
 	
