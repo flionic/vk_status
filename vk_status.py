@@ -159,10 +159,10 @@ def createSysDB(name, value):
 	finally:
 		sqldbc.close()
 		
-readSysDB()
-updateSysDB('lastPostId', '228')
+#readSysDB()
+#updateSysDB('lastPostId', '228')
 
-def addSubsDB(uid):
+def addSubDB(uid):
 	try:
 		with sqldbc.cursor() as cursor:
 			sql = "INSERT INTO `users` (`id`) VALUES (%s)"
@@ -175,7 +175,7 @@ def addSubsDB(uid):
 	finally:
 		sqldbc.close()
 		
-def delSubsDB(uid):
+def delSubDB(uid):
 	try:
 		with sqldbc.cursor() as cursor:
 			sql = "DELETE FROM `users` WHERE `id`=%s"
@@ -262,11 +262,11 @@ def tgmGetOffers(bot, update):
 	
 def tgmSubs(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-    addSubsDB(update.message.chat_id)
+    addSubDB(update.message.chat_id)
 
 def tgmUnsub(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-    delSubsDB(update.message.chat_id)	
+    delSubDB(update.message.chat_id)	
 	
 dispatcher.add_handler(CommandHandler('start', tgmStart))
 dispatcher.add_handler(CommandHandler('help', tgmHelp))
