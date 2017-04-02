@@ -10,7 +10,7 @@ import telegram
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import pymysql, pymysql.cursors
 
-sqldb = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True)
+sqldb = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True, cursorclass=pymysql.cursors.DictCursor)
 
 #cur = sqldb.cursor()
 #cur.execute("SELECT id FROM users;")
