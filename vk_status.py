@@ -13,6 +13,8 @@ tg_token = '358729650:AAH92APduIYym0C50XGDCscYxzRJppXaqM4'
 tgAdmin = '37772301'
 
 bot = telegram.Bot(token=tg_token)
+
+getBot = bot.getMe();
 botLogin = getBot.username
 botName = getBot.first_name
 botID = getBot.id
@@ -48,10 +50,11 @@ def getLastFm():
 		try:
 			if lfm['recenttracks']['track'][0]['@attr']['nowplaying'] == 'true':
 				firstTrack = lfm['recenttracks']['track'][0]
-				lfm_track = " | 🎧 " + str(firstTrack['artist']['#text']) + " — " + str(firstTrack['name'])
+				lfm_track = str(firstTrack['artist']['#text']) + " — " + str(firstTrack['name'])
 				lfm_track = lfm_track.replace('&', '%26')
 				lfm_track = lfm_track.replace('#', '%23')
-				return lfm_track
+				print('Lastfm: ' + lfm_track)
+				return " | 🎧 " + lfm_track
 		except:
 			return ''
 	except:
@@ -107,7 +110,7 @@ def getSteam():
 				timeStr += str(timeInt[3]) + ' сек. '
 
 			stStatus = 'Steam: ' + 'был в сети ' + timeStr + 'назад'
-			
+		print(stStatus)	
 		return stStatus
 	except:
 		print('Ошибка подключения к steam')
@@ -160,6 +163,5 @@ while True:
 	if status != vkStatus:
 		setStatus(status)
 		vkStatus = status
-		print(status + '\n')
 	parseFeed()
 	time.sleep(3)
