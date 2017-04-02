@@ -160,7 +160,7 @@ def writeSubsDB(uid):
 			sql = "INSERT INTO `users` (`id`) VALUES (%s)"
 			cursor.execute(sql, (uid))
 			#cursor.execute("INSERT INTO `users` (`id`) VALUES ('" + str(id) + "')")
-			print(cursor.fetchone())
+			#print(cursor.fetchone())
 	finally:
 		sqldb.close()
 
@@ -170,8 +170,8 @@ def readSubsDB():
 			cursor.execute("SELECT id FROM users;")
 			ids = []
 			for row in cursor:
-			    print(str(row[0]))
-			    ids.append(str(row[0]))
+			    print(row)
+			    #ids.append(str(row[0]))
 			#return ids
 	finally:
 		sqldb.close()
