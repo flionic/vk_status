@@ -137,7 +137,7 @@ def updateSysDB(name, value):
 			data = (value, name)
 			cursor.execute(sql, data)
 	except:
-		pass
+		print('Error updating sysvars in db')
 		
 def createSysDB(name, value):
 	try:
@@ -145,10 +145,9 @@ def createSysDB(name, value):
 			sql = "INSERT INTO `sysvars` (`name`, `value`) VALUES (%s, %s)"
 			cursor.execute(sql, (name, value))
 	except:
-		pass
+		print('Error create sysvar in db')
 		
-#readSysDB()
-updateSysDB('lastPostId', '111')
+readSysDB()
 
 def addSubDB(uid):
 	try:
@@ -181,7 +180,7 @@ def readSubsDB():
 			    ids.append(str(row[0]))
 			return ids
 	except:
-		pass
+		print('Error reading subs from db')
 	#finally:
 		#sqldb.close()
 		
@@ -227,6 +226,8 @@ def parseFeed(force=False, fid=''):
 						print('New offer: ' + name)
 						lastPostId = pid
 						rssUpdDate = rssPubDate
+						updateSysDB('lastPostId', pid)
+						updateSysDB('rssUpdDate', rssPubDate)
 					if force:
 						bot.sendMessage(chat_id=fid, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
 
