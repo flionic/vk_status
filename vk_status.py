@@ -23,6 +23,8 @@ lastfm_token = os.environ.get('lfm_token')
 steam_user = os.environ.get('steam_user')
 steam_api_key = os.environ.get('steam_key')
 
+os.environ["tg_users"] = ['37772301', '37772300']
+
 vkStatus = ''
 def setStatus(stat):
 	vk_l = 'https://api.vk.com/method/'
@@ -146,8 +148,8 @@ def parseFeed(force=False):
 					bot.sendMessage(chat_id=tg_admin, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
 					if not force:
 						print('Новый заказ: ' + name)
-					lastPostId = pid
-		rssUpdDate = rssPubDate
+						lastPostId = pid
+						rssUpdDate = rssPubDate
 
 # Telegram Updater
 updater = Updater(token=tg_token)
