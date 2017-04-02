@@ -149,7 +149,7 @@ def readSysDB():
 	#global rssUpdDate, lastPostId
 	try:
 		with sqldb.cursor() as cursor:
-			cursor.execute("SELECT * FROM sysvars;")
+			cursor.execute("SELECT name, value FROM sysvars;")
 			#ids = []
 			#for row in cursor:
 			#    print(str(row))
@@ -171,6 +171,8 @@ def updateSysDB(name, value):
 			cursor.execute("UPDATE sysvars SET name='" + name + "'WHERE Country='" + value + "';")
 	finally:
 		sqldb.close()
+		
+updateSysDB('lastPostId', '1')
 	
 tg_admin = '37772301'
 bot = telegram.Bot(token=tg_token)
