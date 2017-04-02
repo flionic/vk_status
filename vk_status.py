@@ -174,6 +174,10 @@ def readSubsDB():
 			for row in cursor:
 			    ids.append(str(row[0]))
 			return ids
+		with sqldbc.cursor() as cursor:
+			cursor.execute("SELECT id FROM users;")
+			for row in cursor:
+			    print(str(row[0]))
 	except:
 		print('Error reading subs from db')
 	
