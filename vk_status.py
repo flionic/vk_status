@@ -123,28 +123,7 @@ session = requests.Session()
 rssUpdDate = 0
 lastPostId = 0
 
-def writeSubsDB(id):
-	try:
-		with sqldb.cursor() as cursor:
-			cursor.execute("INSERT INTO `users` (`id`) VALUES ('" + str(id) + "')")
-			print(cursor.fetchone())
-	finally:
-		sqldb.close()
-
-def readSubsDB():
-	try:
-		with sqldb.cursor() as cursor:
-			cursor.execute("SELECT id FROM users;")
-			ids = []
-			for row in cursor:
-			    ids.append(str(row[0]))
-			return ids
-	finally:
-		sqldb.close()
-		
-subs = readSubsDB()
-print(str(subs))
-
+'''
 def readSysDB():
 	#global rssUpdDate, lastPostId
 	try:
@@ -172,7 +151,32 @@ def updateSysDB(name, value):
 	finally:
 		sqldb.close()
 		
-updateSysDB('lastPostId', '1')
+#updateSysDB('lastPostId', '1')
+'''
+
+def writeSubsDB(id):
+	try:
+		with sqldb.cursor() as cursor:
+			cursor.execute("INSERT INTO `users` (`id`) VALUES ('" + str(id) + "')")
+			print(cursor.fetchone())
+	finally:
+		sqldb.close()
+
+def readSubsDB():
+	try:
+		with sqldb.cursor() as cursor:
+			cursor.execute("SELECT id FROM users;")
+			ids = []
+			for row in cursor:
+			    ids.append(str(row[0]))
+			return ids
+	finally:
+		sqldb.close()
+		
+subs = readSubsDB()
+print(str(subs))
+
+writeSubsDB('112233')
 	
 tg_admin = '37772301'
 bot = telegram.Bot(token=tg_token)
