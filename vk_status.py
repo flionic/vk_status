@@ -20,13 +20,8 @@ cur.execute("SELECT id FROM users;")
 for row in cur:
     print(row)
 
-#cur.execute("INSERT INTO users VALUES ('122734')")
-#print(cur.description)
-#print()
-
-#cur.execute("INSERT INTO `users` (`id`) VALUES ('111222333')")
-cur.execute("DELETE FROM users WHERE id='122734122'")
-print(cur.description)
+cur.execute("INSERT INTO users ('id') VALUES ('2281488')")
+#cur.execute("DELETE FROM users WHERE id='122734122'")
 
 cur.close()
 conn.close()
