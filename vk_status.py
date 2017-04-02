@@ -118,7 +118,6 @@ def parseFeed():
 		
 		for i in reversed(orders):
 			if not i.find_all('i', class_='fa fa-thumb-tack c-icon-fixed'):
-				print()
 				name = i.find('a').text
 				link = i.find('a').get('href')
 				for item in rss.iter('item'):
@@ -132,7 +131,6 @@ def parseFeed():
 					msg = name + "\n\n" + link + "\n\n" + categ + "\n\n" + pdate + "\n\n" + price + "\n\n" + desc
 					sendMsg(msg)
 					print('Новый заказ: ' + name)
-		print()
 		lastCheck = datetime.now().timestamp()
 		
 def sendMsg(msg):
