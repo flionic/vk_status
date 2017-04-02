@@ -10,15 +10,12 @@ import telegram
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 tg_token = '358729650:AAH92APduIYym0C50XGDCscYxzRJppXaqM4'
-tgAdmin = '37772301'
+tg_admin = '37772301'
 
 bot = telegram.Bot(token=tg_token)
 
 getBot = bot.getMe();
-botLogin = getBot.username
-botName = getBot.first_name
-botID = getBot.id
-print('Telegram auth: {} as {}, id: {}'.format(botName, botLogin, str(botID)))
+print('Telegram auth: {} as {}, id: {}'.format(getBot.first_name, getBot.username, getBot.id))
 
 vk_token = os.environ.get('vktoken')
 lastfm_user = os.environ.get('lfm_user')
@@ -147,7 +144,7 @@ def parseFeed():
 				pid = int(link[link.find('orders/')+7:link.find('-')])
 				if pid > lastPostId:
 					msg = '🔗 [{}]({})\n\n💵 {}\n\n🆔 ID: {}\n🗃 {}\n⌚️ {}\n\n📝 {}'.format(name, link, price, pid, categ, date, desc)
-					bot.sendMessage(chat_id=admin_id, text=msg, parse_mode=telegram.ParseMode.MARKDOWN)
+					bot.sendMessage(chat_id=tg_admin, text=msg, parse_mode=telegram.ParseMode.MARKDOWN)
 					#sendMsg(msg)
 					print('Новый заказ: ' + name)
 					lastPostId = pid
