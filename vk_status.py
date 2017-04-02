@@ -161,10 +161,10 @@ def writeSubsDB(uid):
 			sql = "INSERT INTO `users` (`id`) VALUES (%s)"
 			cursor.execute(sql, (uid))
 			print('Added subscriber, id: ' + str(uid))
-			return True
+			bot.sendMessage(chat_id=uid, text="Подписка оформлена", parse_mode=telegram.ParseMode.HTML)
 	except:
 		print('Error writing Sub ID')
-		return False
+		bot.sendMessage(chat_id=uid, text="Ошибка! Возможно Вы уже подписканы?", parse_mode=telegram.ParseMode.HTML)
 	finally:
 		sqldbc.close()
 		
@@ -174,10 +174,10 @@ def delSubsDB(uid):
 			sql = "DELETE FROM `users` WHERE `id`=%s"
 			cursor.execute(sql, (uid))
 			print('Deleted subscriber, id: ' + str(uid))
-			return True
+			bot.sendMessage(chat_id=uid, text="Подписка отменена", parse_mode=telegram.ParseMode.HTML)
 	except:
 		print('Error deleting Sub ID')
-		return False
+		bot.sendMessage(chat_id=uid, text="Ошибка! Возможно Вы не подписаны?", parse_mode=telegram.ParseMode.HTML)
 	finally:
 		sqldbc.close()
 
@@ -256,17 +256,11 @@ def tgmGetOffers(bot, update):
 	
 def tgmSubs(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-    if writeSubsDB(update.message.chat_id) == True:
-		bot.sendMessage(chat_id=update.message.chat_id, text="Подписка оформлена", parse_mode=telegram.ParseMode.HTML)
-	else:
-		bot.sendMessage(chat_id=update.message.chat_id, text="Ошибка! Возможно Вы уже подписканы?", parse_mode=telegram.ParseMode.HTML)
+    writeSubsDB(update.message.chat_id)
 	
 def tgmUnsub(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-	if delSubsDB(update.message.chat_id) == True:
-		bot.sendMessage(chat_id=update.message.chat_id, text="Подписка отменена", parse_mode=telegram.ParseMode.HTML)
-	else:
-		bot.sendMessage(chat_id=update.message.chat_id, text="Ошибка! Возможно Вы не подписаны?", parse_mode=telegram.ParseMode.HTML)
+	delSubsDB(update.message.chat_id)
 	
 dispatcher.add_handler(CommandHandler('start', tgmStart))
 dispatcher.add_handler(CommandHandler('help', tgmHelp))
