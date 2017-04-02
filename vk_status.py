@@ -19,10 +19,8 @@ cur.execute("SELECT id FROM users;")
 #print(cur.description)
 #print()
 
-print(str(cur.fetchone()))
-
 for row in cur:
-    print(row.fetchone())
+    print(row[0])
 
 #cur.execute("INSERT INTO users VALUES ('1488228')")
 #cur.execute("DELETE FROM users WHERE id='122734122'")
@@ -73,6 +71,7 @@ def getLastFm():
 				lfm_track = lfm_track.replace('#', '%23')
 				return lfm_track
 		except:
+			print(str(lfm))
 			return ''
 	except:
 		print('Error connecting to LastFM')
