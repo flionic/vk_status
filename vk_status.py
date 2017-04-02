@@ -159,14 +159,15 @@ def tgmStart(bot, update):
 	
 def tgmHelp(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-    bot.sendMessage(chat_id=update.message.chat_id, text='Команды: \n/subscribe - позволяет получать заказы в личные сообщения.\n/unsubscribe  - отписаться от получения заказов.\n/help - помощь по командам.\n/login - авторизоваться на сайте.\n/offer [id] - предложить свою кандидатуру.\n/offermsg [text] - сообщение предложения', parse_mode=telegram.ParseMode.HTML)
+    bot.sendMessage(chat_id=update.message.chat_id, text='Команды: \n/getOffers - получить список заказов с 1 страницы.\n/subscribe - позволяет получать заказы в реальном времени\n/unsubscribe  - отписаться от получения заказов.\n/help - помощь по командам.\n/login - авторизоваться на сайте.\n/offer [id] - предложить свою кандидатуру.\n/offermsg [text] - сообщение предложения', parse_mode=telegram.ParseMode.HTML)
 
-def tgmForceUpd(bot, update):
+def tgmGetOffers(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
     parseFeed(True)
 	
 dispatcher.addHandler(CommandHandler('start', tgmStart))
 dispatcher.addHandler(CommandHandler('help', tgmHelp))
+dispatcher.addHandler(CommandHandler('getOffers', tgmGetOffers))
 
 updater.start_polling()
 	
