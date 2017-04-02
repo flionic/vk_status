@@ -6,6 +6,17 @@ from math import floor
 from bs4 import BeautifulSoup
 import xml.etree.ElementTree as ET
 import locale
+import telegram
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+
+tg_token = '358729650:AAH92APduIYym0C50XGDCscYxzRJppXaqM4'
+tgAdmin = '37772301'
+
+bot = telegram.Bot(token=tg_token)
+botLogin = getBot.username
+botName = getBot.first_name
+botID = getBot.id
+print('Telegram auth: {} as {}, id: {}'.format(botName, botLogin, str(botID)))
 
 vk_token = os.environ.get('vktoken')
 lastfm_user = os.environ.get('lfm_user')
