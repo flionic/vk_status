@@ -144,7 +144,7 @@ def updateSysDB(name, value):
 	try:
 		with sqldbc.cursor() as cursor:
 			sql = "UPDATE `sysvars` SET `value`=%s WHERE `name`=%s)"
-			cursor.execute(sql, (value, name))
+			cursor.execute(sql, (str(value), name))
 	finally:
 		sqldbc.close()
 		
