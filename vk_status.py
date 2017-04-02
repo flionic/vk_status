@@ -12,15 +12,15 @@ import pymysql
 
 conn = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243')
 cur = conn.cursor()
-cur.execute("SELECT * FROM heroku_6c46a1f67ca0243.users;")
 
-print(cur.description)
-print()
+#cur.execute("SELECT * FROM heroku_6c46a1f67ca0243.users;")
+#print(cur.description)
+#print()
 
-for row in cur:
-    print(row)
+#for row in cur:
+#    print(row)
 
-cur.execute("INSERT INTO users (id) VALUES (122734122)")
+cur.execute("INSERT INTO users (id) VALUES (12273412222);")
 print(cur.description)
 print()
 
