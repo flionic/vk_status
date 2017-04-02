@@ -145,14 +145,10 @@ def parseFeed():
 				if pid > lastPostId:
 					msg = '🔗 [{}]({})\n\n💵 {}\n\n🆔 {}\n🗃 {}\n🕒️ {}\n\n📝 {}'.format(name, link, price, pid, categ, date, desc)
 					bot.sendMessage(chat_id=tg_admin, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
-					#sendMsg(msg)
 					print('Новый заказ: ' + name)
 					lastPostId = pid
 		lastCheck = datetime.now().timestamp()
 		
-def sendMsg(msg):
-	response = session.get('https://api.telegram.org/bot214670545:AAGrL2TckiAs1tbaIvP0Tx70nb3Ty-e8KMU/sendMessage?parse_mode=markdown&disable_web_page_preview=true&text=' + msg + '&chat_id=37772301').json()
-
 while True:
 	status = getSteam() + getLastFm()
 	if status != vkStatus:
