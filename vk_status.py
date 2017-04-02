@@ -170,8 +170,9 @@ def readSubsDB():
 			cursor.execute("SELECT id FROM users;")
 			ids = []
 			for row in cursor:
+			    print(str(row[0]))
 			    ids.append(str(row[0]))
-			return ids
+			#return ids
 	finally:
 		sqldb.close()
 		
