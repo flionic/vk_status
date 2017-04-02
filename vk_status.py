@@ -138,17 +138,17 @@ def readSysDB():
 	finally:
 		sqldb.close()
 		
-def createSysDB(name, value):
-	try:
-		with sqldb.cursor() as cursor:
-			cursor.execute("INSERT INTO sysvars (name, value) VALUES ('" + name + "', '" + value + "');")
-	finally:
-		sqldb.close()
-		
 def updateSysDB(name, value):
 	try:
 		with sqldb.cursor() as cursor:
 			cursor.execute("UPDATE `sysvars` SET `name`=lastPostId WHERE `value`=1")
+	finally:
+		sqldb.close()
+		
+def createSysDB(name, value):
+	try:
+		with sqldb.cursor() as cursor:
+			cursor.execute("INSERT INTO sysvars (name, value) VALUES ('" + name + "', '" + value + "');")
 	finally:
 		sqldb.close()
 		
@@ -160,10 +160,11 @@ def writeSubsDB(uid):
 		with sqldbc.cursor() as cursor:
 			sql = "INSERT INTO `users` (`id`) VALUES (%s)"
 			cursor.execute(sql, (uid))
-			#cursor.execute("INSERT INTO `users` (`id`) VALUES ('" + str(id) + "')")
-			#print(cursor.fetchone())
+			print('Added subscriber, id: ' + str(uid))
+			return True
 	except:
 		print('Error writing Sub ID')
+		return False
 	finally:
 		sqldbc.close()
 		
@@ -172,8 +173,11 @@ def delSubsDB(uid):
 		with sqldbc.cursor() as cursor:
 			sql = "DELETE FROM `users` WHERE `id`=%s"
 			cursor.execute(sql, (uid))
+			print('Deleted subscriber, id: ' + str(uid))
+			return True
 	except:
 		print('Error deleting Sub ID')
+		return False
 	finally:
 		sqldbc.close()
 
@@ -189,15 +193,11 @@ def readSubsDB():
 	finally:
 		sqldb.close()
 		
-subs = readSubsDB()
-print(str(subs))
-#writeSubsDB('888999')
-delSubsDB('888999')
-	
 tg_admin = '37772301'
 bot = telegram.Bot(token=tg_token)
 getBot = bot.getMe();
 print('Telegram auth: {} as {}, id: {}'.format(getBot.first_name, getBot.username, getBot.id))
+subs = readSubsDB()
 
 def parseFeed(force=False, fid=''):
 	global rssUpdDate, lastPostId
@@ -255,9 +255,25 @@ def tgmGetOffers(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
     parseFeed(True, update.message.chat_id)
 	
+def tgmSubs(bot, update):
+    bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
+    if writeSubsDB(str(update.message.chat_id)):
+		bot.sendMessage(chat_id=update.message.chat_id, text="Подписка оформлена", parse_mode=telegram.ParseMode.HTML)
+	else:
+		bot.sendMessage(chat_id=update.message.chat_id, text="Ошибка! Возможно Вы уже подписканы?", parse_mode=telegram.ParseMode.HTML)
+	
+def tgmUnsub(bot, update):
+    bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
+	if delSubsDB(str(update.message.chat_id)):
+		bot.sendMessage(chat_id=update.message.chat_id, text="Подписка отменена", parse_mode=telegram.ParseMode.HTML)
+	else:
+		bot.sendMessage(chat_id=update.message.chat_id, text="Ошибка! Возможно Вы не подписаны?", parse_mode=telegram.ParseMode.HTML)
+	
 dispatcher.add_handler(CommandHandler('start', tgmStart))
 dispatcher.add_handler(CommandHandler('help', tgmHelp))
 dispatcher.add_handler(CommandHandler('getOffers', tgmGetOffers))
+dispatcher.add_handler(CommandHandler('subscribe', tgmSubs))
+dispatcher.add_handler(CommandHandler('unsubscribe', tgmUnsub))
 
 updater.start_polling()
 
