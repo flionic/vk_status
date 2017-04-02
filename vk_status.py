@@ -176,24 +176,17 @@ def readSubsDB():
 			return ids
 	except:
 		print('Error reading subs from db')
-	
-session = requests.Session()
 
 readSysDB()
 subs = readSubsDB()
 
-tg_admin = '37772301'
-bot = telegram.Bot(token=tg_token)
-print('Telegram auth: {} as {}, id: {}'.format(bot.getMe().first_name, bot.getMe().username, bot.getMe().id))
-
+session = requests.Session()
 def parseFeed(force=False, fid=''):
 	global rssUpdDate, lastPostId
 	try:
 		rss = ET.fromstring(requests.get('https://freelance.ua/orders/rss').text.encode('utf-8'))
 		locale.setlocale(locale.LC_TIME, "en_US.UTF-8")
 		rssPubDate = datetime.strptime(rss[0][5].text, '%a, %d %b %Y %H:%M:%S %z').timestamp()
-		print(str(rssPubDate > rssUpdDate))
-		print(str(rssPubDate))
 		print(str(rssUpdDate))
 		if (rssPubDate > rssUpdDate) or force:
 			print('Parsing freelance.ua...')
@@ -229,8 +222,12 @@ def parseFeed(force=False, fid=''):
 							bot.sendMessage(chat_id=fid, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
 	except:
 		pass
-# Telegram Updater
+		
+# Telegram
+tg_admin = '37772301'
+bot = telegram.Bot(token=tg_token)
 updater = Updater(token=tg_token)
+print('Telegram auth: {} as {}, id: {}'.format(bot.getMe().first_name, bot.getMe().username, bot.getMe().id))
 dispatcher = updater.dispatcher
 
 def tgmStart(bot, update):
