@@ -149,7 +149,7 @@ def readSysDB():
 	#global rssUpdDate, lastPostId
 	try:
 		with sqldb.cursor() as cursor:
-			cursor.execute("SELECT name, value FROM sysvars;")
+			cursor.execute("SELECT `name`, `value` FROM `sysvars`")
 			#ids = []
 			#for row in cursor:
 			#    print(str(row))
