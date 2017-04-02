@@ -140,12 +140,11 @@ def readSysDB():
 	finally:
 		sqldbc.close()
 		
-def updateSysDB(sname, svalue):
+def updateSysDB(name, value):
 	try:
 		with sqldbc.cursor() as cursor:
-			#sql = "UPDATE sysvars SET svalue=%s WHERE sname=%s"
-			sql = "UPDATE sysvars SET svalue='228' WHERE sname='lastPostId'"
-			#cursor.execute(sql, (svalue, sname))
+			sql = "UPDATE sysvars SET value=%s WHERE id=%s"
+			cursor.execute(sql, (value, 0))
 			cursor.execute(sql)
 	finally:
 		sqldbc.close()
@@ -153,7 +152,7 @@ def updateSysDB(sname, svalue):
 def createSysDB(sname, svalue):
 	try:
 		with sqldbc.cursor() as cursor:
-			sql = "INSERT INTO `users` (`name`, `value`) VALUES (%s, %s)"
+			sql = "INSERT INTO `sysvars` (`name`, `value`) VALUES (%s, %s)"
 			cursor.execute(sql, (sname, svalue))
 	finally:
 		sqldbc.close()
