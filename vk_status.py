@@ -108,25 +108,18 @@ def getSteam():
 		return 'Steam error'
 		
 # MySQL
-rssUpdDate = 0
-lastPostId = 0
-def readSysDB():
-	global rssUpdDate, lastPostId
+def readSysDB(name):
 	try:
 		with sqldbc.cursor() as cursor:
 			sql = "SELECT `name`, `value` FROM `sysvars`"
 			cursor.execute(sql)
 			result = cursor.fetchone()
 			for row in cursor:
-				if row['name'] == 'lastPostId':
-					lastPostId = int(row['value'])
-					print(str(lastPostId))
-				if row['name'] == 'rssUpdDate':
-					rssUpdDate = int(row['value'])
-					print(str(rssUpdDate))
-				#print(str(row))
+				if row['name'] == name:
+					print(str(row['name']))
+					return row['value']
 	except:
-		pass
+		print('Error getting sysvars from db')
 	#finally:
 		#sqldbc.close()
 		
@@ -181,6 +174,9 @@ def readSubsDB():
 
 readSysDB()
 subs = readSubsDB()
+
+rssUpdDate = readSysDB('rssUpdDate')
+lastPostId = readSysDB('lastPostId')
 
 session = requests.Session()
 def parseFeed(force=False, fid=''):
