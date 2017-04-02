@@ -154,7 +154,7 @@ def createSysDB(name, value):
 		#sqldbc.close()
 		
 #readSysDB()
-#updateSysDB('lastPostId', '228')
+updateSysDB('lastPostId', '228')
 
 def addSubDB(uid):
 	try:
