@@ -8,7 +8,7 @@ import xml.etree.ElementTree as ET
 import locale
 import telegram
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-import pymysql
+import pymysql, pymysql.cursors
 
 sqldb = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True)
 
@@ -168,7 +168,7 @@ def createSysDB(name, value):
 def updateSysDB(name, value):
 	try:
 		with sqldb.cursor() as cursor:
-			cursor.execute("UPDATE `sysvars` SET `name`=`lastPostId` WHERE `value`=`1`")
+			cursor.execute("UPDATE `sysvars` SET `name`=lastPostId WHERE `value`=1")
 	finally:
 		sqldb.close()
 		
