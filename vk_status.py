@@ -197,7 +197,6 @@ tg_admin = '37772301'
 bot = telegram.Bot(token=tg_token)
 getBot = bot.getMe();
 print('Telegram auth: {} as {}, id: {}'.format(getBot.first_name, getBot.username, getBot.id))
-subs = readSubsDB()
 
 def parseFeed(force=False, fid=''):
 	global rssUpdDate, lastPostId
@@ -256,29 +255,28 @@ def tgmGetOffers(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
     parseFeed(True, update.message.chat_id)
 	
-def tgmSubs(bot, update):
-    bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-    if writeSubsDB(str(update.message.chat_id)):
-		bot.sendMessage(chat_id=update.message.chat_id, text="Подписка оформлена", parse_mode=telegram.ParseMode.HTML)
-	else:
-		bot.sendMessage(chat_id=update.message.chat_id, text="Ошибка! Возможно Вы уже подписканы?", parse_mode=telegram.ParseMode.HTML)
-	
-def tgmUnsub(bot, update):
-    bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-	if delSubsDB(str(update.message.chat_id)):
-		bot.sendMessage(chat_id=update.message.chat_id, text="Подписка отменена", parse_mode=telegram.ParseMode.HTML)
-	else:
-		bot.sendMessage(chat_id=update.message.chat_id, text="Ошибка! Возможно Вы не подписаны?", parse_mode=telegram.ParseMode.HTML)
-	
+#def tgmSubs(bot, update):
+#    bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
+#    if writeSubsDB(str(update.message.chat_id)):
+#		bot.sendMessage(chat_id=update.message.chat_id, text="Подписка оформлена", parse_mode=telegram.ParseMode.HTML)
+#	else:
+#		bot.sendMessage(chat_id=update.message.chat_id, text="Ошибка! Возможно Вы уже подписканы?", parse_mode=telegram.ParseMode.HTML)
+#	
+#def tgmUnsub(bot, update):
+#    bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
+#	if delSubsDB(str(update.message.chat_id)):
+#		bot.sendMessage(chat_id=update.message.chat_id, text="Подписка отменена", parse_mode=telegram.ParseMode.HTML)
+#	else:
+#		bot.sendMessage(chat_id=update.message.chat_id, text="Ошибка! Возможно Вы не подписаны?", parse_mode=telegram.ParseMode.HTML)
+#	
 dispatcher.add_handler(CommandHandler('start', tgmStart))
 dispatcher.add_handler(CommandHandler('help', tgmHelp))
 dispatcher.add_handler(CommandHandler('getOffers', tgmGetOffers))
-dispatcher.add_handler(CommandHandler('subscribe', tgmSubs))
-dispatcher.add_handler(CommandHandler('unsubscribe', tgmUnsub))
+#dispatcher.add_handler(CommandHandler('subscribe', tgmSubs))
+#dispatcher.add_handler(CommandHandler('unsubscribe', tgmUnsub))
 
 updater.start_polling()
-
-#readSysDB()
+subs = readSubsDB()
 
 while True:
 	status = getSteam() + getLastFm()
