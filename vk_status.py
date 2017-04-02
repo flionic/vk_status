@@ -127,9 +127,10 @@ def parseFeed():
 						categ = item.find('category').text
 						pdate = item.find('pubDate').text
 						locale.setlocale(locale.LC_TIME, "en_US.UTF-8")
-						postTimeStamp = int(datetime.strptime(item.find('pubDate').text, '%a, %d %b %Y %H:%M:%S %z').timestamp())
+						postTime = datetime.strptime(pdate, '%a, %d %b %Y %H:%M:%S %z')
+						postTimeStamp = int(postTime.timestamp())
 						locale.setlocale(locale.LC_TIME, "ru_RU.UTF-8")
-						date = postTimeStamp.strftime('%a, %d %b %Y %H:%M:%S')
+						date = postTime.strftime('%a, %d %b %Y %H:%M:%S')
 				price = i.find('span').text
 				desc = i.find('p').text
 				pid = int(link[link.find('orders/')+7:link.find('-')])
