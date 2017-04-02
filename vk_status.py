@@ -19,10 +19,10 @@ cur.execute("SELECT id FROM users;")
 #print(cur.description)
 #print()
 
-print(str(cur))
+print(str(cur.fetchone()))
 
 for row in cur:
-    print(row)
+    print(row.fetchone())
 
 #cur.execute("INSERT INTO users VALUES ('1488228')")
 #cur.execute("DELETE FROM users WHERE id='122734122'")
