@@ -13,7 +13,7 @@ lastfm_token = os.environ.get('lfm_token')
 steam_user = os.environ.get('steam_user')
 steam_api_key = os.environ.get('steam_key')
 
-locale.setlocale(locale.LC_TIME, "ru")
+locale.setlocale(locale.LC_TIME, "ru_RU.UTF-8")
 
 vkStatus = ''
 def setStatus(stat):
