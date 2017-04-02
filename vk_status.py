@@ -125,8 +125,10 @@ def readSysDB():
 				if row['name'] == 'rssUpdDate':
 					rssUpdDate = row['value']
 				#print(str(row))
-	finally:
-		sqldbc.close()
+	except:
+		pass
+	#finally:
+		#sqldbc.close()
 		
 def updateSysDB(name, value):
 	try:
@@ -136,16 +138,20 @@ def updateSysDB(name, value):
 			#cursor.execute(sql, data)
 			sql = "UPDATE sysvars SET value=2222 WHERE id=1"
 			cursor.execute(sql)
-	finally:
-		sqldbc.close()
+	except:
+		pass
+	#finally:
+		#sqldbc.close()
 		
 def createSysDB(name, value):
 	try:
 		with sqldbc.cursor() as cursor:
 			sql = "INSERT INTO `sysvars` (`name`, `value`) VALUES (%s, %s)"
 			cursor.execute(sql, (name, value))
-	finally:
-		sqldbc.close()
+	except:
+		pass
+	#finally:
+		#sqldbc.close()
 		
 #readSysDB()
 #updateSysDB('lastPostId', '228')
@@ -182,8 +188,10 @@ def readSubsDB():
 			for row in cursor:
 			    ids.append(str(row[0]))
 			return ids
-	finally:
-		sqldb.close()
+	except:
+		pass
+	#finally:
+		#sqldb.close()
 		
 tg_admin = '37772301'
 bot = telegram.Bot(token=tg_token)
