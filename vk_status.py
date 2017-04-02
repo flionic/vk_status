@@ -172,9 +172,7 @@ def readSubsDB():
 	except:
 		print('Error reading subs from db')
 
-readSysDB()
 subs = readSubsDB()
-
 rssUpdDate = readSysDB('rssUpdDate')
 lastPostId = readSysDB('lastPostId')
 
