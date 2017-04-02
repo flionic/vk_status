@@ -10,7 +10,6 @@ import telegram
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import pymysql, pymysql.cursors
 
-sqldb = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True) 
 sqldbc = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True, charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor) 
 
 tg_token = os.environ.get('tg_token')
@@ -109,6 +108,8 @@ def getSteam():
 		return 'Steam error'
 		
 # MySQL
+rssUpdDate = 0
+lastPostId = 0
 def readSysDB():
 	global rssUpdDate, lastPostId
 	try:
@@ -177,16 +178,13 @@ def readSubsDB():
 		print('Error reading subs from db')
 	
 session = requests.Session()
-rssUpdDate = 0
-lastPostId = 0
 
 readSysDB()
 subs = readSubsDB()
 
 tg_admin = '37772301'
 bot = telegram.Bot(token=tg_token)
-getBot = bot.getMe();
-print('Telegram auth: {} as {}, id: {}'.format(getBot.first_name, getBot.username, getBot.id))
+print('Telegram auth: {} as {}, id: {}'.format(bot.getMe().first_name, bot.getMe().username, bot.getMe().id))
 
 def parseFeed(force=False, fid=''):
 	global rssUpdDate, lastPostId
