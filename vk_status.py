@@ -244,7 +244,6 @@ dispatcher = updater.dispatcher
 
 def tgmStart(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-	print(str(update.message.chat_id))
     bot.sendMessage(chat_id=update.message.chat_id, text="Привет! Это бот сайта freelance.ua. Здесь вы можете отслеживать ленту заказов в реальном времени, получая уведомления прямо на свой телефон. Список команд: /help", parse_mode=telegram.ParseMode.HTML)
 	
 def tgmHelp(bot, update):
