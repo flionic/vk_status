@@ -124,38 +124,40 @@ session = requests.Session()
 rssUpdDate = 0
 lastPostId = 0
 
-
 def readSysDB():
 	global rssUpdDate, lastPostId
 	try:
 		with sqldbc.cursor() as cursor:
-			# Read a single record
 			sql = "SELECT `name`, `value` FROM `sysvars`"
 			cursor.execute(sql)
 			result = cursor.fetchone()
-			print(row[0])
 			for row in cursor:
-			    print(str(row))
+				if row['name'] == 'lastPostId':
+					lastPostId = row['value']
+				if row['name'] == 'rssUpdDate':
+					rssUpdDate = row['value']
+				#print(str(row))
 	finally:
 		sqldbc.close()
 		
 def updateSysDB(name, value):
 	try:
 		with sqldbc.cursor() as cursor:
-			cursor.execute("UPDATE `sysvars` SET `name`=lastPostId WHERE `value`=1")
+			sql = "UPDATE `sysvars` SET `value`=%s WHERE `name`=%s)"
+			cursor.execute(sql, (value, name))
 	finally:
 		sqldbc.close()
 		
 def createSysDB(name, value):
 	try:
 		with sqldbc.cursor() as cursor:
-			cursor.execute("INSERT INTO sysvars (name, value) VALUES ('" + name + "', '" + value + "');")
+			sql = "INSERT INTO `users` (`email`, `password`) VALUES (%s, %s)"
+			cursor.execute(sql, ('webmaster@python.org', 'very-secret'))
 	finally:
 		sqldbc.close()
 		
 readSysDB()
-#updateSysDB('lastPostId', '1')
-
+updateSysDB('lastPostId', '1')
 
 def addSubsDB(uid):
 	try:
