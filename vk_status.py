@@ -13,18 +13,6 @@ import pymysql, pymysql.cursors
 sqldb = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True) 
 sqldbc = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True, charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor) 
 
-#cur = sqldb.cursor()
-#cur.execute("SELECT id FROM users;")
-#for row in cur:
-#    print(row[0])
-#cur.execute("INSERT INTO `users` (`id`) VALUES ('111222333')")
-#print(cur.description)
-#print()
-#cur.execute("INSERT INTO users VALUES ('1488228')")
-#cur.execute("DELETE FROM users WHERE id='122734122'")
-#cur.close()
-#sqldb.close()
-
 tg_token = os.environ.get('tg_token')
 vk_token = os.environ.get('vk_token')
 lastfm_user = os.environ.get('lfm_user')
