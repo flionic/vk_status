@@ -158,7 +158,7 @@ def writeSubsDB(id):
 	try:
 		with sqldb.cursor() as cursor:
 			sql = "INSERT INTO `users` (`id`) VALUES (%s)"
-			cursor.execute(sql, (id,))
+			cursor.execute(sql, (str(id),))
 			#cursor.execute("INSERT INTO `users` (`id`) VALUES ('" + str(id) + "')")
 			print(cursor.fetchone())
 	finally:
