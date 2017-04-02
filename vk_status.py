@@ -166,6 +166,16 @@ def writeSubsDB(uid):
 		print('Error writing Sub ID')
 	finally:
 		sqldbc.close()
+		
+def delSubsDB(uid):
+	try:
+		with sqldbc.cursor() as cursor:
+			sql = "DELETE FROM `users` WHERE `id`=%s"
+			cursor.execute(sql, (uid))
+	except:
+		print('Error deleting Sub ID')
+	finally:
+		sqldbc.close()
 
 def readSubsDB():
 	try:
@@ -182,6 +192,7 @@ def readSubsDB():
 subs = readSubsDB()
 print(str(subs))
 
+#writeSubsDB('888999')
 writeSubsDB('888999')
 	
 tg_admin = '37772301'
@@ -248,7 +259,7 @@ dispatcher.add_handler(CommandHandler('getOffers', tgmGetOffers))
 
 updater.start_polling()
 
-readSysDB()
+#readSysDB()
 
 while True:
 	status = getSteam() + getLastFm()
