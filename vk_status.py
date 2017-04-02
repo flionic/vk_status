@@ -119,6 +119,8 @@ lastPostId = 0
 def parseFeed():
 	global rssUpdDate, lastPostId
 	rss = ET.fromstring(requests.get('https://freelance.ua/orders/rss').text.encode('utf-8'))
+	print(str(rss[0][5].text))
+	locale.setlocale(locale.LC_TIME, "en_US.UTF-8")
 	rssPubDate = datetime.strptime(rss[0][5].text, '%a, %d %b %Y %H:%M:%S %z').timestamp()
 	if rssPubDate > rssUpdDate:
 		print('Parsing freelance.ua...')
@@ -134,7 +136,6 @@ def parseFeed():
 					if item.find('link').text == i.find('a').get('href'):
 						categ = item.find('category').text
 						pdate = item.find('pubDate').text
-						locale.setlocale(locale.LC_TIME, "en_US.UTF-8")
 						postTime = datetime.strptime(pdate, '%a, %d %b %Y %H:%M:%S %z')
 						postTimeStamp = int(postTime.timestamp())
 						locale.setlocale(locale.LC_TIME, "ru_RU.UTF-8")
