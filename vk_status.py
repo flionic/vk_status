@@ -157,6 +157,20 @@ def readSysDB():
 			#return ids
 	finally:
 		sqldb.close()
+		
+def createSysDB(name, value):
+	try:
+		with sqldb.cursor() as cursor:
+			cursor.execute("INSERT INTO sysvars (name, value) VALUES ('" + name + "', '" + value + "');")
+	finally:
+		sqldb.close()
+		
+def updateSysDB(name, value):
+	try:
+		with sqldb.cursor() as cursor:
+			cursor.execute("UPDATE sysvars SET name='" + name + "'WHERE Country='" + value + "';")
+	finally:
+		sqldb.close()
 	
 tg_admin = '37772301'
 bot = telegram.Bot(token=tg_token)
@@ -218,7 +232,9 @@ dispatcher.add_handler(CommandHandler('help', tgmHelp))
 dispatcher.add_handler(CommandHandler('getOffers', tgmGetOffers))
 
 updater.start_polling()
-	
+
+readSysDB()
+
 while True:
 	status = getSteam() + getLastFm()
 	if status != vkStatus:
