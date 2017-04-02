@@ -20,7 +20,7 @@ print()
 for row in cur:
     print(row)
 	
-cur.execute('INSERT INTO users VALUES (\'122734122\');')
+cur.execute('INSERT INTO users (id) VALUES (122734122);')
 print(cur.description)
 print()
 
