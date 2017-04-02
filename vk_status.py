@@ -140,12 +140,11 @@ def readSysDB():
 	finally:
 		sqldbc.close()
 		
-def updateSysDB(name, value):
+def updateSysDB(sname, svalue):
 	try:
 		with sqldbc.cursor() as cursor:
 			sql = "UPDATE `sysvars` SET `value`=%s WHERE `id`=%s"
-			cursor.execute(sql, (value, '0'))
-			cursor.execute(sql)
+			cursor.execute(sql, (svalue, '1'))
 	finally:
 		sqldbc.close()
 		
@@ -158,7 +157,7 @@ def createSysDB(name, value):
 		sqldbc.close()
 		
 readSysDB()
-updateSysDB('lastPostId', '1')
+updateSysDB('lastPostId', '228')
 
 def addSubsDB(uid):
 	try:
