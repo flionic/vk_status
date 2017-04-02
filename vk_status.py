@@ -116,7 +116,7 @@ lastCheck = datetime.now().timestamp() - 3600
 rssUpdDate = 0
 lastPostId = 0
 
-def parseFeed(force):
+def parseFeed(force=False):
 	global rssUpdDate, lastPostId
 	rss = ET.fromstring(requests.get('https://freelance.ua/orders/rss').text.encode('utf-8'))
 	rssPubDate = datetime.strptime(rss[0][5].text, '%a, %d %b %Y %H:%M:%S %z').timestamp()
