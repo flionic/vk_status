@@ -130,14 +130,14 @@ def parseFeed():
 				desc = i.find('p').text
 				pid = int(link[link.find('orders/')+7:link.find('-')])
 				if postTimeStamp > lastCheck:
-					msg = name + "\n\n" + link + "\n\n" + categ + "\n\n" + pdate + "\n\n" + price + "\n\n" + desc
+					msg = '[{}]({})\n\n{}\n\n{}\n{}\n\n{}'.format(name, link, price, categ, pdate, desc)
 					sendMsg(msg)
 					print('Новый заказ: ' + name)
 					lastPostId = pid
 		lastCheck = datetime.now().timestamp()
 		
 def sendMsg(msg):
-	response = session.get('https://api.telegram.org/bot214670545:AAGrL2TckiAs1tbaIvP0Tx70nb3Ty-e8KMU/sendMessage?disable_web_page_preview=true&text=' + msg + '&chat_id=37772301').json()
+	response = session.get('https://api.telegram.org/bot214670545:AAGrL2TckiAs1tbaIvP0Tx70nb3Ty-e8KMU/sendMessage?parse_mode=markdown&disable_web_page_preview=true&text=' + msg + '&chat_id=37772301').json()
 
 while True:
 	status = getSteam() + getLastFm()
