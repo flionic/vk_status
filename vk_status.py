@@ -168,24 +168,26 @@ def delSubDB(uid):
 
 def readSubsDB():
 	try:
+		with sqldbc.cursor() as cursor:
+			cursor.execute("SELECT id FROM users;")
+			for row in cursor:
+			    print(str(row))
 		with sqldb.cursor() as cursor:
 			cursor.execute("SELECT id FROM users;")
 			ids = []
 			for row in cursor:
 			    ids.append(str(row[0]))
 			return ids
-		with sqldbc.cursor() as cursor:
-			cursor.execute("SELECT id FROM users;")
-			for row in cursor:
-			    print(str(row[0]))
 	except:
 		print('Error reading subs from db')
 	
 session = requests.Session()
 rssUpdDate = 0
 lastPostId = 0
+
 readSysDB()
-	
+subs = readSubsDB()
+
 tg_admin = '37772301'
 bot = telegram.Bot(token=tg_token)
 getBot = bot.getMe();
@@ -264,7 +266,6 @@ dispatcher.add_handler(CommandHandler('subscribe', tgmSubs))
 dispatcher.add_handler(CommandHandler('unsubscribe', tgmUnsub))
 
 updater.start_polling()
-subs = readSubsDB()
 
 while True:
 	status = getSteam() + getLastFm()
