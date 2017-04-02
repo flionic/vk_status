@@ -166,7 +166,7 @@ def addSubDB(uid):
 def delSubDB(uid):
 	try:
 		with sqldbc.cursor() as cursor:
-			sql = "DELETE FROM `users` WHERE `id`=%s"
+			sql = "DELETE FROM `users` WHERE `id`=(%s)"
 			cursor.execute(sql, (uid))
 			print('Deleted subscriber, id: ' + str(uid))
 			bot.sendMessage(chat_id=uid, text="Подписка отменена", parse_mode=telegram.ParseMode.HTML)
