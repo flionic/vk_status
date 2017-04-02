@@ -31,28 +31,6 @@ lastfm_token = os.environ.get('lfm_token')
 steam_user = os.environ.get('steam_user')
 steam_api_key = os.environ.get('steam_key')
 
-def writeSubsDB(id):
-	try:
-		with sqldb.cursor() as cursor:
-			cursor.execute("INSERT INTO `users` (`id`) VALUES ('" + str(id) + "')")
-			print(cursor.fetchone())
-	finally:
-		sqldb.close()
-
-def readSubsDB():
-	try:
-		with sqldb.cursor() as cursor:
-			cursor.execute("SELECT id FROM users;")
-			ids = []
-			for row in cursor:
-			    ids.append(str(row[0]))
-			return ids
-	finally:
-		sqldb.close()
-		
-subs = readSubsDB()
-print(str(subs))
-
 vkStatus = ''
 def setStatus(stat):
 	vk_l = 'https://api.vk.com/method/'
@@ -145,14 +123,36 @@ session = requests.Session()
 rssUpdDate = 0
 lastPostId = 0
 
+def writeSubsDB(id):
+	try:
+		with sqldb.cursor() as cursor:
+			cursor.execute("INSERT INTO `users` (`id`) VALUES ('" + str(id) + "')")
+			print(cursor.fetchone())
+	finally:
+		sqldb.close()
+
+def readSubsDB():
+	try:
+		with sqldb.cursor() as cursor:
+			cursor.execute("SELECT id FROM users;")
+			ids = []
+			for row in cursor:
+			    ids.append(str(row[0]))
+			return ids
+	finally:
+		sqldb.close()
+		
+subs = readSubsDB()
+print(str(subs))
+
 def readSysDB():
-	global rssUpdDate, lastPostId
+	#global rssUpdDate, lastPostId
 	try:
 		with sqldb.cursor() as cursor:
 			cursor.execute("SELECT * FROM sysvars;")
 			#ids = []
-			for row in cursor:
-			    print(str(row))
+			#for row in cursor:
+			#    print(str(row))
 			    #ids.append(str(row))
 			#return ids
 	finally:
