@@ -113,15 +113,15 @@ def getSteam():
 		
 session = requests.Session()
 lastCheck = datetime.now().timestamp() - 3600
+rssUpdDate = 0
 lastPostId = 0
 
-def parseFeed():
-	global lastCheck, lastPostId
-	nowTime = int(datetime.today().timestamp())
-	
-	if nowTime > (lastCheck + 300):
-		print('Updating FL RSS...')
-		rss = ET.fromstring(requests.get('https://freelance.ua/orders/rss').text.encode('utf-8'))
+def parseFeed(force):
+	global rssUpdDate, lastPostId
+	rss = ET.fromstring(requests.get('https://freelance.ua/orders/rss').text.encode('utf-8'))
+	rssPubDate = datetime.strptime(rss[0][5].text, '%a, %d %b %Y %H:%M:%S %z').timestamp()
+	if rssPubDate > rssUpdDate or force:
+		print('Parsing freelance.ua...')
 		rp = session.get('https://freelance.ua/')
 		soup = BeautifulSoup(rp.text, "lxml")
 		orders = soup.find_all("li", class_="j-order")
@@ -147,7 +147,7 @@ def parseFeed():
 					bot.sendMessage(chat_id=tg_admin, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
 					print('Новый заказ: ' + name)
 					lastPostId = pid
-		lastCheck = datetime.now().timestamp()
+		rssUpdDate = rssPubDate
 
 # Telegram Updater
 updater = Updater(token=tg_token)
@@ -159,11 +159,13 @@ def tgmStart(bot, update):
 	
 def tgmHelp(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-    bot.sendMessage(chat_id=update.message.chat_id, text='Команды: \n/subscribe - позволяет получать заказы в личные сообщения.\n/unsubscribe  - отписаться от получения заказов.\n/login - авторизоваться на сайте.\n/offer [id] - предложить свою кандидатуру.\n/offermsg [text] - сообщение предложения', parse_mode=telegram.ParseMode.HTML)
+    bot.sendMessage(chat_id=update.message.chat_id, text='Команды: \n/subscribe - позволяет получать заказы в личные сообщения.\n/unsubscribe  - отписаться от получения заказов.\n/help - помощь по командам.\n/login - авторизоваться на сайте.\n/offer [id] - предложить свою кандидатуру.\n/offermsg [text] - сообщение предложения', parse_mode=telegram.ParseMode.HTML)
 
-start_handler = CommandHandler('start', tgmStart)
-dispatcher.addHandler(start_handler)
-
+def tgmForceUpd(bot, update):
+    bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
+    parseFeed(True)
+	
+dispatcher.addHandler(CommandHandler('start', tgmStart))
 dispatcher.addHandler(CommandHandler('help', tgmHelp))
 
 updater.start_polling()
