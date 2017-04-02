@@ -10,24 +10,23 @@ import telegram
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import pymysql
 
+sqldb = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True)
 
-conn = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True)
-cur = conn.cursor()
+#cur = sqldb.cursor()
 
-cur.execute("SELECT id FROM users;")
+#cur.execute("SELECT id FROM users;")
+#for row in cur:
+#    print(row[0])
 
 #cur.execute("INSERT INTO `users` (`id`) VALUES ('111222333')")
 #print(cur.description)
 #print()
 
-for row in cur:
-    print(row[0])
-
 #cur.execute("INSERT INTO users VALUES ('1488228')")
 #cur.execute("DELETE FROM users WHERE id='122734122'")
 
-cur.close()
-conn.close()
+#cur.close()
+#sqldb.close()
 
 
 tg_token = '358729650:AAH92APduIYym0C50XGDCscYxzRJppXaqM4'
@@ -43,6 +42,9 @@ lastfm_user = os.environ.get('lfm_user')
 lastfm_token = os.environ.get('lfm_token')
 steam_user = os.environ.get('steam_user')
 steam_api_key = os.environ.get('steam_key')
+
+subs = readSubsDB()
+print(str(subs))
 
 vkStatus = ''
 print('http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=' + lastfm_user + '&api_key=' + lastfm_token + '&format=json')
@@ -132,6 +134,24 @@ def getSteam():
 	except:
 		print('Error connecting to steam')
 		return 'Steam error'
+		
+def writeSubsDB(id):
+	try:
+		with sqldb.cursor() as cursor:
+			cursor.execute("INSERT INTO `users` (`id`) VALUES ('" + str(id) + "')")
+			print(cursor.fetchone())
+	finally:
+		sqldb.close()
+
+def readSubsDB():
+	try:
+		with sqldb.cursor() as cursor:
+			cursor.execute("SELECT id FROM users;")
+			ids = []
+			for row in cursor:
+			    ids.append(str(row[0]))
+	finally:
+		sqldb.close()
 		
 session = requests.Session()
 rssUpdDate = 0
