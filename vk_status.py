@@ -10,12 +10,12 @@ import telegram
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import pymysql
 
-conn = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243')
+conn = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True)
 cur = conn.cursor()
 
-cur.execute("SELECT id FROM heroku_6c46a1f67ca0243.users;")
+cur.execute("SELECT id FROM users;")
 #print(cur.description)
-print()
+#print()
 
 for row in cur:
     print(row)
