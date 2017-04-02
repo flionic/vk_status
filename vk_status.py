@@ -9,6 +9,10 @@ import locale
 import telegram
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import ast
+import mysql.connector
+
+cnx = mysql.connector.connect(user='b0c8671f5877e8', password='1798e26c', host='us-cdbr-iron-east-03.cleardb.net', database='heroku_6c46a1f67ca0243')
+cnx.close()
 
 tg_token = '358729650:AAH92APduIYym0C50XGDCscYxzRJppXaqM4'
 tg_admin = '37772301'
@@ -180,8 +184,8 @@ updater.start_polling()
 while True:
 	status = getSteam() + getLastFm()
 	if status != vkStatus:
+		print(status)
 		setStatus(status)
 		vkStatus = status
-		print(status)
 	parseFeed()
 	time.sleep(3)
