@@ -11,16 +11,21 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import pymysql
 
 conn = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243')
-#cur = conn.cursor()
-#cur.execute("SELECT * FROM users")
-#
-#print(cur.description)
-#print()
-#
-#for row in cur:
-#    print(row)
-#
-#cur.close()
+cur = conn.cursor()
+cur.execute("SELECT * FROM heroku_6c46a1f67ca0243.users;")
+
+print(cur.description)
+print()
+
+lur.execute('INSERT INTO users VALUES (\'122734122\');')
+print(lur.description)
+print()
+
+for row in cur:
+    print(row)
+
+cur.close()
+lur.close()
 conn.close()
 
 tg_token = '358729650:AAH92APduIYym0C50XGDCscYxzRJppXaqM4'
