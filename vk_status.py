@@ -43,11 +43,28 @@ lastfm_token = os.environ.get('lfm_token')
 steam_user = os.environ.get('steam_user')
 steam_api_key = os.environ.get('steam_key')
 
+def writeSubsDB(id):
+	try:
+		with sqldb.cursor() as cursor:
+			cursor.execute("INSERT INTO `users` (`id`) VALUES ('" + str(id) + "')")
+			print(cursor.fetchone())
+	finally:
+		sqldb.close()
+
+def readSubsDB():
+	try:
+		with sqldb.cursor() as cursor:
+			cursor.execute("SELECT id FROM users;")
+			ids = []
+			for row in cursor:
+			    ids.append(str(row[0]))
+	finally:
+		sqldb.close()
+		
 subs = readSubsDB()
 print(str(subs))
 
 vkStatus = ''
-print('http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=' + lastfm_user + '&api_key=' + lastfm_token + '&format=json')
 def setStatus(stat):
 	vk_l = 'https://api.vk.com/method/'
 	token = '&access_token=' + vk_token + '&v=' + '5.52'
@@ -134,24 +151,6 @@ def getSteam():
 	except:
 		print('Error connecting to steam')
 		return 'Steam error'
-		
-def writeSubsDB(id):
-	try:
-		with sqldb.cursor() as cursor:
-			cursor.execute("INSERT INTO `users` (`id`) VALUES ('" + str(id) + "')")
-			print(cursor.fetchone())
-	finally:
-		sqldb.close()
-
-def readSubsDB():
-	try:
-		with sqldb.cursor() as cursor:
-			cursor.execute("SELECT id FROM users;")
-			ids = []
-			for row in cursor:
-			    ids.append(str(row[0]))
-	finally:
-		sqldb.close()
 		
 session = requests.Session()
 rssUpdDate = 0
