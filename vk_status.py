@@ -165,6 +165,8 @@ start_handler = CommandHandler('start', tgmStart)
 dispatcher.addHandler(start_handler)
 
 dispatcher.addHandler(CommandHandler('help', tgmHelp))
+
+updater.start_polling()
 	
 while True:
 	status = getSteam() + getLastFm()
