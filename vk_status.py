@@ -10,7 +10,8 @@ import telegram
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import pymysql, pymysql.cursors
 
-sqldb = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True)
+sqldb = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True) 
+sqldbc = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True, charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor) 
 
 #cur = sqldb.cursor()
 #cur.execute("SELECT id FROM users;")
@@ -156,7 +157,7 @@ def updateSysDB(name, value):
 
 def writeSubsDB(uid):
 	try:
-		with sqldb.cursor() as cursor:
+		with sqldbc.cursor() as cursor:
 			sql = "INSERT INTO `users` (`id`) VALUES (%s)"
 			cursor.execute(sql, (uid))
 			#cursor.execute("INSERT INTO `users` (`id`) VALUES ('" + str(id) + "')")
