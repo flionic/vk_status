@@ -144,7 +144,8 @@ def parseFeed(force=False):
 				if (pid > lastPostId) or force:
 					msg = '🔗 [{}]({})\n\n💵 {}\n\n🆔 {}\n🗃 {}\n🕒️ {}\n\n📝 {}'.format(name, link, price, pid, categ, date, desc)
 					bot.sendMessage(chat_id=tg_admin, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
-					print('Новый заказ: ' + name)
+					if not force:
+						print('Новый заказ: ' + name)
 					lastPostId = pid
 		rssUpdDate = rssPubDate
 
