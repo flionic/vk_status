@@ -148,7 +148,24 @@ def parseFeed():
 					print('Новый заказ: ' + name)
 					lastPostId = pid
 		lastCheck = datetime.now().timestamp()
-		
+
+# Telegram Updater
+updater = Updater(token=tgToken)
+dispatcher = updater.dispatcher
+
+def tgmStart(bot, update):
+    bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
+    bot.sendMessage(chat_id=update.message.chat_id, text="Привет! Это бот сайта freelance.ua. Здесь вы можете отслеживать ленту заказов в реальном времени, получая уведомления прямо на свой телефон. Список команд: /help", parse_mode=telegram.ParseMode.HTML)
+	
+def tgmHelp(bot, update):
+    bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
+    bot.sendMessage(chat_id=update.message.chat_id, text='Команды: \n/subscribe - позволяет получать заказы в личные сообщения.\n/unsubscribe  - отписаться от получения заказов.\n/login - авторизоваться на сайте.\n/offer [id] - предложить свою кандидатуру.\n/offermsg [text] - сообщение предложения', parse_mode=telegram.ParseMode.HTML)
+
+start_handler = CommandHandler('start', tgmStart)
+dispatcher.addHandler(start_handler)
+
+dispatcher.addHandler(CommandHandler('help', tgmHelp))
+	
 while True:
 	status = getSteam() + getLastFm()
 	if status != vkStatus:
