@@ -10,7 +10,7 @@ import telegram
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import pymysql, pymysql.cursors
 
-#sqldb = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True) 
+sqldb = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True) 
 sqldbc = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True, charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor) 
 
 tg_token = os.environ.get('tg_token')
@@ -96,7 +96,7 @@ def getSteam():
 			if timeInt[1] > 0:
 				timeStr += str(timeInt[1]) + ' ч. '
 
-			if timeInt[2] > 0 and timeInt[0] == 0:
+			if timeInt[2] > 0 and timeInt[0] == 0 and timeInt[1] < 5:
 				timeStr += str(timeInt[2]) + ' мин. '
 
 			if timeInt[3] > 0 and timeInt[2] == 0 and timeInt[1] == 0:
@@ -174,7 +174,7 @@ def delSubDB(uid):
 
 def readSubsDB():
 	try:
-		with sqldbc.cursor() as cursor:
+		with sqldb.cursor() as cursor:
 			cursor.execute("SELECT id FROM users;")
 			ids = []
 			for row in cursor:
