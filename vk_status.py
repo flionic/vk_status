@@ -126,23 +126,16 @@ lastPostId = 0
 
 
 def readSysDB():
-	#global rssUpdDate, lastPostId
+	global rssUpdDate, lastPostId
 	try:
 		with sqldbc.cursor() as cursor:
 			# Read a single record
 			sql = "SELECT `name`, `value` FROM `sysvars`"
 			cursor.execute(sql)
 			result = cursor.fetchone()
-			print(result)
+			print(row[0])
 			for row in cursor:
 			    print(str(row))
-		#with sqldbc.cursor() as cursor:
-		#	cursor.execute("SELECT `name`, `value` FROM `sysvars`")
-		#	#ids = []
-		#	for row in cursor:
-		#	    print(str(row))
-		#	    #ids.append(str(row))
-		#	#return ids
 	finally:
 		sqldbc.close()
 		
@@ -196,7 +189,6 @@ def readSubsDB():
 			cursor.execute("SELECT id FROM users;")
 			ids = []
 			for row in cursor:
-			    #print(row)
 			    ids.append(str(row[0]))
 			return ids
 	finally:
