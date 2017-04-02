@@ -8,6 +8,7 @@ import xml.etree.ElementTree as ET
 import locale
 import telegram
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+import ast
 
 tg_token = '358729650:AAH92APduIYym0C50XGDCscYxzRJppXaqM4'
 tg_admin = '37772301'
@@ -23,7 +24,8 @@ lastfm_token = os.environ.get('lfm_token')
 steam_user = os.environ.get('steam_user')
 steam_api_key = os.environ.get('steam_key')
 
-os.environ["tg_users"] = ['37772301', '37772300']
+os.environ["tg_users"] = '[{37772301: {login: bionic_leha, pass: 123}}]'
+bot_users = ast.literal_eval(os.environ.get("tg_users").read())
 
 vkStatus = ''
 def setStatus(stat):
