@@ -146,7 +146,10 @@ def parseFeed():
 				price = i.find('span').text
 				desc = i.find('p').text
 				pid = int(link[link.find('orders/')+7:link.find('-')])
-				if postTimeStamp > lastCheck:
+				print('Post id: ' + str(pid))
+				print('lastPost id: ' + str(lastPostId))
+				print('pid > lastPostId: ' + pid > lastPostId)
+				if pid > lastPostId:
 					msg = '[{}]({})\n\n{}\n\n{}\n{}\n\n{}'.format(name, link, price, categ, date, desc)
 					sendMsg(msg)
 					print('Новый заказ: ' + name)
