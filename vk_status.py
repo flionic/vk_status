@@ -150,7 +150,7 @@ def parseFeed():
 		lastCheck = datetime.now().timestamp()
 
 # Telegram Updater
-updater = Updater(token=tgToken)
+updater = Updater(token=tg_token)
 dispatcher = updater.dispatcher
 
 def tgmStart(bot, update):
