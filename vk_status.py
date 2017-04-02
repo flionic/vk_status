@@ -245,6 +245,7 @@ dispatcher = updater.dispatcher
 def tgmStart(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
     bot.sendMessage(chat_id=update.message.chat_id, text="Привет! Это бот сайта freelance.ua. Здесь вы можете отслеживать ленту заказов в реальном времени, получая уведомления прямо на свой телефон. Список команд: /help", parse_mode=telegram.ParseMode.HTML)
+    bot.sendMessage(chat_id=update.message.chat_id, text=update.message.chat_id, parse_mode=telegram.ParseMode.HTML)
 	
 def tgmHelp(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
@@ -270,7 +271,7 @@ def tgmGetOffers(bot, update):
 #	
 dispatcher.add_handler(CommandHandler('start', tgmStart))
 dispatcher.add_handler(CommandHandler('help', tgmHelp))
-dispatcher.add_handler(CommandHandler('getOffers', tgmGetOffers))
+dispatcher.add_handler(CommandHandler('get_offers', tgmGetOffers))
 #dispatcher.add_handler(CommandHandler('subscribe', tgmSubs))
 #dispatcher.add_handler(CommandHandler('unsubscribe', tgmUnsub))
 
