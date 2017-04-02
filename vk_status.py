@@ -143,9 +143,11 @@ def readSysDB():
 def updateSysDB(name, value):
 	try:
 		with sqldbc.cursor() as cursor:
-			sql = "UPDATE `sysvars` SET `value`=%s WHERE `id`=%s"
-			data = (value, '1')
-			cursor.execute(sql, data)
+			#sql = "UPDATE `sysvars` SET `value`=%s WHERE `id`=%s"
+			#data = (value, '1')
+			#cursor.execute(sql, data)
+			sql = "UPDATE `sysvars` SET `value`=`2222` WHERE `id`=`1`"
+			cursor.execute(sql)
 	finally:
 		sqldbc.close()
 		
