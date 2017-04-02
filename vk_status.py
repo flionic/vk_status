@@ -17,15 +17,14 @@ cur.execute("SELECT * FROM heroku_6c46a1f67ca0243.users;")
 print(cur.description)
 print()
 
-lur.execute('INSERT INTO users VALUES (\'122734122\');')
-print(lur.description)
-print()
-
 for row in cur:
     print(row)
+	
+cur.execute('INSERT INTO users VALUES (\'122734122\');')
+print(cur.description)
+print()
 
 cur.close()
-lur.close()
 conn.close()
 
 tg_token = '358729650:AAH92APduIYym0C50XGDCscYxzRJppXaqM4'
