@@ -179,7 +179,7 @@ bot = telegram.Bot(token=tg_token)
 getBot = bot.getMe();
 print('Telegram auth: {} as {}, id: {}'.format(getBot.first_name, getBot.username, getBot.id))
 
-def parseFeed(force=False):
+def parseFeed(force=False, fid=''):
 	global rssUpdDate, lastPostId
 	rss = ET.fromstring(requests.get('https://freelance.ua/orders/rss').text.encode('utf-8'))
 	locale.setlocale(locale.LC_TIME, "en_US.UTF-8")
@@ -207,11 +207,14 @@ def parseFeed(force=False):
 				pid = int(link[link.find('orders/')+7:link.find('-')])
 				if (pid > lastPostId) or force:
 					msg = '🔗 [{}]({})\n\n💵 {}\n\n🆔 {}\n🗃 {}\n🕒️ {}\n\n📝 {}'.format(name, link, price, pid, categ, date, desc)
-					bot.sendMessage(chat_id=tg_admin, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
 					if not force:
+						for id in subs:
+							bot.sendMessage(chat_id=id, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
 						print('New offer: ' + name)
 						lastPostId = pid
 						rssUpdDate = rssPubDate
+					if force:
+						bot.sendMessage(chat_id=fid, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
 
 # Telegram Updater
 updater = Updater(token=tg_token)
@@ -227,7 +230,7 @@ def tgmHelp(bot, update):
 
 def tgmGetOffers(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-    parseFeed(force=True)
+    parseFeed(True, update.message.chat_id)
 	
 dispatcher.add_handler(CommandHandler('start', tgmStart))
 dispatcher.add_handler(CommandHandler('help', tgmHelp))
