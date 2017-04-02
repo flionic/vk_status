@@ -34,14 +34,14 @@ def setStatus(stat):
 		r = requests.get(vk_l + 'status.set?text=' + stat + token).json()
 		try:
 			if r['response'] == 1:
-				print('Статус установлен')
+				print('Status is set')
 		except:
 			try:
-				print("VK отдал ошибку: " + r['error']['error_msg'])
+				print("VK returned error: " + r['error']['error_msg'])
 			except:
-				print('Запрос к ВК вернул: ' + r)
+				print('Request from VK: ' + r)
 	except:
-		print('Ошибка подключения к VK')
+		print('Error connecting to VK')
 		
 def getLastFm():
 	lfm_api = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=' + lastfm_user + '&api_key=' + lastfm_token + '&format=json'
@@ -57,8 +57,8 @@ def getLastFm():
 		except:
 			return ''
 	except:
-		print('Ошибка подключения к LastFM')
-		return ' | ошибка LastFM'
+		print('Error connecting to LastFM')
+		return ' | LastFM error'
 
 def getSteam():
 	try:
@@ -111,8 +111,8 @@ def getSteam():
 			stStatus = 'Steam: ' + 'был в сети ' + timeStr + 'назад'
 		return stStatus
 	except:
-		print('Ошибка подключения к steam')
-		return 'Ошибка Steam'
+		print('Error connecting to steam')
+		return 'Steam error'
 		
 session = requests.Session()
 lastCheck = datetime.now().timestamp() - 3600
@@ -123,7 +123,7 @@ def parseFeed():
 	nowTime = int(datetime.today().timestamp())
 	
 	if nowTime > (lastCheck + 300):
-		print('Обновляю RSS ленту...')
+		print('Updating FL RSS...')
 		rss = ET.fromstring(requests.get('https://freelance.ua/orders/rss').text.encode('utf-8'))
 		rp = session.get('https://freelance.ua/')
 		soup = BeautifulSoup(rp.text, "lxml")
@@ -147,7 +147,7 @@ def parseFeed():
 				pid = int(link[link.find('orders/')+7:link.find('-')])
 				print('Post id: ' + str(pid))
 				print('lastPost id: ' + str(lastPostId))
-				print('pid > lastPostId: ' + pid > lastPostId)
+				print('pid > lastPostId: ' + (pid > lastPostId))
 				if pid > lastPostId:
 					msg = '[{}]({})\n\n{}\n\n{}\n{}\n\n{}'.format(name, link, price, categ, date, desc)
 					sendMsg(msg)
