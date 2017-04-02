@@ -119,12 +119,11 @@ lastCheck = datetime.now().timestamp() - 3600
 lastPostId = 0
 
 def parseFeed():
-	global lastCheck
-	global name, link, categ, pdate, price, desc
+	global lastCheck, lastPostId
 	nowTime = int(datetime.today().timestamp())
 	
 	if nowTime > (lastCheck + 300):
-		print('Updating RSS feed...')
+		print('Обновляю RSS ленту...')
 		rss = ET.fromstring(requests.get('https://freelance.ua/orders/rss').text.encode('utf-8'))
 		rp = session.get('https://freelance.ua/')
 		soup = BeautifulSoup(rp.text, "lxml")
