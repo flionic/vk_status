@@ -120,8 +120,10 @@ def readSysDB():
 			for row in cursor:
 				if row['name'] == 'lastPostId':
 					lastPostId = int(row['value'])
+					print(str(lastPostId))
 				if row['name'] == 'rssUpdDate':
 					rssUpdDate = int(row['value'])
+					print(str(rssUpdDate))
 				#print(str(row))
 	except:
 		pass
