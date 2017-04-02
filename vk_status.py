@@ -8,11 +8,20 @@ import xml.etree.ElementTree as ET
 import locale
 import telegram
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-import ast
-import mysql.connector
+import pymysql
 
-cnx = mysql.connector.connect(user='b0c8671f5877e8', password='1798e26c', host='us-cdbr-iron-east-03.cleardb.net', database='heroku_6c46a1f67ca0243')
-cnx.close()
+conn = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243')
+#cur = conn.cursor()
+#cur.execute("SELECT * FROM users")
+#
+#print(cur.description)
+#print()
+#
+#for row in cur:
+#    print(row)
+#
+#cur.close()
+conn.close()
 
 tg_token = '358729650:AAH92APduIYym0C50XGDCscYxzRJppXaqM4'
 tg_admin = '37772301'
@@ -27,11 +36,6 @@ lastfm_user = os.environ.get('lfm_user')
 lastfm_token = os.environ.get('lfm_token')
 steam_user = os.environ.get('steam_user')
 steam_api_key = os.environ.get('steam_key')
-
-os.environ['tg_users'] = '[{\'id\': \'37772301\', \'login\': \'bionic_leha\', \'pass\': \'123\'}]'
-bot_users = ast.literal_eval(os.environ.get('tg_users'))
-#print(bot_users[0])
-print(str(bot_users))
 
 vkStatus = ''
 def setStatus(stat):
