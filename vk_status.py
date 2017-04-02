@@ -120,7 +120,6 @@ def parseFeed(force=False):
 	rss = ET.fromstring(requests.get('https://freelance.ua/orders/rss').text.encode('utf-8'))
 	locale.setlocale(locale.LC_TIME, "en_US.UTF-8")
 	rssPubDate = datetime.strptime(rss[0][5].text, '%a, %d %b %Y %H:%M:%S %z').timestamp()
-	print(str(force))
 	if (rssPubDate > rssUpdDate) or force:
 		print('Parsing freelance.ua...')
 		soup = BeautifulSoup(session.get('https://freelance.ua/').text, "lxml")
@@ -142,7 +141,7 @@ def parseFeed(force=False):
 				price = i.find('span').text
 				desc = i.find('p').text
 				pid = int(link[link.find('orders/')+7:link.find('-')])
-				if pid > lastPostId:
+				if (pid > lastPostId) or force:
 					msg = '🔗 [{}]({})\n\n💵 {}\n\n🆔 {}\n🗃 {}\n🕒️ {}\n\n📝 {}'.format(name, link, price, pid, categ, date, desc)
 					bot.sendMessage(chat_id=tg_admin, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
 					print('Новый заказ: ' + name)
