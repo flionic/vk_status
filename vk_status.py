@@ -10,7 +10,7 @@ import telegram
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import pymysql, pymysql.cursors
 
-sqldb = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True) 
+#sqldb = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True) 
 sqldbc = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True, charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor) 
 
 tg_token = os.environ.get('tg_token')
@@ -133,13 +133,11 @@ def readSysDB():
 def updateSysDB(name, value):
 	try:
 		with sqldbc.cursor() as cursor:
-			sql = "UPDATE `sysvars` SET `value`=%s WHERE `id`=%s"
-			data = (value, '1')
+			sql = "UPDATE `sysvars` SET `value`=%s WHERE `name`=%s"
+			data = (value, name)
 			cursor.execute(sql, data)
 	except:
 		pass
-	#finally:
-		#sqldbc.close()
 		
 def createSysDB(name, value):
 	try:
@@ -148,11 +146,9 @@ def createSysDB(name, value):
 			cursor.execute(sql, (name, value))
 	except:
 		pass
-	#finally:
-		#sqldbc.close()
 		
 #readSysDB()
-updateSysDB('lastPostId', '228')
+updateSysDB('lastPostId', '111')
 
 def addSubDB(uid):
 	try:
@@ -161,7 +157,6 @@ def addSubDB(uid):
 			cursor.execute(sql, (uid))
 			print('Added subscriber, id: ' + str(uid))
 			bot.sendMessage(chat_id=uid, text="Подписка оформлена", parse_mode=telegram.ParseMode.HTML)
-			#sqldbc.close()
 	except:
 		print('Error writing Sub ID')
 		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка. Возможно, вы уже подписаны.", parse_mode=telegram.ParseMode.HTML)	
@@ -173,14 +168,13 @@ def delSubDB(uid):
 			cursor.execute(sql, (uid))
 			print('Deleted subscriber, id: ' + str(uid))
 			bot.sendMessage(chat_id=uid, text="Подписка отменена", parse_mode=telegram.ParseMode.HTML)
-			#sqldbc.close()
 	except:
 		print('Error deleting Sub ID')
 		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка. Возможно, вы еще не подписаны.", parse_mode=telegram.ParseMode.HTML)
 
 def readSubsDB():
 	try:
-		with sqldb.cursor() as cursor:
+		with sqldbc.cursor() as cursor:
 			cursor.execute("SELECT id FROM users;")
 			ids = []
 			for row in cursor:
