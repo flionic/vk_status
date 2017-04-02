@@ -43,6 +43,7 @@ steam_user = os.environ.get('steam_user')
 steam_api_key = os.environ.get('steam_key')
 
 vkStatus = ''
+print('http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=' + lastfm_user + '&api_key=' + lastfm_token + '&format=json')
 def setStatus(stat):
 	vk_l = 'https://api.vk.com/method/'
 	token = '&access_token=' + vk_token + '&v=' + '5.52'
@@ -71,7 +72,6 @@ def getLastFm():
 				lfm_track = lfm_track.replace('#', '%23')
 				return lfm_track
 		except:
-			print(str(lfm))
 			return ''
 	except:
 		print('Error connecting to LastFM')
