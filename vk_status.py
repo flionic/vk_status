@@ -111,13 +111,15 @@ def getSteam():
 def readSysDB(name):
 	try:
 		with sqldbc.cursor() as cursor:
-			sql = "SELECT `name`, `value` FROM `sysvars`"
-			cursor.execute(sql)
-			result = cursor.fetchone()
+			#sql = "SELECT `name`, `value` FROM `sysvars`"
+			sql = "SELECT value FROM sysvars where name=(%s)"
+			cursor.execute(sql, (name))
+			#result = cursor.fetchone()
 			for row in cursor:
-				if row['name'] == name:
-					print(str(row['name']))
-					return row['value']
+				print(str(row))
+				#if row['name'] == name:
+				#	print(str(row['name']))
+				#	return row['value']
 	except:
 		print('Error getting sysvars from db')
 	#finally:
@@ -217,7 +219,7 @@ def parseFeed(force=False, fid=''):
 						if force:
 							bot.sendMessage(chat_id=fid, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
 	except:
-		pass
+		print('Error parse freelance.ua')
 		
 # Telegram
 tg_admin = '37772301'
