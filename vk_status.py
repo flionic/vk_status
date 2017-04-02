@@ -20,7 +20,7 @@ cur = conn.cursor()
 #for row in cur:
 #    print(row)
 
-cur.execute("INSERT INTO users (id) VALUES (12273412222);")
+cur.execute("INSERT INTO users VALUES ('12273412222')")
 print(cur.description)
 print()
 
