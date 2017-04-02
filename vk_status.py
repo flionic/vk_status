@@ -108,10 +108,7 @@ def getSteam():
 		print('Error connecting to steam')
 		return 'Steam error'
 		
-session = requests.Session()
-rssUpdDate = 0
-lastPostId = 0
-
+# MySQL
 def readSysDB():
 	global rssUpdDate, lastPostId
 	try:
@@ -146,8 +143,6 @@ def createSysDB(name, value):
 			cursor.execute(sql, (name, value))
 	except:
 		print('Error create sysvar in db')
-		
-readSysDB()
 
 def addSubDB(uid):
 	try:
@@ -181,9 +176,12 @@ def readSubsDB():
 			return ids
 	except:
 		print('Error reading subs from db')
-	#finally:
-		#sqldb.close()
-		
+	
+session = requests.Session()
+rssUpdDate = 0
+lastPostId = 0
+readSysDB()
+	
 tg_admin = '37772301'
 bot = telegram.Bot(token=tg_token)
 getBot = bot.getMe();
@@ -226,8 +224,8 @@ def parseFeed(force=False, fid=''):
 						print('New offer: ' + name)
 						lastPostId = pid
 						rssUpdDate = rssPubDate
-						updateSysDB('lastPostId', pid)
-						updateSysDB('rssUpdDate', rssPubDate)
+						updateSysDB('lastPostId', str(pid))
+						updateSysDB('rssUpdDate', str(rssPubDate))
 					if force:
 						bot.sendMessage(chat_id=fid, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
 
