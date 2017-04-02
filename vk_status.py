@@ -112,20 +112,17 @@ def getSteam():
 		return 'Steam error'
 		
 session = requests.Session()
-lastCheck = datetime.now().timestamp() - 3600
 rssUpdDate = 0
 lastPostId = 0
 
-def parseFeed():
+def parseFeed(force=False):
 	global rssUpdDate, lastPostId
 	rss = ET.fromstring(requests.get('https://freelance.ua/orders/rss').text.encode('utf-8'))
-	print(str(rss[0][5].text))
 	locale.setlocale(locale.LC_TIME, "en_US.UTF-8")
 	rssPubDate = datetime.strptime(rss[0][5].text, '%a, %d %b %Y %H:%M:%S %z').timestamp()
-	if rssPubDate > rssUpdDate:
+	if rssPubDate > rssUpdDate or force:
 		print('Parsing freelance.ua...')
-		rp = session.get('https://freelance.ua/')
-		soup = BeautifulSoup(rp.text, "lxml")
+		soup = BeautifulSoup(session.get('https://freelance.ua/').text, "lxml")
 		orders = soup.find_all("li", class_="j-order")
 		
 		for i in reversed(orders):
@@ -165,7 +162,7 @@ def tgmHelp(bot, update):
 
 def tgmGetOffers(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-    parseFeed()
+    parseFeed(force=True)
 	
 dispatcher.addHandler(CommandHandler('start', tgmStart))
 dispatcher.addHandler(CommandHandler('help', tgmHelp))
