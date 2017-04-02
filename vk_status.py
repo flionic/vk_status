@@ -13,8 +13,6 @@ lastfm_token = os.environ.get('lfm_token')
 steam_user = os.environ.get('steam_user')
 steam_api_key = os.environ.get('steam_key')
 
-locale.setlocale(locale.LC_TIME, "ru_RU.UTF-8")
-
 vkStatus = ''
 def setStatus(stat):
 	vk_l = 'https://api.vk.com/method/'
@@ -128,7 +126,9 @@ def parseFeed():
 					if item.find('link').text == i.find('a').get('href'):
 						categ = item.find('category').text
 						pdate = item.find('pubDate').text
+						locale.setlocale(locale.LC_TIME, "en_US.UTF-8")
 						postTimeStamp = int(datetime.strptime(item.find('pubDate').text, '%a, %d %b %Y %H:%M:%S %z').timestamp())
+						locale.setlocale(locale.LC_TIME, "ru_RU.UTF-8")
 						date = postTimeStamp.strftime('%a, %d %b %Y %H:%M:%S')
 				price = i.find('span').text
 				desc = i.find('p').text
