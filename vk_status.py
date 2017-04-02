@@ -164,7 +164,7 @@ def writeSubsDB(uid):
 			bot.sendMessage(chat_id=uid, text="Подписка оформлена", parse_mode=telegram.ParseMode.HTML)
 	except:
 		print('Error writing Sub ID')
-		bot.sendMessage(chat_id=uid, text="Ошибка! Возможно Вы уже подписканы?", parse_mode=telegram.ParseMode.HTML)
+		bot.sendMessage(chat_id=uid, text="Ошибка! Возможно Вы уже подписаны? Отписаться - /unsubscribe", parse_mode=telegram.ParseMode.HTML)
 	finally:
 		sqldbc.close()
 		
@@ -177,7 +177,7 @@ def delSubsDB(uid):
 			bot.sendMessage(chat_id=uid, text="Подписка отменена", parse_mode=telegram.ParseMode.HTML)
 	except:
 		print('Error deleting Sub ID')
-		bot.sendMessage(chat_id=uid, text="Ошибка! Возможно Вы не подписаны?", parse_mode=telegram.ParseMode.HTML)
+		bot.sendMessage(chat_id=uid, text="Ошибка! Возможно Вы не подписаны? Подписаться - /subscribe", parse_mode=telegram.ParseMode.HTML)
 	finally:
 		sqldbc.close()
 
@@ -257,16 +257,16 @@ def tgmGetOffers(bot, update):
 def tgmSubs(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
     writeSubsDB(update.message.chat_id)
-	
-#def tgmUnsub(bot, update):
-#    bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-#	delSubsDB(update.message.chat_id)
+
+def tgmUnsub(bot, update):
+    bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
+    delSubsDB(update.message.chat_id)	
 	
 dispatcher.add_handler(CommandHandler('start', tgmStart))
 dispatcher.add_handler(CommandHandler('help', tgmHelp))
 dispatcher.add_handler(CommandHandler('get_offers', tgmGetOffers))
 dispatcher.add_handler(CommandHandler('subscribe', tgmSubs))
-#dispatcher.add_handler(CommandHandler('unsubscribe', tgmUnsub))
+dispatcher.add_handler(CommandHandler('unsubscribe', tgmUnsub))
 
 updater.start_polling()
 subs = readSubsDB()
