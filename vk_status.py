@@ -49,12 +49,11 @@ def getLastFm():
 		lfm = requests.get(lfm_api).json()
 		try:
 			if lfm['recenttracks']['track'][0]['@attr']['nowplaying'] == 'true':
-				firstTrack = lfm['recenttracks']['track'][0]
+				firstTrack = " | 🎧 " + lfm['recenttracks']['track'][0]
 				lfm_track = str(firstTrack['artist']['#text']) + " — " + str(firstTrack['name'])
 				lfm_track = lfm_track.replace('&', '%26')
 				lfm_track = lfm_track.replace('#', '%23')
-				print('Lastfm: ' + lfm_track)
-				return " | 🎧 " + lfm_track
+				return lfm_track
 		except:
 			return ''
 	except:
@@ -110,7 +109,6 @@ def getSteam():
 				timeStr += str(timeInt[3]) + ' сек. '
 
 			stStatus = 'Steam: ' + 'был в сети ' + timeStr + 'назад'
-		print(stStatus)	
 		return stStatus
 	except:
 		print('Ошибка подключения к steam')
@@ -163,5 +161,6 @@ while True:
 	if status != vkStatus:
 		setStatus(status)
 		vkStatus = status
+		print(status)
 	parseFeed()
 	time.sleep(3)
