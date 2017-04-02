@@ -10,6 +10,7 @@ import telegram
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import pymysql
 
+
 conn = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True)
 cur = conn.cursor()
 
@@ -27,6 +28,7 @@ for row in cur:
 
 cur.close()
 conn.close()
+
 
 tg_token = '358729650:AAH92APduIYym0C50XGDCscYxzRJppXaqM4'
 tg_admin = '37772301'
@@ -66,8 +68,8 @@ def getLastFm():
 		lfm = requests.get(lfm_api).json()
 		try:
 			if lfm['recenttracks']['track'][0]['@attr']['nowplaying'] == 'true':
-				firstTrack = " | 🎧 " + lfm['recenttracks']['track'][0]
-				lfm_track = str(firstTrack['artist']['#text']) + " — " + str(firstTrack['name'])
+				firstTrack = lfm['recenttracks']['track'][0]
+				lfm_track = " | 🎧 " + str(firstTrack['artist']['#text']) + " — " + str(firstTrack['name'])
 				lfm_track = lfm_track.replace('&', '%26')
 				lfm_track = lfm_track.replace('#', '%23')
 				return lfm_track
