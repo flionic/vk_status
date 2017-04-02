@@ -5,12 +5,15 @@ from datetime import datetime
 from math import floor
 from bs4 import BeautifulSoup
 import xml.etree.ElementTree as ET
+import locale
 
 vk_token = os.environ.get('vktoken')
 lastfm_user = os.environ.get('lfm_user')
 lastfm_token = os.environ.get('lfm_token')
 steam_user = os.environ.get('steam_user')
 steam_api_key = os.environ.get('steam_key')
+
+locale.setlocale(locale.LC_TIME, "ru")
 
 vkStatus = ''
 def setStatus(stat):
@@ -126,11 +129,12 @@ def parseFeed():
 						categ = item.find('category').text
 						pdate = item.find('pubDate').text
 						postTimeStamp = int(datetime.strptime(item.find('pubDate').text, '%a, %d %b %Y %H:%M:%S %z').timestamp())
+						date = postTimeStamp.strftime('%a, %d %b %Y %H:%M:%S %z')
 				price = i.find('span').text
 				desc = i.find('p').text
 				pid = int(link[link.find('orders/')+7:link.find('-')])
 				if postTimeStamp > lastCheck:
-					msg = '[{}]({})\n\n{}\n\n{}\n{}\n\n{}'.format(name, link, price, categ, pdate, desc)
+					msg = '[{}]({})\n\n{}\n\n{}\n{}\n\n{}'.format(name, link, price, categ, date, desc)
 					sendMsg(msg)
 					print('Новый заказ: ' + name)
 					lastPostId = pid
