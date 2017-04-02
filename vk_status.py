@@ -168,7 +168,7 @@ def createSysDB(name, value):
 def updateSysDB(name, value):
 	try:
 		with sqldb.cursor() as cursor:
-			cursor.execute("UPDATE sysvars SET name='lastPostId' WHERE value='1'")
+			cursor.execute("UPDATE sysvars SET name='lastPostId' WHERE value='1';")
 	finally:
 		sqldb.close()
 		
