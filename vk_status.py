@@ -129,7 +129,7 @@ def parseFeed():
 						categ = item.find('category').text
 						pdate = item.find('pubDate').text
 						postTimeStamp = int(datetime.strptime(item.find('pubDate').text, '%a, %d %b %Y %H:%M:%S %z').timestamp())
-						date = postTimeStamp.strftime('%a, %d %b %Y %H:%M:%S %z')
+						date = postTimeStamp.strftime('%a, %d %b %Y %H:%M:%S')
 				price = i.find('span').text
 				desc = i.find('p').text
 				pid = int(link[link.find('orders/')+7:link.find('-')])
