@@ -102,7 +102,7 @@ def getSteam():
 		return 'Ошибка Steam'
 		
 session = requests.Session()
-lastCheck = 0
+lastCheck = datetime.now().timestamp() - 3600
 
 def parseFeed():
 	global lastCheck
@@ -131,7 +131,7 @@ def parseFeed():
 				if postTimeStamp > lastCheck:
 					msg = name + "\n\n" + link + "\n\n" + categ + "\n\n" + pdate + "\n\n" + price + "\n\n" + desc
 					sendMsg(msg)
-					print(msg)
+					print('Новый заказ: ' + name)
 		print()
 		lastCheck = datetime.now().timestamp()
 		
