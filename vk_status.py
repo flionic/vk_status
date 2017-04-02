@@ -14,15 +14,18 @@ conn = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f58
 cur = conn.cursor()
 
 cur.execute("SELECT id FROM heroku_6c46a1f67ca0243.users;")
-print(cur.description)
+#print(cur.description)
 print()
 
 for row in cur:
     print(row)
 
-cur.execute("INSERT INTO users VALUES ('122734')")
-print(cur.description)
-print()
+#cur.execute("INSERT INTO users VALUES ('122734')")
+#print(cur.description)
+#print()
+
+sql = "INSERT INTO `users` (`id`) VALUES (%s)"
+cur.execute(sql, ('37772301'))
 
 cur.close()
 conn.close()
