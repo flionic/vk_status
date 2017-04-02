@@ -13,31 +13,19 @@ import pymysql
 sqldb = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True)
 
 #cur = sqldb.cursor()
-
 #cur.execute("SELECT id FROM users;")
 #for row in cur:
 #    print(row[0])
-
 #cur.execute("INSERT INTO `users` (`id`) VALUES ('111222333')")
 #print(cur.description)
 #print()
-
 #cur.execute("INSERT INTO users VALUES ('1488228')")
 #cur.execute("DELETE FROM users WHERE id='122734122'")
-
 #cur.close()
 #sqldb.close()
 
-
-tg_token = '358729650:AAH92APduIYym0C50XGDCscYxzRJppXaqM4'
-tg_admin = '37772301'
-
-bot = telegram.Bot(token=tg_token)
-
-getBot = bot.getMe();
-print('Telegram auth: {} as {}, id: {}'.format(getBot.first_name, getBot.username, getBot.id))
-
-vk_token = os.environ.get('vktoken')
+tg_token = os.environ.get('tg_token')
+vk_token = os.environ.get('vk_token')
 lastfm_user = os.environ.get('lfm_user')
 lastfm_token = os.environ.get('lfm_token')
 steam_user = os.environ.get('steam_user')
@@ -156,6 +144,24 @@ def getSteam():
 session = requests.Session()
 rssUpdDate = 0
 lastPostId = 0
+
+def readSysDB():
+	global rssUpdDate, lastPostId
+	try:
+		with sqldb.cursor() as cursor:
+			cursor.execute("SELECT * FROM sysvars;")
+			#ids = []
+			for row in cursor:
+			    print(str(row))
+			    #ids.append(str(row))
+			#return ids
+	finally:
+		sqldb.close()
+	
+tg_admin = '37772301'
+bot = telegram.Bot(token=tg_token)
+getBot = bot.getMe();
+print('Telegram auth: {} as {}, id: {}'.format(getBot.first_name, getBot.username, getBot.id))
 
 def parseFeed(force=False):
 	global rssUpdDate, lastPostId
