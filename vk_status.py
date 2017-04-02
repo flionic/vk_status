@@ -116,11 +116,11 @@ lastCheck = datetime.now().timestamp() - 3600
 rssUpdDate = 0
 lastPostId = 0
 
-def parseFeed(force=False):
+def parseFeed():
 	global rssUpdDate, lastPostId
 	rss = ET.fromstring(requests.get('https://freelance.ua/orders/rss').text.encode('utf-8'))
 	rssPubDate = datetime.strptime(rss[0][5].text, '%a, %d %b %Y %H:%M:%S %z').timestamp()
-	if rssPubDate > rssUpdDate or force:
+	if rssPubDate > rssUpdDate:
 		print('Parsing freelance.ua...')
 		rp = session.get('https://freelance.ua/')
 		soup = BeautifulSoup(rp.text, "lxml")
@@ -163,7 +163,7 @@ def tgmHelp(bot, update):
 
 def tgmGetOffers(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-    parseFeed(force=True)
+    parseFeed()
 	
 dispatcher.addHandler(CommandHandler('start', tgmStart))
 dispatcher.addHandler(CommandHandler('help', tgmHelp))
