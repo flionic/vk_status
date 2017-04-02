@@ -155,7 +155,7 @@ def createSysDB(name, value):
 #updateSysDB('lastPostId', '1')
 '''
 
-def writeSubsDB(uid):
+def addSubsDB(uid):
 	try:
 		with sqldbc.cursor() as cursor:
 			sql = "INSERT INTO `users` (`id`) VALUES (%s)"
@@ -256,7 +256,7 @@ def tgmGetOffers(bot, update):
 	
 def tgmSubs(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-    writeSubsDB(update.message.chat_id)
+    addSubsDB(update.message.chat_id)
 
 def tgmUnsub(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
