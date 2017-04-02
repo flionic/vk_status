@@ -162,6 +162,8 @@ def writeSubsDB(uid):
 			cursor.execute(sql, (uid))
 			#cursor.execute("INSERT INTO `users` (`id`) VALUES ('" + str(id) + "')")
 			#print(cursor.fetchone())
+	except:
+		print('Error writing Sub ID')
 	finally:
 		sqldb.close()
 
@@ -180,7 +182,7 @@ def readSubsDB():
 subs = readSubsDB()
 print(str(subs))
 
-writeSubsDB('112233')
+writeSubsDB('1488228')
 	
 tg_admin = '37772301'
 bot = telegram.Bot(token=tg_token)
