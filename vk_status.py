@@ -144,7 +144,7 @@ def parseFeed():
 				pid = int(link[link.find('orders/')+7:link.find('-')])
 				if pid > lastPostId:
 					msg = '🔗 [{}]({})\n\n💵 {}\n\n🆔 ID: {}\n🗃 {}\n⌚️ {}\n\n📝 {}'.format(name, link, price, pid, categ, date, desc)
-					bot.sendMessage(chat_id=tg_admin, text=msg, parse_mode=telegram.ParseMode.MARKDOWN)
+					bot.sendMessage(chat_id=tg_admin, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
 					#sendMsg(msg)
 					print('Новый заказ: ' + name)
 					lastPostId = pid
