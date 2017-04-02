@@ -165,7 +165,7 @@ def writeSubsDB(uid):
 	except:
 		print('Error writing Sub ID')
 	finally:
-		sqldb.close()
+		sqldbc.close()
 
 def readSubsDB():
 	try:
@@ -182,7 +182,7 @@ def readSubsDB():
 subs = readSubsDB()
 print(str(subs))
 
-writeSubsDB('1488228')
+writeSubsDB('888999')
 	
 tg_admin = '37772301'
 bot = telegram.Bot(token=tg_token)
