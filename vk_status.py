@@ -118,9 +118,9 @@ def readSysDB():
 			result = cursor.fetchone()
 			for row in cursor:
 				if row['name'] == 'lastPostId':
-					lastPostId = row['value']
+					lastPostId = int(row['value'])
 				if row['name'] == 'rssUpdDate':
-					rssUpdDate = row['value']
+					rssUpdDate = int(row['value'])
 				#print(str(row))
 	except:
 		pass
@@ -224,8 +224,8 @@ def parseFeed(force=False, fid=''):
 						print('New offer: ' + name)
 						lastPostId = pid
 						rssUpdDate = rssPubDate
-						updateSysDB('lastPostId', str(pid))
-						updateSysDB('rssUpdDate', str(rssPubDate))
+						updateSysDB('lastPostId', lastPostId)
+						updateSysDB('rssUpdDate', rssUpdDate)
 					if force:
 						bot.sendMessage(chat_id=fid, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
 
