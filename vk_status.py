@@ -256,14 +256,14 @@ def tgmGetOffers(bot, update):
 	
 def tgmSubs(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-    if writeSubsDB(update.message.chat_id):
+    if writeSubsDB(update.message.chat_id) == True:
 		bot.sendMessage(chat_id=update.message.chat_id, text="Подписка оформлена", parse_mode=telegram.ParseMode.HTML)
 	else:
 		bot.sendMessage(chat_id=update.message.chat_id, text="Ошибка! Возможно Вы уже подписканы?", parse_mode=telegram.ParseMode.HTML)
 	
 def tgmUnsub(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-	if delSubsDB(update.message.chat_id):
+	if delSubsDB(update.message.chat_id) == True:
 		bot.sendMessage(chat_id=update.message.chat_id, text="Подписка отменена", parse_mode=telegram.ParseMode.HTML)
 	else:
 		bot.sendMessage(chat_id=update.message.chat_id, text="Ошибка! Возможно Вы не подписаны?", parse_mode=telegram.ParseMode.HTML)
