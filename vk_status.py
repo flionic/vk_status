@@ -143,16 +143,16 @@ def readSysDB():
 def updateSysDB(sname, svalue):
 	try:
 		with sqldbc.cursor() as cursor:
-			sql = "UPDATE `sysvars` SET `value`=%s WHERE `name`=%s)"
+			sql = "UPDATE `sysvars` SET `value`=%s WHERE `name`=%s"
 			cursor.execute(sql, (svalue, sname))
 	finally:
 		sqldbc.close()
 		
-def createSysDB(name, value):
+def createSysDB(sname, svalue):
 	try:
 		with sqldbc.cursor() as cursor:
-			sql = "INSERT INTO `users` (`email`, `password`) VALUES (%s, %s)"
-			cursor.execute(sql, ('webmaster@python.org', 'very-secret'))
+			sql = "INSERT INTO `users` (`name`, `value`) VALUES (%s, %s)"
+			cursor.execute(sql, (sname, svalue))
 	finally:
 		sqldbc.close()
 		
