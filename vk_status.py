@@ -58,6 +58,7 @@ def readSubsDB():
 			ids = []
 			for row in cursor:
 			    ids.append(str(row[0]))
+			return ids
 	finally:
 		sqldb.close()
 		
