@@ -24,8 +24,10 @@ lastfm_token = os.environ.get('lfm_token')
 steam_user = os.environ.get('steam_user')
 steam_api_key = os.environ.get('steam_key')
 
-os.environ["tg_users"] = '[{\'37772301\': {\'login\': \'bionic_leha\', \'pass\': \'123\'}}]'
-bot_users = ast.literal_eval(os.environ.get("tg_users"))
+os.environ['tg_users'] = '[{\'37772301\': {\'login\': \'bionic_leha\', \'pass\': \'123\'}}]'
+bot_users = ast.literal_eval(os.environ.get('tg_users'))
+#print(bot_users[0])
+print(str(bot_users))
 
 vkStatus = ''
 def setStatus(stat):
