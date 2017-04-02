@@ -167,7 +167,7 @@ def writeSubsDB(uid):
 def readSubsDB():
 	try:
 		with sqldb.cursor() as cursor:
-			cursor.execute("SELECT id FROM users;")
+			cursor.execute("SELECT `id` FROM `users`")
 			ids = []
 			for row in cursor:
 			    print(row)
