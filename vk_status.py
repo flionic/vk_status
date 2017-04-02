@@ -163,7 +163,7 @@ def tgmHelp(bot, update):
 
 def tgmGetOffers(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-    parseFeed(True)
+    parseFeed(force=True)
 	
 dispatcher.addHandler(CommandHandler('start', tgmStart))
 dispatcher.addHandler(CommandHandler('help', tgmHelp))
