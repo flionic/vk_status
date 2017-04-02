@@ -191,9 +191,8 @@ def readSubsDB():
 		
 subs = readSubsDB()
 print(str(subs))
-
 #writeSubsDB('888999')
-writeSubsDB('888999')
+delSubsDB('888999')
 	
 tg_admin = '37772301'
 bot = telegram.Bot(token=tg_token)
@@ -230,7 +229,10 @@ def parseFeed(force=False, fid=''):
 					msg = '🔗 [{}]({})\n\n💵 {}\n\n🆔 {}\n🗃 {}\n🕒️ {}\n\n📝 {}'.format(name, link, price, pid, categ, date, desc)
 					if not force:
 						for id in subs:
-							bot.sendMessage(chat_id=id, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
+							try:
+								bot.sendMessage(chat_id=id, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
+							except:
+								pass
 						print('New offer: ' + name)
 						lastPostId = pid
 						rssUpdDate = rssPubDate
