@@ -157,11 +157,12 @@ def addSubDB(uid):
 			cursor.execute(sql, (uid))
 			print('Added subscriber, id: ' + str(uid))
 			bot.sendMessage(chat_id=uid, text="Подписка оформлена", parse_mode=telegram.ParseMode.HTML)
+			sqldbc.close()
 	except:
 		print('Error writing Sub ID')
-		bot.sendMessage(chat_id=uid, text="Ошибка! Возможно Вы уже подписаны? Отписаться - /unsubscribe", parse_mode=telegram.ParseMode.HTML)
+		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка. Возможно, вы уже подписаны.", parse_mode=telegram.ParseMode.HTML)
 	finally:
-		sqldbc.close()
+		sqldbc.close()	
 		
 def delSubDB(uid):
 	try:
@@ -170,9 +171,10 @@ def delSubDB(uid):
 			cursor.execute(sql, (uid))
 			print('Deleted subscriber, id: ' + str(uid))
 			bot.sendMessage(chat_id=uid, text="Подписка отменена", parse_mode=telegram.ParseMode.HTML)
+			sqldbc.close()
 	except:
 		print('Error deleting Sub ID')
-		bot.sendMessage(chat_id=uid, text="Ошибка! Возможно Вы не подписаны? Подписаться - /subscribe", parse_mode=telegram.ParseMode.HTML)
+		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка. Возможно, вы еще не подписаны.", parse_mode=telegram.ParseMode.HTML)
 	finally:
 		sqldbc.close()
 
