@@ -304,7 +304,7 @@ def authFlance(uid):
 		print('Error request to site ' + str(response.status_code))
 	
 	print(str(request.cookies.get_dict()))
-	addUsersData('cookie', request.cookies.get_dict(), uid)
+	#addUsersData('cookie', request.cookies.get_dict(), uid)
 	#print(rp.text)
 	
 def loginFlance(uid):
@@ -362,7 +362,7 @@ def tgmPass(bot, update):
 
 def tgmGetOffers(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-    parseFlance(True, update.message.chat_id)
+    parseFlance(update.message.chat_id)
 	
 def tgmSubs(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
