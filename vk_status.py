@@ -286,9 +286,13 @@ def parseFlance(fid=''):
 	
 def authFlance(uid):
 	try:
+		print('authFlance method')
 		login = getUsersData('login', uid)
 		passw = getUsersData('pass', uid)
+		print(login)
+		print(passw)
 		if (login + passw) > 10:
+			print('2i')
 			form_data = {'email': login, 'pass': passw, 'remember': True, 'submit': 'submit'}
 			response = session.post('https://freelance.ua/user/login', data=form_data).json()
 			if response['data']['success'] == True:
@@ -309,14 +313,12 @@ def loginFlance(uid):
 	try:
 		jar = requests.cookies.RequestsCookieJar()
 		#cook = [authFlance(uid),ast.literal_eval(getUsersData('cookie', uid))][ast.literal_eval(getUsersData('cookie', uid))]
-		print('1')
 		cook = ast.literal_eval(getUsersData('cookie', uid))
-		print('2')
 		if not cook:
-			print('3i')
+			print('1i')
 			authFlance(uid)
 		else:
-			print('3e')
+			print('1e')
 			for i in cook:
 				jar.set(i, cook[i])
 			response = request.get('https://freelance.ua/', cookies=jar).json()
