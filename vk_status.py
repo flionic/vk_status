@@ -103,6 +103,10 @@ def getSteam():
 		
 # MySQL
 sqldbc = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True, charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor) 
+def rsDataBase():
+	sqldbc.close()
+	sqldbc.connect()
+
 def readSysDB(name):
 	try:
 		with sqldbc.cursor() as cursor:
@@ -191,7 +195,7 @@ def addAuthDB(name, value, uid):
 				print('Adding account {}: {}'.format(uid, name))
 				bot.sendMessage(chat_id=uid, text="К вашему аккаунту успешно добавлен " + name, parse_mode=telegram.ParseMode.HTML)					
 			else:
-				bot.sendMessage(chat_id=uid, text="Для начала вы должны быть подписчиком бота.\nПодписаться - /subscribe" + name, parse_mode=telegram.ParseMode.HTML)
+				bot.sendMessage(chat_id=uid, text="Для начала вы должны быть подписчиком бота.\nПодписаться - /subscribe", parse_mode=telegram.ParseMode.HTML)
 	except:
 		print('Error writing account')
 		bot.sendMessage(chat_id=uid, text="Ошибка отправки " + name, parse_mode=telegram.ParseMode.HTML)
@@ -284,7 +288,12 @@ def tgmSubs(bot, update):
 
 def tgmUnsub(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-    delSubDB(update.message.chat_id)	
+    delSubDB(update.message.chat_id)
+
+def tgmRsDb(bot, update):
+	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
+	rsDataBase()
+	bot.sendMessage(chat_id=update.message.chat_id, text='Отправлена команда переподключения к серверу базы данных', parse_mode=telegram.ParseMode.HTML)
 	
 dispatcher.add_handler(CommandHandler('start', tgmStart))
 dispatcher.add_handler(CommandHandler('help', tgmHelp))
@@ -294,6 +303,7 @@ dispatcher.add_handler(CommandHandler('unsubscribe', tgmUnsub))
 dispatcher.add_handler(CommandHandler('auth', tgmAuth))
 dispatcher.add_handler(CommandHandler('login', tgmLogin))
 dispatcher.add_handler(CommandHandler('pass', tgmPass))
+dispatcher.add_handler(CommandHandler('reset_db', tgmRsDb))
 
 updater.start_polling()
 
