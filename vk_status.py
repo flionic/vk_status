@@ -232,7 +232,7 @@ def addUsersData(name, value, uid):
 		rsDataBase()
 		#sqldbc.connect()
 		with sqldbc.cursor() as cursor:
-			sql = "UPDATE users SET {}={} WHERE id={}".format(name, value, uid)
+			sql = 'UPDATE users SET {}="{}" WHERE id={}'.format(name, value, uid)
 			if ifAuthDB(uid):
 				cursor.execute(sql)
 				print('Adding account {}: {}'.format(uid, name))
