@@ -183,10 +183,10 @@ def getUsersData(name, uid):
 		rsDataBase()
 		if userExist(uid):
 			with sqldbc.cursor() as cursor:
-			sql = "select {} from users where id={}".format(name, uid)
-			cursor.execute(sql)
-			for row in cursor:
-				return str(row[name])
+				sql = "select {} from users where id={}".format(name, uid)
+				cursor.execute(sql)
+				for row in cursor:
+					return str(row[name])
 		else:
 			bot.sendMessage(chat_id=uid, text="Для продолжения, вы должны быть подписчиком.\nПодписаться - /subscribe", parse_mode=telegram.ParseMode.HTML)
 	except:
