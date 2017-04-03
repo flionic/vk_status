@@ -290,9 +290,10 @@ def authFlance(uid):
 	login = 'bionic_leha'
 	password = 're7z3k77w9'
 	form_data = {'email': login, 'pass': password, 'remember': True, 'submit': 'submit'}
-	
+	print('authFlance')
 	response = request.post('https://freelance.ua/user/login', data=form_data).json()
 	try:
+		print('In try')
 		if response['data']['success'] == True:
 			print('Successful auth')
 			bot.sendMessage(chat_id=uid, text='Успешная авторизация', parse_mode=telegram.ParseMode.MARKDOWN)
