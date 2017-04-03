@@ -289,6 +289,7 @@ def authFlance(uid):
 		print('authFlance method')
 		login = getUsersData('login', uid)
 		passw = getUsersData('pass', uid)
+		print(len(login))
 		if login and passw:
 			print('2i')
 			form_data = {'email': login, 'pass': passw, 'remember': True, 'submit': 'submit'}
