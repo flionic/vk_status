@@ -147,20 +147,17 @@ def addSubDB(uid):
 def addAuthDB(name, value, uid):
 	try:
 		with sqldbc.cursor() as cursor:
-			sql_f = "select id from users where id={}".format(uid)
-			sql_a = "INSERT INTO users (id) VALUES ({})".format(uid)
+			sql_f = "select id from users where id={}".format('111')
+			#sql_a = "INSERT INTO users (id) VALUES ({})".format('111')
 			sql_u = "UPDATE users SET {}=(%s) WHERE id=(%s)".format(name)
 			cursor.execute(sql_f)
 			for i in cursor:
-				if len(str(i)) > 0:
-					cursor.execute(sql_u, (value, uid))
-					print('Added account data: ' + name)
-					bot.sendMessage(chat_id=uid, text="К вашему аккаунту добавлен " + name, parse_mode=telegram.ParseMode.HTML)
+				if not len(str(i)) > 0:
+					bot.sendMessage(chat_id=uid, text="Для начала вы должны быть подписчиком бота.\nПодписаться - /subscribe" + name, parse_mode=telegram.ParseMode.HTML)
 				else:
-					cursor.execute(sql_a, (value, uid))
 					cursor.execute(sql_u, (value, uid))
-					print('Reg account data: ' + uid)
-					bot.sendMessage(chat_id=uid, text="Ваш аккаунт успешно зарегистрирован у бота!", parse_mode=telegram.ParseMode.HTML)
+					print('Adding account {}: {}'.format(uid, name))
+					bot.sendMessage(chat_id=uid, text="К вашему аккаунту успешно добавлен " + name, parse_mode=telegram.ParseMode.HTML)
 	except:
 		print('Error writing account')
 		bot.sendMessage(chat_id=uid, text="Ошибка отправки " + name, parse_mode=telegram.ParseMode.HTML)
