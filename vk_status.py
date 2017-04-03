@@ -153,7 +153,7 @@ def delSubDB(uid):
 			bot.sendMessage(chat_id=uid, text="Подписка отменена", parse_mode=telegram.ParseMode.HTML)
 	except:
 		print('Error deleting Sub ID')
-		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка. Возможно, вы еще не подписаны.", parse_mode=telegram.ParseMode.HTML)
+		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка.\nПопробуйте еще раз! /unsubscribe.", parse_mode=telegram.ParseMode.HTML)
 
 def readSubsDB():
 	try:
