@@ -289,9 +289,7 @@ def authFlance(uid):
 		print('authFlance method')
 		login = getUsersData('login', uid)
 		passw = getUsersData('pass', uid)
-		print(login)
-		print(passw)
-		if (login + passw) > 10:
+		if login and passw:
 			print('2i')
 			form_data = {'email': login, 'pass': passw, 'remember': True, 'submit': 'submit'}
 			response = session.post('https://freelance.ua/user/login', data=form_data).json()
@@ -315,10 +313,8 @@ def loginFlance(uid):
 		#cook = [authFlance(uid),ast.literal_eval(getUsersData('cookie', uid))][ast.literal_eval(getUsersData('cookie', uid))]
 		cook = ast.literal_eval(getUsersData('cookie', uid))
 		if not cook:
-			print('1i')
 			authFlance(uid)
 		else:
-			print('1e')
 			for i in cook:
 				jar.set(i, cook[i])
 			response = request.get('https://freelance.ua/', cookies=jar).json()
