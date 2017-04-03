@@ -147,8 +147,8 @@ def addSubDB(uid):
 def addAuthDB(name, value, uid):
 	try:
 		with sqldbc.cursor() as cursor:
-			sql = "UPDATE users SET %s=(%s) WHERE id=(%s)"
-			cursor.execute(sql, (name, value, uid))
+			sql = "UPDATE users SET login=(%s) WHERE id=(%s)"
+			cursor.execute(sql, (value, uid))
 			print('Added account data: ' + name)
 			bot.sendMessage(chat_id=uid, text="К вашему аккаунту добавлен " + name, parse_mode=telegram.ParseMode.HTML)
 	except:
@@ -237,7 +237,7 @@ def tgmHelp(bot, update):
 
 def tgmAuth(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-    bot.sendMessage(chat_id=update.message.chat_id, text='Недостаточно данных для авторизации.\nДля авторизации на сайте отправьте сообщения по типу:\n\n/login your_login / email\n/pass your_password', parse_mode=telegram.ParseMode.HTML)\
+    bot.sendMessage(chat_id=update.message.chat_id, text='Недостаточно данных для авторизации.\nОтправьте сообщения по типу:\n\n/login your_login / email\n/pass your_password', parse_mode=telegram.ParseMode.HTML)\
 	
 def tgmLogin(bot, update):
 	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
