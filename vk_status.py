@@ -289,8 +289,7 @@ def authFlance(uid):
 		print('authFlance method')
 		login = getUsersData('login', uid)
 		passw = getUsersData('pass', uid)
-		print(len(login))
-		if login and passw:
+		if len(str(ano) + str(bno)) > 10:
 			print('2i')
 			form_data = {'email': login, 'pass': passw, 'remember': True, 'submit': 'submit'}
 			response = session.post('https://freelance.ua/user/login', data=form_data).json()
