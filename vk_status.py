@@ -242,14 +242,16 @@ def tgmAuth(bot, update):
 def tgmLogin(bot, update):
 	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
 	try:
-		addAuthDB('login', (update.message.text).split(" ")[1], update.message.chat_id)
+		login = (update.message.text).split(" ")[1]
+		addAuthDB('login', login, update.message.chat_id)
 	except:
 		bot.sendMessage(chat_id=update.message.chat_id, text='Вы не ввели логин.\nСообщение должно иметь вид "/login my_name"' + login, parse_mode=telegram.ParseMode.HTML)
 	
 def tgmPass(bot, update):
 	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING) 
 	try:
-		addAuthDB('pass', (update.message.text).split(" ")[1], update.message.chat_id)
+		passw = (update.message.text).split(" ")[1]
+		addAuthDB('pass', passw, update.message.chat_id)
 	except:
 		bot.sendMessage(chat_id=update.message.chat_id, text='Вы не ввели пароль.\nСообщение должно иметь вид "/pass 1q2w3e4r5t"' + login, parse_mode=telegram.ParseMode.HTML)
 
