@@ -28,7 +28,7 @@ def setStatus(stat):
 		try:
 			if r['response'] == 1:
 				vkStatus = stat
-				print('Status updated\n' + stat)
+				print('VK Status updated\n' + stat)
 		except:
 			try:
 				print("VK returned error: " + r['error']['error_msg'])
@@ -312,7 +312,7 @@ def loginFlance(uid):
 		print('1')
 		cook = ast.literal_eval(getUsersData('cookie', uid))
 		print('2')
-		if not str(cook):
+		if not cook:
 			print('3i')
 			authFlance(uid)
 		else:
