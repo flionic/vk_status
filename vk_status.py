@@ -153,11 +153,11 @@ def createSysDB(name, value):
 		
 def addPostInfo(id, link):
 	try:
-		rsDataBase()
 		with sqldbc.cursor() as cursor:
 			sql = "INSERT INTO posts (id, link) VALUES (%s, %s)"
 			cursor.execute(sql, (id, link))
 	except:
+		rsDataBase()
 		print('Error adding data to posts')
 		
 def userExist(uid):
