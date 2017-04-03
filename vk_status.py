@@ -171,8 +171,8 @@ def readSubsDB():
 		print('Error reading subs from db')
 
 subs = readSubsDB()
-rssUpdDate = readSysDB('rssUpdDate')
-lastPostId = readSysDB('lastPostId')
+rssUpdDate = int(readSysDB('rssUpdDate'))
+lastPostId = int(readSysDB('lastPostId'))
 
 session = requests.Session()
 def parseFeed(force=False, fid=''):
