@@ -345,10 +345,26 @@ def tgmHelp(bot, update):
 	/subscribe - подписка на заказы в реальном времени
 	/unsubscribe  - отписаться от получения заказов
 	/auth - авторизация на сайте
+	/fauth [login] [pass] - авторизация на сайте, сохранятся только cookie)
+	/help_auth - информация про авторизацию
 	/offer [id] - предложить свою кандидатуру шаблоном
 	/offer [id][text] - предложить свою кандидатуру с сообщением [text]
 	/offermsg [text] - шаблон сообщения предложения
-	/fauth [login] [pass]- принудительная авторизация, используя логин и пароль (они не будут сохранены, сохранятся только cookie)
+	""", parse_mode=telegram.ParseMode.HTML)
+	
+def tgmHelpSec(bot, update):
+    bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
+    bot.sendMessage(chat_id=update.message.chat_id, text="""
+Бот имеет два вида авторизации.
+
+Первый: /auth
+Универсальный метод авторизации, сначала ищет в базе данных куки, если их нет - ищет логин/пароль, а если нет и их - предлагает авторизоваться.
+Сохраняет логин, пароль и куки. Спросит отдельно логин и пароль.
+
+Второй: /fauth
+Позволяет войти на сайт без сохранения пароля. Ваши логин и пароль единоразово уходят на сервер, в ответ бот получает куки, и уже их сохраняет. В этом случае в базе данных бота логин и пароль сохранятся не будет!
+Пример такой авторизации:
+"/fauth user_name password"
 	""", parse_mode=telegram.ParseMode.HTML)
 
 def tgmAuth(bot, update):
@@ -400,6 +416,7 @@ def tgmRsDb(bot, update):
 	
 dispatcher.add_handler(CommandHandler('start', tgmStart))
 dispatcher.add_handler(CommandHandler('help', tgmHelp))
+dispatcher.add_handler(CommandHandler('help_auth', tgmHelpSec))
 dispatcher.add_handler(CommandHandler('get_offers', tgmGetOffers))
 dispatcher.add_handler(CommandHandler('subscribe', tgmSubs))
 dispatcher.add_handler(CommandHandler('unsubscribe', tgmUnsub))
