@@ -285,7 +285,7 @@ def tgmHelp(bot, update):
     bot.sendMessage(chat_id=update.message.chat_id, text="""
 	Команды:
 	/get_offers - получить список заказов с 1 страницы
-	/subscribe - позволяет получать заказы в реальном времени
+	/subscribe - подписка на заказы в реальном времени
 	/unsubscribe  - отписаться от получения заказов
 	/auth - авторизация на сайте
 	/offer [id] - предложить свою кандидатуру шаблоном
