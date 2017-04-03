@@ -133,45 +133,43 @@ def createSysDB(name, value):
 	except:
 		print('Error create sysvar in db')
 
+def ifAuthDB(uid):
+	try:
+		with sqldbc.cursor() as cursor:
+			sql_f = "select id from users where id={}".format(uid)
+			cursor.execute(sql_f)
+			for i in cursor:
+				return True
+	except:
+		print('Error checking account')
+		
 def addSubDB(uid):
 	try:
 		with sqldbc.cursor() as cursor:
 			sql = "INSERT INTO `users` (`id`) VALUES (%s)"
-			cursor.execute(sql, (uid))
-			print('Added subscriber, id: ' + str(uid))
-			bot.sendMessage(chat_id=uid, text="Подписка оформлена", parse_mode=telegram.ParseMode.HTML)
+			if not ifAuthDB(uid):
+				cursor.execute(sql, (uid))
+				print('Added subscriber, id: ' + str(uid))
+				bot.sendMessage(chat_id=uid, text="Подписка оформлена", parse_mode=telegram.ParseMode.HTML)
+			else:
+				bot.sendMessage(chat_id=uid, text="По нашим сведениям, вы уже подписаны :)", parse_mode=telegram.ParseMode.HTML)
 	except:
 		print('Error writing Sub ID')
-		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка. Возможно, вы уже подписаны.", parse_mode=telegram.ParseMode.HTML)
-
-def addAuthDB(name, value, uid):
-	try:
-		with sqldbc.cursor() as cursor:
-			sql_f = "select id from users where id={}".format(uid)
-			#sql_a = "INSERT INTO users (id) VALUES ({})".format('111')
-			sql_u = "UPDATE users SET {}=(%s) WHERE id=(%s)".format(name)
-			cursor.execute(sql_f)
-			for i in cursor:
-				if i:
-					cursor.execute(sql_u, (value, uid))
-					print('Adding account {}: {}'.format(uid, name))
-					bot.sendMessage(chat_id=uid, text="К вашему аккаунту успешно добавлен " + name, parse_mode=telegram.ParseMode.HTML)					
-				else:
-					bot.sendMessage(chat_id=uid, text="Для начала вы должны быть подписчиком бота.\nПодписаться - /subscribe" + name, parse_mode=telegram.ParseMode.HTML)
-	except:
-		print('Error writing account')
-		bot.sendMessage(chat_id=uid, text="Ошибка отправки " + name, parse_mode=telegram.ParseMode.HTML)
+		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка.", parse_mode=telegram.ParseMode.HTML)
 		
 def delSubDB(uid):
 	try:
 		with sqldbc.cursor() as cursor:
 			sql = "DELETE FROM `users` WHERE `id`=(%s)"
-			cursor.execute(sql, (uid))
-			print('Deleted subscriber, id: ' + str(uid))
-			bot.sendMessage(chat_id=uid, text="Подписка отменена", parse_mode=telegram.ParseMode.HTML)
+			if ifAuthDB(uid):
+				cursor.execute(sql, (uid))
+				print('Deleted subscriber, id: ' + str(uid))
+				bot.sendMessage(chat_id=uid, text="Подписка отменена", parse_mode=telegram.ParseMode.HTML)
+			else:
+				bot.sendMessage(chat_id=uid, text="Вы еще не являетесь подписчиком.\nПодписаться - /subscribe", parse_mode=telegram.ParseMode.HTML)
 	except:
 		print('Error deleting Sub ID')
-		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка.\nПопробуйте еще раз! /unsubscribe.", parse_mode=telegram.ParseMode.HTML)
+		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка.", parse_mode=telegram.ParseMode.HTML)
 
 def readSubsDB():
 	try:
@@ -183,6 +181,20 @@ def readSubsDB():
 	except:
 		print('Error reading subs from db')
 		return 0
+
+def addAuthDB(name, value, uid):
+	try:
+		with sqldbc.cursor() as cursor:
+			sql_u = "UPDATE users SET {}=(%s) WHERE id=(%s)".format(name)
+				if ifAuthDB(uid):
+					cursor.execute(sql_u, (value, uid))
+					print('Adding account {}: {}'.format(uid, name))
+					bot.sendMessage(chat_id=uid, text="К вашему аккаунту успешно добавлен " + name, parse_mode=telegram.ParseMode.HTML)					
+				else:
+					bot.sendMessage(chat_id=uid, text="Для начала вы должны быть подписчиком бота.\nПодписаться - /subscribe" + name, parse_mode=telegram.ParseMode.HTML)
+	except:
+		print('Error writing account')
+		bot.sendMessage(chat_id=uid, text="Ошибка отправки " + name, parse_mode=telegram.ParseMode.HTML)
 
 rssUpdDate = 0
 lastPostId = int(readSysDB('lastPostId'))
