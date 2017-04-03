@@ -348,8 +348,7 @@ def tgmHelp(bot, update):
 	/offer [id] - предложить свою кандидатуру шаблоном
 	/offer [id][text] - предложить свою кандидатуру с сообщением [text]
 	/offermsg [text] - шаблон сообщения предложения
-	/fauth [login] [pass]- принудительная авторизация, 
-используя логин и пароль (они не будут сохранены, сохранятся только cookie)
+	/fauth [login] [pass]- принудительная авторизация, используя логин и пароль (они не будут сохранены, сохранятся только cookie)
 	""", parse_mode=telegram.ParseMode.HTML)
 
 def tgmAuth(bot, update):
