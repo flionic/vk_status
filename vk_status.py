@@ -305,7 +305,9 @@ def authFlance(uid):
 def loginFlance(uid):
 	try:
 		jar = requests.cookies.RequestsCookieJar()
-		cook = [authFlance(uid),ast.literal_eval(getUsersData('cookie', uid))][ast.literal_eval(getUsersData('cookie', uid))]
+		#cook = [authFlance(uid),ast.literal_eval(getUsersData('cookie', uid))][ast.literal_eval(getUsersData('cookie', uid))]
+		print(getUsersData('cookie', uid))
+		cook = ast.literal_eval(getUsersData('cookie', uid))
 		for i in cook:
 			jar.set(i, cook[i])
 		response = request.get('https://freelance.ua/', cookies=jar).json()
