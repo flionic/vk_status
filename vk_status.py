@@ -289,8 +289,7 @@ def authFlance(uid):
 		print('authFlance method')
 		login = getUsersData('login', uid)
 		passw = getUsersData('pass', uid)
-		if len(str(login) + str(passw)) > 10:
-			print('2i')
+		try:
 			form_data = {'email': login, 'pass': passw, 'remember': True, 'submit': 'submit'}
 			response = session.post('https://freelance.ua/user/login', data=form_data).json()
 			if response['data']['success'] == True:
@@ -301,7 +300,7 @@ def authFlance(uid):
 				print('Auth error: ' + str(response['errors']))
 				bot.sendMessage(chat_id=uid, text='Ошибка авторизации: ' + str(response['errors'][0]), parse_mode=telegram.ParseMode.MARKDOWN)
 				#getLogin()
-		else:
+		except:
 			bot.sendMessage(chat_id=update.message.chat_id, text='Недостаточно данных для авторизации.\nОтправьте сообщения по типу:\n\n/login your_login / email\n/pass your_password', parse_mode=telegram.ParseMode.HTML)
 	except:
 		print('Error request to site ' + str(response.status_code))
