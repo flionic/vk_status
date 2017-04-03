@@ -180,6 +180,22 @@ def addSubDB(uid):
 		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка. Повторите попытку еще раз.", parse_mode=telegram.ParseMode.HTML)
 		rsDataBase()
 		
+def getSubDB(uid, name):
+	try:
+		#sqldbc.connect()
+		with sqldbc.cursor() as cursor:
+			sql = "select %s from users where id=%s"
+			cursor.execute(sql, (name, uid))
+			#[return row for row in cursor]
+			for row in cursor:
+				print('Get data: ' + str(row[name]))
+				bot.sendMessage(chat_id=uid, text="Данные из БД получены", parse_mode=telegram.ParseMode.HTML)
+		#sqldbc.close()
+	except:
+		print('Error getting from users table')
+		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка. Повторите попытку еще раз.", parse_mode=telegram.ParseMode.HTML)
+		rsDataBase()
+		
 def delSubDB(uid):
 	try:
 		#sqldbc.connect()
@@ -197,7 +213,7 @@ def delSubDB(uid):
 		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка. Повторите попытку еще раз.", parse_mode=telegram.ParseMode.HTML)
 		rsDataBase()
 
-def readSubsDB():
+def getSubs():
 	try:
 		#sqldbc.connect()
 		with sqldbc.cursor() as cursor:
@@ -211,7 +227,7 @@ def readSubsDB():
 		rsDataBase()
 		return 0
 
-def addAuthDB(name, value, uid):
+def addUsersData(name, value, uid):
 	try:
 		#sqldbc.connect()
 		with sqldbc.cursor() as cursor:
@@ -232,17 +248,16 @@ rssUpdDate = 0
 lastPostId = int(readSysDB('lastPostId'))
 
 session = requests.Session()
-def parseFlance(force=False, fid=''):
+def parseFlance(fid=''):
 	global rssUpdDate, lastPostId
 	try:
 		rss = ET.fromstring(requests.get('https://freelance.ua/orders/rss').text.encode('utf-8'))
 		locale.setlocale(locale.LC_TIME, "en_US.UTF-8")
 		rssPubDate = datetime.strptime(rss[0][5].text, '%a, %d %b %Y %H:%M:%S %z').timestamp() + 10750
-		if (rssPubDate > rssUpdDate) or force:
+		if (rssPubDate > rssUpdDate) or fid:
 			print('Parsing freelance.ua...')
 			soup = BeautifulSoup(session.get('https://freelance.ua/').text, "lxml")
 			orders = soup.find_all("li", class_="j-order")
-			
 			for i in reversed(orders):
 				if not i.find_all('i', class_='fa fa-thumb-tack c-icon-fixed'):
 					name = i.find('a').text
@@ -260,17 +275,46 @@ def parseFlance(force=False, fid=''):
 					desc = i.find('p').text
 					pid = int(link[link.find('orders/')+7:link.find('-')])
 					rssUpdDate = updateSysDB('rssUpdDate', rssPubDate)
-					if (pid > lastPostId) or force or rssUpdDate == 0:
+					if (pid > lastPostId) or fid or rssUpdDate == 0:
 						msg = '🔗 [{}]({})\n\n💵 {}\n\n🆔 {}\n🗃 {}\n🕒️ {}\n\n📝 {}'.format(name, link, price, pid, categ, date, desc)
-						if not force:
-							[bot.sendMessage(chat_id=id, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True) for id in readSubsDB()]
+						if not fid:
+							[bot.sendMessage(chat_id=id, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True) for id in getSubs()]
 							print('New offer: ' + name)
 							lastPostId = updateSysDB('lastPostId', pid)
-						if force:
+						else:
 							bot.sendMessage(chat_id=fid, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
 	except:
 		print('Error parse freelance.ua')
-		
+	
+def authFlance(uid):
+	login = 'bionic_leha'
+	password = 're7z3k77w9'
+	form_data = {'email': login, 'pass': password, 'remember': True, 'submit': 'submit'}
+	
+	response = request.post('https://freelance.ua/user/login', data=form_data).json()
+	try:
+		if response['data']['success'] == True:
+			print('Successful auth')
+			bot.sendMessage(chat_id=uid, text='Успешная авторизация', parse_mode=telegram.ParseMode.MARKDOWN)
+		elif response['data']['success'] == False:
+			print('Auth error: ' + str(response['errors']))
+			bot.sendMessage(chat_id=uid, text='Ошибка авторизации: ' + str(response['errors']), parse_mode=telegram.ParseMode.MARKDOWN)
+			#getLogin()
+	except:
+		print('Error request to site ' + str(response.status_code))
+	
+	print(str(request.cookies.get_dict()))
+	addUsersData('cookie', request.cookies.get_dict(), uid)
+	#print(rp.text)
+	
+def loginFlance(uid):
+	jar = requests.cookies.RequestsCookieJar()
+	cook = getSubDB(uid, 'cookie')
+	for i in cook:
+		jar.set(i, cook[i])
+	response = request.get('https://freelance.ua/', cookies=jar).json()
+	print(str(response.status_code))
+	
 # Telegram
 tg_admin = '37772301'
 bot = telegram.Bot(token=tg_token)
@@ -297,13 +341,14 @@ def tgmHelp(bot, update):
 
 def tgmAuth(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-    bot.sendMessage(chat_id=update.message.chat_id, text='Недостаточно данных для авторизации.\nОтправьте сообщения по типу:\n\n/login your_login / email\n/pass your_password', parse_mode=telegram.ParseMode.HTML)\
+	authFlance(update.message.chat_id)
+    bot.sendMessage(chat_id=update.message.chat_id, text='Недостаточно данных для авторизации.\nОтправьте сообщения по типу:\n\n/login your_login / email\n/pass your_password', parse_mode=telegram.ParseMode.HTML)
 	
 def tgmLogin(bot, update):
 	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
 	if len(update.message.text) > 10:
 		login = (update.message.text).split(" ")[1]
-		addAuthDB('login', login, update.message.chat_id)
+		addUsersData('login', login, update.message.chat_id)
 	else:
 		bot.sendMessage(chat_id=update.message.chat_id, text='Вы не ввели логин.\nСообщение должно иметь вид:\n"/login my_name"', parse_mode=telegram.ParseMode.HTML)
 	
@@ -311,7 +356,7 @@ def tgmPass(bot, update):
 	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING) 
 	if len(update.message.text) > 10:
 		passw = (update.message.text).split(" ")[1]
-		addAuthDB('pass', passw, update.message.chat_id)
+		addUsersData('pass', passw, update.message.chat_id)
 	else:
 		bot.sendMessage(chat_id=update.message.chat_id, text='Вы не ввели пароль.\nСообщение должно иметь вид:\n"/pass 1q2w3e4r5t"', parse_mode=telegram.ParseMode.HTML)
 
