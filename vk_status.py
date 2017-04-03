@@ -10,8 +10,6 @@ import telegram
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import pymysql, pymysql.cursors
 
-sqldbc = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True, charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor) 
-
 tg_token = os.environ.get('tg_token')
 vk_token = os.environ.get('vk_token')
 lastfm_user = os.environ.get('lfm_user')
@@ -108,6 +106,7 @@ def getSteam():
 		return 'Steam error'
 		
 # MySQL
+sqldbc = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True, charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor) 
 def readSysDB(name):
 	try:
 		with sqldbc.cursor() as cursor:
