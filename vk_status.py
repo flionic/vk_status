@@ -150,8 +150,9 @@ def addAuthDB(name, value, uid):
 			sql_f = "select id from users where id={}".format('111')
 			#sql_a = "INSERT INTO users (id) VALUES ({})".format('111')
 			sql_u = "UPDATE users SET {}=(%s) WHERE id=(%s)".format(name)
-			cursor.execute(sql_f)
-			if not cursor:
+			try:
+				cursor.execute(sql_f)
+			except:
 				print('azazazaz')
 			for i in cursor:
 				if not len(str(i)) > 0:
