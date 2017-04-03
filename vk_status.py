@@ -310,6 +310,7 @@ def loginFlance(uid):
 		jar = requests.cookies.RequestsCookieJar()
 		#cook = [authFlance(uid),ast.literal_eval(getUsersData('cookie', uid))][ast.literal_eval(getUsersData('cookie', uid))]
 		cook = ast.literal_eval(getUsersData('cookie', uid))
+		print(str(cook))
 		if len(str(cook)) < 10:
 			authFlance(uid)
 			return
