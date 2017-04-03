@@ -245,7 +245,7 @@ def tgmLogin(bot, update):
 	if len(login) > 0:
 		addAuthDB('login', login, update.message.chat_id)
 	else:
-		bot.sendMessage(chat_id=update.message.chat_id, text='Вы не ввели логин.\nСообщение должно иметь вид "/login my_name"' + login, parse_mode=telegram.ParseMode.HTML)
+		bot.sendMessage(chat_id=update.message.chat_id, text='Вы не ввели логин.\nСообщение должно иметь вид "/login my_name"', parse_mode=telegram.ParseMode.HTML)
 	
 def tgmPass(bot, update):
 	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING) 
@@ -253,7 +253,7 @@ def tgmPass(bot, update):
 	if len(passw) > 0:
 		addAuthDB('pass', passw, update.message.chat_id)
 	else:
-		bot.sendMessage(chat_id=update.message.chat_id, text='Вы не ввели пароль.\nСообщение должно иметь вид "/pass 1q2w3e4r5t"' + login, parse_mode=telegram.ParseMode.HTML)
+		bot.sendMessage(chat_id=update.message.chat_id, text='Вы не ввели пароль.\nСообщение должно иметь вид "/pass 1q2w3e4r5t"', parse_mode=telegram.ParseMode.HTML)
 
 def tgmGetOffers(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
