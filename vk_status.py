@@ -298,7 +298,7 @@ def authFlance(uid):
 				bot.sendMessage(chat_id=uid, text='Успешная авторизация, cookie сохранены', parse_mode=telegram.ParseMode.MARKDOWN)
 			elif response['data']['success'] == False:
 				print('Auth error: ' + str(response['errors']))
-				bot.sendMessage(chat_id=uid, text='Ошибка авторизации: ' + str(response['errors'][0]) + '\n\nОтправьте сообщения по типу:\n\n/login your_login / email\n/pass your_password', parse_mode=telegram.ParseMode.MARKDOWN)
+				bot.sendMessage(chat_id=uid, text='Ошибка авторизации: ' + str(response['errors'][0]) + '\n\nОтправьте сообщения по типу:\n\n/login your_login / email\n/pass your_password', parse_mode=telegram.ParseMode.HTML)
 				#getLogin()
 		else:
 			bot.sendMessage(chat_id=update.message.chat_id, text='Недостаточно данных для авторизации.\nОтправьте сообщения по типу:\n\n/login your_login / email\n/pass your_password', parse_mode=telegram.ParseMode.HTML)
