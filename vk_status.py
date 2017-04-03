@@ -286,17 +286,21 @@ def parseFlance(fid=''):
 	
 def authFlance(uid):
 	try:
-		bot.sendMessage(chat_id=update.message.chat_id, text='Недостаточно данных для авторизации.\nОтправьте сообщения по типу:\n\n/login your_login / email\n/pass your_password', parse_mode=telegram.ParseMode.HTML)
-		form_data = {'email': getUsersData('login', uid), 'pass': getUsersData('pass', uid), 'remember': True, 'submit': 'submit'}
-		response = session.post('https://freelance.ua/user/login', data=form_data).json()
-		if response['data']['success'] == True:
-			print('Successful auth')
-			updUsersData('cookie', str(session.cookies.get_dict()), uid)
-			bot.sendMessage(chat_id=uid, text='Успешная авторизация, cookie сохранены', parse_mode=telegram.ParseMode.MARKDOWN)
-		elif response['data']['success'] == False:
-			print('Auth error: ' + str(response['errors']))
-			bot.sendMessage(chat_id=uid, text='Ошибка авторизации: ' + str(response['errors']), parse_mode=telegram.ParseMode.MARKDOWN)
-			#getLogin()
+		login = getUsersData('login', uid)
+		passw = getUsersData('pass', uid)
+		if (login + passw) > 10:
+			form_data = {'email': login, 'pass': passw, 'remember': True, 'submit': 'submit'}
+			response = session.post('https://freelance.ua/user/login', data=form_data).json()
+			if response['data']['success'] == True:
+				print('Successful auth')
+				updUsersData('cookie', str(session.cookies.get_dict()), uid)
+				bot.sendMessage(chat_id=uid, text='Успешная авторизация, cookie сохранены', parse_mode=telegram.ParseMode.MARKDOWN)
+			elif response['data']['success'] == False:
+				print('Auth error: ' + str(response['errors']))
+				bot.sendMessage(chat_id=uid, text='Ошибка авторизации: ' + str(response['errors']), parse_mode=telegram.ParseMode.MARKDOWN)
+				#getLogin()
+		else:
+			bot.sendMessage(chat_id=update.message.chat_id, text='Недостаточно данных для авторизации.\nОтправьте сообщения по типу:\n\n/login your_login / email\n/pass your_password', parse_mode=telegram.ParseMode.HTML)
 	except:
 		print('Error request to site ' + str(response.status_code))
 	#print(rp.text)
@@ -305,7 +309,10 @@ def loginFlance(uid):
 	try:
 		jar = requests.cookies.RequestsCookieJar()
 		#cook = [authFlance(uid),ast.literal_eval(getUsersData('cookie', uid))][ast.literal_eval(getUsersData('cookie', uid))]
-		cook = [authFlance(uid),ast.literal_eval(getUsersData('cookie', uid))][ast.literal_eval(getUsersData('cookie', uid))]
+		cook = ast.literal_eval(getUsersData('cookie', uid))
+		if len(str(cook)) < 10:
+			authFlance(uid)
+			return
 		for i in cook:
 			jar.set(i, cook[i])
 		response = request.get('https://freelance.ua/', cookies=jar).json()
