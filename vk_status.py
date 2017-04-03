@@ -118,8 +118,7 @@ def readSysDB(name):
 	except:
 		print('Error getting sysvars from db')
 		return 0
-	#finally:
-		#sqldbc.close()
+		#sqldbc.close()	
 		
 def updateSysDB(name, value):
 	try:
