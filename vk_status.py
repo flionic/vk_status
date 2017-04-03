@@ -241,13 +241,14 @@ def tgmAuth(bot, update):
 	
 def tgmLogin(bot, update):
 	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-	login = (update.message.text).split(" ")[1]
-	print(len(login))
+	try:
+		login = (update.message.text).split(" ")[1]
+	except:
+		print(len(login))
+		bot.sendMessage(chat_id=update.message.chat_id, text='Вы не ввели логин.\nСообщение должно иметь вид \"/login my_name\"', parse_mode=telegram.ParseMode.HTML)
 	if len(login) > 0:
 		addAuthDB('login', login, update.message.chat_id)
-	else:
-		bot.sendMessage(chat_id=update.message.chat_id, text='Вы не ввели логин.\nСообщение должно иметь вид \"/login my_name\"', parse_mode=telegram.ParseMode.HTML)
-	
+
 def tgmPass(bot, update):
 	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING) 
 	passw = (update.message.text).split(" ")[1]
