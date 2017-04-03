@@ -151,8 +151,9 @@ def addAuthDB(name, value, uid):
 			#sql_a = "INSERT INTO users (id) VALUES ({})".format('111')
 			sql_u = "UPDATE users SET {}=(%s) WHERE id=(%s)".format(name)
 			cursor.execute(sql_f)
+			if not cursor:
+				print('azazazaz')
 			for i in cursor:
-				print(len(str(i)))
 				if not len(str(i)) > 0:
 					bot.sendMessage(chat_id=uid, text="Для начала вы должны быть подписчиком бота.\nПодписаться - /subscribe" + name, parse_mode=telegram.ParseMode.HTML)
 				else:
