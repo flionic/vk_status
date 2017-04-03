@@ -151,6 +151,15 @@ def createSysDB(name, value):
 		print('Error create sysvar in db')
 		rsDataBase()
 		
+def addPostInfo(id, link):
+	try:
+		rsDataBase()
+		with sqldbc.cursor() as cursor:
+			sql = "INSERT INTO posts (id, link) VALUES (%s, %s)"
+			cursor.execute(sql, (id, link))
+	except:
+		print('Error adding data to posts')
+		
 def userExist(uid):
 	try:
 		rsDataBase()
@@ -272,6 +281,7 @@ def parseFlance(fid=''):
 					if (pid > lastPostId) or fid or rssUpdDate == 0:
 						msg = '🔗 [{}]({})\n\n💵 {}\n\n🆔 {}\n🗃 {}\n🕒️ {}\n\n📝 {}'.format(name, link, price, pid, categ, date, desc)
 						if not fid:
+							addPostInfo(pid, link)
 							[bot.sendMessage(chat_id=id, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True) for id in getSubs()]
 							print('New offer: ' + name)
 							lastPostId = updateSysDB('lastPostId', pid)
