@@ -209,7 +209,7 @@ def delSubDB(uid):
 				bot.sendMessage(chat_id=uid, text="Вы еще не являетесь подписчиком.\nПодписаться - /subscribe", parse_mode=telegram.ParseMode.HTML)
 		#sqldbc.close()
 	except:
-		print('Error deleting Sub ID')
+		print('Error removing sub')
 		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка. Повторите попытку еще раз.", parse_mode=telegram.ParseMode.HTML)
 		rsDataBase()
 
@@ -223,26 +223,26 @@ def getSubs():
 			return ids
 		#sqldbc.close()
 	except:
-		print('Error reading subs from db')
+		print('Error while reading subs')
 		rsDataBase()
 		return 0
 
 def addUsersData(name, value, uid):
 	try:
+		rsDataBase()
 		#sqldbc.connect()
 		with sqldbc.cursor() as cursor:
-			sql_u = "UPDATE users SET {}=(%s) WHERE id=(%s)".format(name)
+			sql = "UPDATE users SET {}={} WHERE id={}".format(name, value, uid)
 			if ifAuthDB(uid):
-				cursor.execute(sql_u, (value, uid))
+				cursor.execute(sql)
 				print('Adding account {}: {}'.format(uid, name))
 				bot.sendMessage(chat_id=uid, text="К вашему аккаунту успешно добавлен " + name, parse_mode=telegram.ParseMode.HTML)					
 			else:
 				bot.sendMessage(chat_id=uid, text="Для начала вы должны быть подписчиком бота.\nПодписаться - /subscribe", parse_mode=telegram.ParseMode.HTML)
 		#sqldbc.close()
 	except:
-		print('Error writing account')
+		print('Error while adding userData')
 		bot.sendMessage(chat_id=uid, text="Ошибка отправки " + name, parse_mode=telegram.ParseMode.HTML)
-		rsDataBase()
 
 rssUpdDate = 0
 lastPostId = int(readSysDB('lastPostId'))
@@ -303,7 +303,7 @@ def authFlance(uid):
 	except:
 		print('Error request to site ' + str(response.status_code))
 	print(str(session.cookies.get_dict()))
-	addUsersData('cookie', session.cookies.get_dict(), uid)
+	addUsersData('cookie', str(session.cookies.get_dict()), uid)
 	#print(rp.text)
 	
 def loginFlance(uid):
@@ -342,7 +342,7 @@ def tgmHelp(bot, update):
 def tgmAuth(bot, update):
 	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
 	authFlance(update.message.chat_id)
-	bot.sendMessage(chat_id=update.message.chat_id, text='Недостаточно данных для авторизации.\nОтправьте сообщения по типу:\n\n/login your_login / email\n/pass your_password', parse_mode=telegram.ParseMode.HTML)
+	#bot.sendMessage(chat_id=update.message.chat_id, text='Недостаточно данных для авторизации.\nОтправьте сообщения по типу:\n\n/login your_login / email\n/pass your_password', parse_mode=telegram.ParseMode.HTML)
 	
 def tgmLogin(bot, update):
 	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
