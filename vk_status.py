@@ -93,7 +93,8 @@ def getSteam():
 			if timeInt[1] > 0:
 				timeStr += str(timeInt[1]) + ' ч. '
 
-			if timeInt[2] > 0 and timeInt[0] == 0 and timeInt[1] < 5:
+			print(str(timeInt[1]))
+			if timeInt[2] > 0 and timeInt[0] == 0:
 				timeStr += str(timeInt[2]) + ' мин. '
 
 			if timeInt[3] > 0 and timeInt[2] == 0 and timeInt[1] == 0:
