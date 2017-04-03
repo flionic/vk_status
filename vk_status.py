@@ -310,14 +310,13 @@ def loginFlance(uid):
 		jar = requests.cookies.RequestsCookieJar()
 		#cook = [authFlance(uid),ast.literal_eval(getUsersData('cookie', uid))][ast.literal_eval(getUsersData('cookie', uid))]
 		cook = ast.literal_eval(getUsersData('cookie', uid))
-		print(str(cook))
-		if len(str(cook)) < 10:
+		if not str(cook):
 			authFlance(uid)
-			return
-		for i in cook:
-			jar.set(i, cook[i])
-		response = request.get('https://freelance.ua/', cookies=jar).json()
-		bot.sendMessage(chat_id=uid, text='Авторизация успешная, : ' + str(response.status_code), parse_mode=telegram.ParseMode.MARKDOWN)
+		else:
+			for i in cook:
+				jar.set(i, cook[i])
+			response = request.get('https://freelance.ua/', cookies=jar).json()
+			bot.sendMessage(chat_id=uid, text='Авторизация успешная, : ' + str(response.status_code), parse_mode=telegram.ParseMode.MARKDOWN)
 	except:
 		print("Error loggining to site")
 	
