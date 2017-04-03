@@ -113,9 +113,7 @@ def readSysDB(name):
 		with sqldbc.cursor() as cursor:
 			sql = "SELECT value FROM sysvars where name=(%s)"
 			cursor.execute(sql, (name))
-			for row in cursor:
-				print(str(row))
-				return row['value']
+			[return row['value'] for row in cursor]
 	except:
 		print('Error getting sysvars from db')
 	#finally:
@@ -181,7 +179,6 @@ def parseFeed(force=False, fid=''):
 		rss = ET.fromstring(requests.get('https://freelance.ua/orders/rss').text.encode('utf-8'))
 		locale.setlocale(locale.LC_TIME, "en_US.UTF-8")
 		rssPubDate = datetime.strptime(rss[0][5].text, '%a, %d %b %Y %H:%M:%S %z').timestamp()
-		print(str(rssUpdDate))
 		if (rssPubDate > rssUpdDate) or force:
 			print('Parsing freelance.ua...')
 			soup = BeautifulSoup(session.get('https://freelance.ua/').text, "lxml")
