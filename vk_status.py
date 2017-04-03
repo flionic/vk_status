@@ -166,7 +166,7 @@ def readSubsDB():
 		print('Error reading subs from db')
 		return 0
 
-rssUpdDate = int(readSysDB('rssUpdDate'))
+rssUpdDate = 0
 lastPostId = int(readSysDB('lastPostId'))
 
 session = requests.Session()
@@ -197,7 +197,7 @@ def parseFeed(force=False, fid=''):
 					price = i.find('span').text
 					desc = i.find('p').text
 					pid = int(link[link.find('orders/')+7:link.find('-')])
-					if (pid > lastPostId) or force or lastPostId == 0 or rssUpdDate == 0:
+					if (pid > lastPostId) or force or rssUpdDate == 0:
 						msg = '🔗 [{}]({})\n\n💵 {}\n\n🆔 {}\n🗃 {}\n🕒️ {}\n\n📝 {}'.format(name, link, price, pid, categ, date, desc)
 						if not force:
 							[bot.sendMessage(chat_id=id, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True) for id in readSubsDB()]
@@ -235,8 +235,7 @@ def tgmLogin(bot, update):
 	
 def tgmPass(bot, update):
 	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING) 
-	passw = update.message.text
-	passw = passw.split(" ")[1]
+	passw = (update.message.text).split(" ")[1]
 	bot.sendMessage(chat_id=update.message.chat_id, text='Пароль сохранен ' + passw, parse_mode=telegram.ParseMode.HTML)
 
 def tgmGetOffers(bot, update):
