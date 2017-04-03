@@ -204,7 +204,7 @@ def parseFeed(force=False, fid=''):
 					price = i.find('span').text
 					desc = i.find('p').text
 					pid = int(link[link.find('orders/')+7:link.find('-')])
-					if (pid > lastPostId) or force:
+					if (pid > lastPostId) or force or lastPostId == 0 or rssUpdDate == 0:
 						msg = '🔗 [{}]({})\n\n💵 {}\n\n🆔 {}\n🗃 {}\n🕒️ {}\n\n📝 {}'.format(name, link, price, pid, categ, date, desc)
 						if not force:
 							[bot.sendMessage(chat_id=id, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True) for id in subs]
