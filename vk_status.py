@@ -295,7 +295,7 @@ def authFlance(uid):
 			if response['data']['success'] == True:
 				print('Successful auth')
 				updUsersData('cookie', str(session.cookies.get_dict()), uid)
-				bot.sendMessage(chat_id=uid, text='Успешная авторизация, cookie сохранены', parse_mode=telegram.ParseMode.MARKDOWN)
+				bot.sendMessage(chat_id=uid, text='Успешная авторизация', parse_mode=telegram.ParseMode.MARKDOWN)
 			elif response['data']['success'] == False:
 				print('Auth error: ' + str(response['errors']))
 				bot.sendMessage(chat_id=uid, text='Ошибка авторизации: ' + str(response['errors'][0]) + '\n\nОтправьте сообщения по типу:\n\n/login your_login / email\n/pass your_password', parse_mode=telegram.ParseMode.HTML)
@@ -308,16 +308,19 @@ def authFlance(uid):
 	
 def loginFlance(uid):
 	try:
-		jar = requests.cookies.RequestsCookieJar()
 		#cook = [authFlance(uid),ast.literal_eval(getUsersData('cookie', uid))][ast.literal_eval(getUsersData('cookie', uid))]
 		cook = ast.literal_eval(getUsersData('cookie', uid))
-		if not cook:
-			authFlance(uid)
-		else:
+		print(str(cook))
+		if cook:
+			print('1i')
+			jar = requests.cookies.RequestsCookieJar()
 			for i in cook:
 				jar.set(i, cook[i])
-			response = request.get('https://freelance.ua/', cookies=jar).json()
-			bot.sendMessage(chat_id=uid, text='Авторизация успешная, : ' + str(response.status_code), parse_mode=telegram.ParseMode.MARKDOWN)
+			response = session.get('https://freelance.ua/', cookies=jar).json()
+			bot.sendMessage(chat_id=uid, text='Авторизация успешная, : ' + str(response.status_code), parse_mode=telegram.ParseMode.HTML)
+			print('1e')
+		else:
+			authFlance(uid)
 	except:
 		print("Error loggining to site")
 	
