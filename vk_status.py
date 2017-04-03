@@ -147,7 +147,7 @@ def addSubDB(uid):
 def addAuthDB(name, value, uid):
 	try:
 		with sqldbc.cursor() as cursor:
-			sql = "UPDATE users SET login=(%s) WHERE id=(%s)"
+			sql = "UPDATE users SET {}=(%s) WHERE id=(%s)".format(name)
 			cursor.execute(sql, (value, uid))
 			print('Added account data: ' + name)
 			bot.sendMessage(chat_id=uid, text="К вашему аккаунту добавлен " + name, parse_mode=telegram.ParseMode.HTML)
@@ -241,18 +241,18 @@ def tgmAuth(bot, update):
 	
 def tgmLogin(bot, update):
 	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-	try:
-		login = (update.message.text).split(" ")[1]
+	login = (update.message.text).split(" ")[1]
+	if len(login) > 0:
 		addAuthDB('login', login, update.message.chat_id)
-	except:
+	else:
 		bot.sendMessage(chat_id=update.message.chat_id, text='Вы не ввели логин.\nСообщение должно иметь вид "/login my_name"' + login, parse_mode=telegram.ParseMode.HTML)
 	
 def tgmPass(bot, update):
 	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING) 
-	try:
-		passw = (update.message.text).split(" ")[1]
+	passw = (update.message.text).split(" ")[1]
+	if len(passw) > 0:
 		addAuthDB('pass', passw, update.message.chat_id)
-	except:
+	else:
 		bot.sendMessage(chat_id=update.message.chat_id, text='Вы не ввели пароль.\nСообщение должно иметь вид "/pass 1q2w3e4r5t"' + login, parse_mode=telegram.ParseMode.HTML)
 
 def tgmGetOffers(bot, update):
