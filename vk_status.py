@@ -229,7 +229,7 @@ dispatcher = updater.dispatcher
 
 def tgmStart(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-    bot.sendMessage(chat_id=update.message.chat_id, text="Привет! Это бот сайта freelance.ua. Здесь вы можете отслеживать ленту заказов в реальном времени, получая уведомления прямо на свой телефон. Список команд: /help", parse_mode=telegram.ParseMode.HTML)
+    bot.sendMessage(chat_id=update.message.chat_id, text="Привет! Это бот сайта freelance.ua. Здесь вы можете отслеживать ленту заказов в реальном времени, получая уведомления прямо на свой телефон. Список команд: [/help](/help 123)", parse_mode=telegram.ParseMode.MARKDOWN)
 	
 def tgmHelp(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
@@ -241,16 +241,16 @@ def tgmAuth(bot, update):
 	
 def tgmLogin(bot, update):
 	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-	login = (update.message.text).split(" ")[1]
 	if len(update.message.text) > 10:
+		login = (update.message.text).split(" ")[1]
 		addAuthDB('login', login, update.message.chat_id)
 	else:
 		bot.sendMessage(chat_id=update.message.chat_id, text='Вы не ввели логин.\nСообщение должно иметь вид "/login my_name"', parse_mode=telegram.ParseMode.HTML)
 	
 def tgmPass(bot, update):
 	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING) 
-	passw = (update.message.text).split(" ")[1]
 	if len(update.message.text) > 10:
+		passw = (update.message.text).split(" ")[1]
 		addAuthDB('pass', passw, update.message.chat_id)
 	else:
 		bot.sendMessage(chat_id=update.message.chat_id, text='Вы не ввели пароль.\nСообщение должно иметь вид "/pass 1q2w3e4r5t"', parse_mode=telegram.ParseMode.HTML)
