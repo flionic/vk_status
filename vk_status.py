@@ -340,7 +340,7 @@ def tgmHelp(bot, update):
 
 def tgmAuth(bot, update):
 	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-	loginFlance(uid)
+	loginFlance(update.message.chat_id)
 	#bot.sendMessage(chat_id=update.message.chat_id, text='Недостаточно данных для авторизации.\nОтправьте сообщения по типу:\n\n/login your_login / email\n/pass your_password', parse_mode=telegram.ParseMode.HTML)
 	
 def tgmLogin(bot, update):
