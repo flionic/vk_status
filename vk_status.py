@@ -113,9 +113,11 @@ def readSysDB(name):
 		with sqldbc.cursor() as cursor:
 			sql = "SELECT value FROM sysvars where name=(%s)"
 			cursor.execute(sql, (name))
-			return cursor[0]['value']
+			for row in cursor:
+				return row['value']
 	except:
 		print('Error getting sysvars from db')
+		return 0
 	#finally:
 		#sqldbc.close()
 		
@@ -167,6 +169,7 @@ def readSubsDB():
 			return ids
 	except:
 		print('Error reading subs from db')
+		return 0
 
 subs = readSubsDB()
 rssUpdDate = int(readSysDB('rssUpdDate'))
