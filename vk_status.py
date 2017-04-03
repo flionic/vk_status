@@ -147,7 +147,7 @@ def addSubDB(uid):
 def addAuthDB(name, value, uid):
 	try:
 		with sqldbc.cursor() as cursor:
-			sql = "UPDATE users SET (%s)=(%s) WHERE id=(%s)"
+			sql = "UPDATE users SET %s=(%s) WHERE id=(%s)"
 			cursor.execute(sql, (name, value, uid))
 			print('Added account data: ' + name)
 			bot.sendMessage(chat_id=uid, text="К вашему аккаунту добавлен " + name, parse_mode=telegram.ParseMode.HTML)
