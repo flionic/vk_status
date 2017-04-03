@@ -142,7 +142,18 @@ def addSubDB(uid):
 			bot.sendMessage(chat_id=uid, text="Подписка оформлена", parse_mode=telegram.ParseMode.HTML)
 	except:
 		print('Error writing Sub ID')
-		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка. Возможно, вы уже подписаны.", parse_mode=telegram.ParseMode.HTML)	
+		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка. Возможно, вы уже подписаны.", parse_mode=telegram.ParseMode.HTML)
+
+def addAuthDB(name, value, uid):
+	try:
+		with sqldbc.cursor() as cursor:
+			sql = "UPDATE users SET (%s)=(%s) WHERE id=(%s)"
+			cursor.execute(sql, (name, value, uid))
+			print('Added account data: ' + name)
+			bot.sendMessage(chat_id=uid, text="К вашему аккаунту добавлен " + name, parse_mode=telegram.ParseMode.HTML)
+	except:
+		print('Error writing account')
+		bot.sendMessage(chat_id=uid, text="Ошибка отправки " + name, parse_mode=telegram.ParseMode.HTML)
 		
 def delSubDB(uid):
 	try:
@@ -222,21 +233,25 @@ def tgmStart(bot, update):
 	
 def tgmHelp(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-    bot.sendMessage(chat_id=update.message.chat_id, text='Команды: \n/getOffers - получить список заказов с 1 страницы.\n/subscribe - позволяет получать заказы в реальном времени\n/unsubscribe  - отписаться от получения заказов.\n/auth - авторизация на сайте.\n/help - помощь по командам.\n/login - авторизоваться на сайте.\n/offer [id] - предложить свою кандидатуру.\n/offermsg [text] - сообщение предложения', parse_mode=telegram.ParseMode.HTML)
+    bot.sendMessage(chat_id=update.message.chat_id, text='Команды: \n/get_offers - получить список заказов с 1 страницы.\n/subscribe - позволяет получать заказы в реальном времени\n/unsubscribe  - отписаться от получения заказов.\n/auth - авторизация на сайте.\n/help - помощь по командам.\n/login - авторизоваться на сайте.\n/offer [id] - предложить свою кандидатуру.\n/offermsg [text] - сообщение предложения', parse_mode=telegram.ParseMode.HTML)
 
 def tgmAuth(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-    bot.sendMessage(chat_id=update.message.chat_id, text='Недостаточно данных для авторизации.\nДля авторизации на сайте отправьте сообщения по типу:\n\n/login your_login/email\n/pass your_password', parse_mode=telegram.ParseMode.HTML)\
+    bot.sendMessage(chat_id=update.message.chat_id, text='Недостаточно данных для авторизации.\nДля авторизации на сайте отправьте сообщения по типу:\n\n/login your_login / email\n/pass your_password', parse_mode=telegram.ParseMode.HTML)\
 	
 def tgmLogin(bot, update):
-	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING) 
-	login = (update.message.text).split(" ")[1]
-	bot.sendMessage(chat_id=update.message.chat_id, text='Логин сохранен ' + login, parse_mode=telegram.ParseMode.HTML)
+	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
+	try:
+		addAuthDB('login', (update.message.text).split(" ")[1], update.message.chat_id)
+	except:
+		bot.sendMessage(chat_id=update.message.chat_id, text='Вы не ввели логин.\nСообщение должно иметь вид "/login my_name"' + login, parse_mode=telegram.ParseMode.HTML)
 	
 def tgmPass(bot, update):
 	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING) 
-	passw = (update.message.text).split(" ")[1]
-	bot.sendMessage(chat_id=update.message.chat_id, text='Пароль сохранен ' + passw, parse_mode=telegram.ParseMode.HTML)
+	try:
+		addAuthDB('pass', (update.message.text).split(" ")[1], update.message.chat_id)
+	except:
+		bot.sendMessage(chat_id=update.message.chat_id, text='Вы не ввели пароль.\nСообщение должно иметь вид "/pass 1q2w3e4r5t"' + login, parse_mode=telegram.ParseMode.HTML)
 
 def tgmGetOffers(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
