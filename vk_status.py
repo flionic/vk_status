@@ -19,12 +19,14 @@ steam_api_key = os.environ.get('steam_key')
 
 vkStatus = ''
 def setStatus(stat):
+	global vkStatus
 	vk_l = 'https://api.vk.com/method/'
 	token = '&access_token=' + vk_token + '&v=' + '5.52'
 	try:
 		r = requests.get(vk_l + 'status.set?text=' + stat + token).json()
 		try:
 			if r['response'] == 1:
+				vkStatus = stat
 				print('Status updated\n' + stat)
 		except:
 			try:
@@ -344,8 +346,6 @@ updater.start_polling()
 
 while True:
 	status = getSteam() + getLastFm()
-	if status != vkStatus:
-		setStatus(status)
-		vkStatus = status
+	[setStatus(status),''][status != vkStatus]
 	parseFeed()
 	time.sleep(3)
