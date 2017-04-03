@@ -119,6 +119,7 @@ def readSysDB(name):
 		sqldbc.close()
 	except:
 		print('Error getting sysvars from db')
+		rsDataBase()
 		return 0
 		#sqldbc.close()	
 		
@@ -133,6 +134,7 @@ def updateSysDB(name, value):
 		sqldbc.close()
 	except:
 		print('Error updating sysvars in db')
+		rsDataBase()
 		
 def createSysDB(name, value):
 	try:
@@ -143,7 +145,8 @@ def createSysDB(name, value):
 		sqldbc.close()
 	except:
 		print('Error create sysvar in db')
-
+		rsDataBase()
+		
 def ifAuthDB(uid):
 	try:
 		sqldbc.connect()
@@ -155,6 +158,7 @@ def ifAuthDB(uid):
 		sqldbc.close()
 	except:
 		print('Error checking account')
+		rsDataBase()
 		
 def addSubDB(uid):
 	try:
@@ -171,6 +175,7 @@ def addSubDB(uid):
 	except:
 		print('Error writing Sub ID')
 		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка. Повторите попытку еще раз.", parse_mode=telegram.ParseMode.HTML)
+		rsDataBase()
 		
 def delSubDB(uid):
 	try:
@@ -187,6 +192,7 @@ def delSubDB(uid):
 	except:
 		print('Error deleting Sub ID')
 		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка. Повторите попытку еще раз.", parse_mode=telegram.ParseMode.HTML)
+		rsDataBase()
 
 def readSubsDB():
 	try:
@@ -199,6 +205,7 @@ def readSubsDB():
 		sqldbc.close()
 	except:
 		print('Error reading subs from db')
+		rsDataBase()
 		return 0
 
 def addAuthDB(name, value, uid):
@@ -216,6 +223,7 @@ def addAuthDB(name, value, uid):
 	except:
 		print('Error writing account')
 		bot.sendMessage(chat_id=uid, text="Ошибка отправки " + name, parse_mode=telegram.ParseMode.HTML)
+		rsDataBase()
 
 rssUpdDate = 0
 lastPostId = int(readSysDB('lastPostId'))
