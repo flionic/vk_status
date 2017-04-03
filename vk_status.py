@@ -186,12 +186,12 @@ def addAuthDB(name, value, uid):
 	try:
 		with sqldbc.cursor() as cursor:
 			sql_u = "UPDATE users SET {}=(%s) WHERE id=(%s)".format(name)
-				if ifAuthDB(uid):
-					cursor.execute(sql_u, (value, uid))
-					print('Adding account {}: {}'.format(uid, name))
-					bot.sendMessage(chat_id=uid, text="К вашему аккаунту успешно добавлен " + name, parse_mode=telegram.ParseMode.HTML)					
-				else:
-					bot.sendMessage(chat_id=uid, text="Для начала вы должны быть подписчиком бота.\nПодписаться - /subscribe" + name, parse_mode=telegram.ParseMode.HTML)
+			if ifAuthDB(uid):
+				cursor.execute(sql_u, (value, uid))
+				print('Adding account {}: {}'.format(uid, name))
+				bot.sendMessage(chat_id=uid, text="К вашему аккаунту успешно добавлен " + name, parse_mode=telegram.ParseMode.HTML)					
+			else:
+				bot.sendMessage(chat_id=uid, text="Для начала вы должны быть подписчиком бота.\nПодписаться - /subscribe" + name, parse_mode=telegram.ParseMode.HTML)
 	except:
 		print('Error writing account')
 		bot.sendMessage(chat_id=uid, text="Ошибка отправки " + name, parse_mode=telegram.ParseMode.HTML)
