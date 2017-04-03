@@ -111,15 +111,11 @@ def getSteam():
 def readSysDB(name):
 	try:
 		with sqldbc.cursor() as cursor:
-			#sql = "SELECT `name`, `value` FROM `sysvars`"
 			sql = "SELECT value FROM sysvars where name=(%s)"
 			cursor.execute(sql, (name))
-			#result = cursor.fetchone()
 			for row in cursor:
 				print(str(row))
-				#if row['name'] == name:
-				#	print(str(row['name']))
-				#	return row['value']
+				return row['value']
 	except:
 		print('Error getting sysvars from db')
 	#finally:
