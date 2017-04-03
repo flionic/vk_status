@@ -128,6 +128,7 @@ def updateSysDB(name, value):
 			cursor.execute(sql, data)
 			return value
 	except:
+		updateSysDB(name, value)
 		rsDataBase()
 		print('Error updating sysvars in db')
 		
