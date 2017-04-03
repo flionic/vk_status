@@ -232,7 +232,7 @@ rssUpdDate = 0
 lastPostId = int(readSysDB('lastPostId'))
 
 session = requests.Session()
-def parseFeed(force=False, fid=''):
+def parseFlance(force=False, fid=''):
 	global rssUpdDate, lastPostId
 	try:
 		rss = ET.fromstring(requests.get('https://freelance.ua/orders/rss').text.encode('utf-8'))
@@ -317,7 +317,7 @@ def tgmPass(bot, update):
 
 def tgmGetOffers(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-    parseFeed(True, update.message.chat_id)
+    parseFlance(True, update.message.chat_id)
 	
 def tgmSubs(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
@@ -346,6 +346,6 @@ updater.start_polling()
 
 while True:
 	status = getSteam() + getLastFm()
-	setStatus(status) if status != vkStatus
-	parseFeed()
+	setStatus(status) if status != vkStatus else ''
+	parseFlance()
 	time.sleep(3)
