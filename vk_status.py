@@ -222,7 +222,21 @@ def tgmStart(bot, update):
 	
 def tgmHelp(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-    bot.sendMessage(chat_id=update.message.chat_id, text='Команды: \n/getOffers - получить список заказов с 1 страницы.\n/subscribe - позволяет получать заказы в реальном времени\n/unsubscribe  - отписаться от получения заказов.\n/help - помощь по командам.\n/login - авторизоваться на сайте.\n/offer [id] - предложить свою кандидатуру.\n/offermsg [text] - сообщение предложения', parse_mode=telegram.ParseMode.HTML)
+    bot.sendMessage(chat_id=update.message.chat_id, text='Команды: \n/getOffers - получить список заказов с 1 страницы.\n/subscribe - позволяет получать заказы в реальном времени\n/unsubscribe  - отписаться от получения заказов.\n/auth - авторизация на сайте.\n/help - помощь по командам.\n/login - авторизоваться на сайте.\n/offer [id] - предложить свою кандидатуру.\n/offermsg [text] - сообщение предложения', parse_mode=telegram.ParseMode.HTML)
+
+def tgmAuth(bot, update):
+    bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
+    bot.sendMessage(chat_id=update.message.chat_id, text='Недостаточно данных для авторизации.\nДля авторизации на сайте отправьте сообщения по типу:\n\n/login your_login/email\n/pass your_password', parse_mode=telegram.ParseMode.HTML)\
+	
+def tgmLogin(bot, update):
+    bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING) 
+	login = update.message.text.split(" ")[0]
+    bot.sendMessage(chat_id=update.message.chat_id, text='Логин сохранен ' + login, parse_mode=telegram.ParseMode.HTML)
+	
+def tgmPass(bot, update):
+    bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING) 
+	passw = update.message.text.split(" ")[0]
+    bot.sendMessage(chat_id=update.message.chat_id, text='Пароль сохранен ' + passw, parse_mode=telegram.ParseMode.HTML)
 
 def tgmGetOffers(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
@@ -241,6 +255,9 @@ dispatcher.add_handler(CommandHandler('help', tgmHelp))
 dispatcher.add_handler(CommandHandler('get_offers', tgmGetOffers))
 dispatcher.add_handler(CommandHandler('subscribe', tgmSubs))
 dispatcher.add_handler(CommandHandler('unsubscribe', tgmUnsub))
+dispatcher.add_handler(CommandHandler('auth', tgmAuth))
+dispatcher.add_handler(CommandHandler('login', tgmLogin))
+dispatcher.add_handler(CommandHandler('pass', tgmPass))
 
 updater.start_polling()
 
