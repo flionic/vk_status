@@ -160,6 +160,18 @@ def addPostInfo(id, link):
 		rsDataBase()
 		print('Error adding data to posts')
 		
+def getPostLink(pid):
+	try:
+		rsDataBase()
+		with sqldbc.cursor() as cursor:
+			sql = "select link from posts where id={}".format(pid)
+			cursor.execute(sql)
+			for i in cursor:
+				return i
+	except:
+		print('Error checking account')
+		rsDataBase()
+		
 def userExist(uid):
 	try:
 		rsDataBase()
@@ -446,7 +458,8 @@ def tgmAddOffer(bot, update):
 	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
 	try:
 		pid = (update.message.text).split(" ")[1]
-		sendOffer(update.message.chat_id, link, (update.message.text).split(" ")[2])
+		bot.sendMessage(chat_id=update.message.chat_id, text='ID: {}\n\n{}'.format(pid, getPostLink(pid)), parse_mode=telegram.ParseMode.HTML)
+		#sendOffer(update.message.chat_id, link, (update.message.text).split(" ")[2])
 	except:
 		bot.sendMessage(chat_id=update.message.chat_id, text='ID поста не указан', parse_mode=telegram.ParseMode.HTML)
 	
@@ -461,6 +474,7 @@ dispatcher.add_handler(CommandHandler('fauth', tgmAuthForce))
 dispatcher.add_handler(CommandHandler('login', tgmLogin))
 dispatcher.add_handler(CommandHandler('pass', tgmPass))
 dispatcher.add_handler(CommandHandler('reset_db', tgmRsDb))
+dispatcher.add_handler(CommandHandler('offer', tgmAddOffer))
 
 updater.start_polling()
 
