@@ -215,7 +215,7 @@ def parseFeed(force=False, fid=''):
 	try:
 		rss = ET.fromstring(requests.get('https://freelance.ua/orders/rss').text.encode('utf-8'))
 		locale.setlocale(locale.LC_TIME, "en_US.UTF-8")
-		rssPubDate = datetime.strptime(rss[0][5].text, '%a, %d %b %Y %H:%M:%S %z').timestamp() + 10850
+		rssPubDate = datetime.strptime(rss[0][5].text, '%a, %d %b %Y %H:%M:%S %z').timestamp() + 10750
 		if (rssPubDate > rssUpdDate) or force:
 			print('Parsing freelance.ua...')
 			soup = BeautifulSoup(session.get('https://freelance.ua/').text, "lxml")
