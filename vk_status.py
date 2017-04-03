@@ -284,11 +284,10 @@ def parseFlance(fid=''):
 	except:
 		print('Error parse freelance.ua')
 	
-def authFlance(uid):
+def authFlance(uid, ulogin='', upassw=''):
 	try:
-		print('authFlance method')
-		login = getUsersData('login', uid)
-		passw = getUsersData('pass', uid)
+		login = [getUsersData('login', uid), ulogin][len(ulogin) > 0]
+		passw = [getUsersData('pass', uid), upassw][len(upassw) > 0]
 		if type(login) is str and type(passw) is str:
 			form_data = {'email': login, 'pass': passw, 'remember': True, 'submit': 'submit'}
 			response = session.post('https://freelance.ua/user/login', data=form_data).json()
@@ -303,7 +302,7 @@ def authFlance(uid):
 		else:
 			bot.sendMessage(chat_id=update.message.chat_id, text='Недостаточно данных для авторизации.\nОтправьте сообщения по типу:\n\n/login your_login / email\n/pass your_password', parse_mode=telegram.ParseMode.HTML)
 	except:
-		print('Error request to site ' + str(response.status_code))
+		print('Error auth on Flance' + str(response.status_code))
 	#print(rp.text)
 	
 def loginFlance(uid):
@@ -315,7 +314,12 @@ def loginFlance(uid):
 			for i in cook:
 				jar.set(i, cook[i])
 			response = session.get('https://freelance.ua/', cookies=jar)
-			bot.sendMessage(chat_id=uid, text='Авторизация успешная, статус ' + str(response.status_code), parse_mode=telegram.ParseMode.HTML)
+			soup = BeautifulSoup(response.text, "lxml")
+			try:
+				uname = soup.find("li", class_="hidden-xs").text
+				bot.sendMessage(chat_id=uid, text='Авторизация успешная. Привет, {}!'.format(uname), parse_mode=telegram.ParseMode.HTML)
+			except:
+				bot.sendMessage(chat_id=uid, text='Что-то пошло не так...Возможно сессия устарела?', parse_mode=telegram.ParseMode.HTML)
 		else:
 			authFlance(uid)
 	except:
@@ -344,12 +348,23 @@ def tgmHelp(bot, update):
 	/offer [id] - предложить свою кандидатуру шаблоном
 	/offer [id][text] - предложить свою кандидатуру с сообщением [text]
 	/offermsg [text] - шаблон сообщения предложения
+	/fauth [login] [pass]- принудительная авторизация, 
+используя логин и пароль (они не будут сохранены, сохранятся только cookie)
 	""", parse_mode=telegram.ParseMode.HTML)
 
 def tgmAuth(bot, update):
 	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
 	loginFlance(update.message.chat_id)
-	#bot.sendMessage(chat_id=update.message.chat_id, text='Недостаточно данных для авторизации.\nОтправьте сообщения по типу:\n\n/login your_login / email\n/pass your_password', parse_mode=telegram.ParseMode.HTML)
+	authFlance(uid)
+	
+def tgmAuthForce(bot, update):
+	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
+	try:
+		login = (update.message.text).split(" ")[1]
+		passw = (update.message.text).split(" ")[2]
+		authFlance(update.message.chat_id, login, passw)
+	except:
+		bot.sendMessage(chat_id=update.message.chat_id, text='Проверьте правильность данных, вы что-то упустили.\nВаше сообщение должно выглядеть так:\n"/fauth login password"', parse_mode=telegram.ParseMode.HTML)
 	
 def tgmLogin(bot, update):
 	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
@@ -390,6 +405,7 @@ dispatcher.add_handler(CommandHandler('get_offers', tgmGetOffers))
 dispatcher.add_handler(CommandHandler('subscribe', tgmSubs))
 dispatcher.add_handler(CommandHandler('unsubscribe', tgmUnsub))
 dispatcher.add_handler(CommandHandler('auth', tgmAuth))
+dispatcher.add_handler(CommandHandler('fauth', tgmAuthForce))
 dispatcher.add_handler(CommandHandler('login', tgmLogin))
 dispatcher.add_handler(CommandHandler('pass', tgmPass))
 dispatcher.add_handler(CommandHandler('reset_db', tgmRsDb))
