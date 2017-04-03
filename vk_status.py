@@ -104,6 +104,7 @@ def getSteam():
 # MySQL
 sqldbc = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True, charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor) 
 def rsDataBase():
+	print('Reconnecting to database')
 	sqldbc.close()
 	sqldbc.connect()
 
@@ -127,6 +128,7 @@ def updateSysDB(name, value):
 			cursor.execute(sql, data)
 			return value
 	except:
+		rsDataBase()
 		print('Error updating sysvars in db')
 		
 def createSysDB(name, value):
@@ -145,6 +147,7 @@ def ifAuthDB(uid):
 			for i in cursor:
 				return True
 	except:
+		rsDataBase()
 		print('Error checking account')
 		
 def addSubDB(uid):
@@ -158,8 +161,9 @@ def addSubDB(uid):
 			else:
 				bot.sendMessage(chat_id=uid, text="По нашим сведениям, вы уже подписаны :)", parse_mode=telegram.ParseMode.HTML)
 	except:
+		rsDataBase()
 		print('Error writing Sub ID')
-		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка.", parse_mode=telegram.ParseMode.HTML)
+		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка. Повторите попытку еще раз.", parse_mode=telegram.ParseMode.HTML)
 		
 def delSubDB(uid):
 	try:
@@ -172,8 +176,9 @@ def delSubDB(uid):
 			else:
 				bot.sendMessage(chat_id=uid, text="Вы еще не являетесь подписчиком.\nПодписаться - /subscribe", parse_mode=telegram.ParseMode.HTML)
 	except:
+		rsDataBase()
 		print('Error deleting Sub ID')
-		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка.", parse_mode=telegram.ParseMode.HTML)
+		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка. Повторите попытку еще раз.", parse_mode=telegram.ParseMode.HTML)
 
 def readSubsDB():
 	try:
@@ -197,6 +202,7 @@ def addAuthDB(name, value, uid):
 			else:
 				bot.sendMessage(chat_id=uid, text="Для начала вы должны быть подписчиком бота.\nПодписаться - /subscribe", parse_mode=telegram.ParseMode.HTML)
 	except:
+		rsDataBase()
 		print('Error writing account')
 		bot.sendMessage(chat_id=uid, text="Ошибка отправки " + name, parse_mode=telegram.ParseMode.HTML)
 
