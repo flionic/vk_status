@@ -6,6 +6,7 @@ from math import floor
 from bs4 import BeautifulSoup
 import xml.etree.ElementTree as ET
 import locale
+import ast
 import telegram
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import pymysql, pymysql.cursors
@@ -150,7 +151,7 @@ def createSysDB(name, value):
 		print('Error create sysvar in db')
 		rsDataBase()
 		
-def ifAuthDB(uid):
+def userExist(uid):
 	try:
 		#sqldbc.connect()
 		with sqldbc.cursor() as cursor:
@@ -168,7 +169,7 @@ def addSubDB(uid):
 		#sqldbc.connect()
 		with sqldbc.cursor() as cursor:
 			sql = "INSERT INTO `users` (`id`) VALUES (%s)"
-			if not ifAuthDB(uid):
+			if not userExist(uid):
 				cursor.execute(sql, (uid))
 				print('Added subscriber, id: ' + str(uid))
 				bot.sendMessage(chat_id=uid, text="Подписка оформлена", parse_mode=telegram.ParseMode.HTML)
@@ -180,33 +181,33 @@ def addSubDB(uid):
 		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка. Повторите попытку еще раз.", parse_mode=telegram.ParseMode.HTML)
 		rsDataBase()
 		
-def getSubDB(uid, name):
+def getUsersData(name, uid):
 	try:
-		#sqldbc.connect()
+		rsDataBase()
 		with sqldbc.cursor() as cursor:
-			sql = "select %s from users where id=%s"
-			cursor.execute(sql, (name, uid))
-			#[return row for row in cursor]
-			for row in cursor:
-				print('Get data: ' + str(row[name]))
-				bot.sendMessage(chat_id=uid, text="Данные из БД получены", parse_mode=telegram.ParseMode.HTML)
-		#sqldbc.close()
+			sql = "select {} from users where id={}".format(name, uid)
+			if userExist(uid):
+				cursor.execute(sql)
+				for row in cursor:
+					bot.sendMessage(chat_id=uid, text="Данные из БД получены", parse_mode=telegram.ParseMode.HTML)
+					return str(row[name])
+			else:
+				bot.sendMessage(chat_id=uid, text="Для продолжения, вы должны быть подписчиком.\nПодписаться - /subscribe", parse_mode=telegram.ParseMode.HTML)
 	except:
 		print('Error getting from users table')
 		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка. Повторите попытку еще раз.", parse_mode=telegram.ParseMode.HTML)
-		rsDataBase()
 		
 def delSubDB(uid):
 	try:
 		#sqldbc.connect()
 		with sqldbc.cursor() as cursor:
 			sql = "DELETE FROM `users` WHERE `id`=(%s)"
-			if ifAuthDB(uid):
+			if userExist(uid):
 				cursor.execute(sql, (uid))
 				print('Deleted subscriber, id: ' + str(uid))
 				bot.sendMessage(chat_id=uid, text="Подписка отменена, а так же удалены все данные", parse_mode=telegram.ParseMode.HTML)
 			else:
-				bot.sendMessage(chat_id=uid, text="Вы еще не являетесь подписчиком.\nПодписаться - /subscribe", parse_mode=telegram.ParseMode.HTML)
+				bot.sendMessage(chat_id=uid, text="Для продолжения, вы должны быть подписчиком.\nПодписаться - /subscribe", parse_mode=telegram.ParseMode.HTML)
 		#sqldbc.close()
 	except:
 		print('Error removing sub')
@@ -227,19 +228,17 @@ def getSubs():
 		rsDataBase()
 		return 0
 
-def addUsersData(name, value, uid):
+def updUsersData(name, value, uid):
 	try:
 		rsDataBase()
-		#sqldbc.connect()
 		with sqldbc.cursor() as cursor:
 			sql = 'UPDATE users SET {}="{}" WHERE id={}'.format(name, value, uid)
-			if ifAuthDB(uid):
+			if userExist(uid):
 				cursor.execute(sql)
 				print('Adding account {}: {}'.format(uid, name))
 				bot.sendMessage(chat_id=uid, text="К вашему аккаунту успешно добавлен " + name, parse_mode=telegram.ParseMode.HTML)					
 			else:
 				bot.sendMessage(chat_id=uid, text="Для начала вы должны быть подписчиком бота.\nПодписаться - /subscribe", parse_mode=telegram.ParseMode.HTML)
-		#sqldbc.close()
 	except:
 		print('Error while adding userData')
 		bot.sendMessage(chat_id=uid, text="Ошибка отправки " + name, parse_mode=telegram.ParseMode.HTML)
@@ -287,32 +286,32 @@ def parseFlance(fid=''):
 		print('Error parse freelance.ua')
 	
 def authFlance(uid):
-	login = 'bionic_leha'
-	password = 're7z3k77w9'
-	form_data = {'email': login, 'pass': password, 'remember': True, 'submit': 'submit'}
-	response = session.post('https://freelance.ua/user/login', data=form_data).json()
 	try:
-		print('In try')
+		bot.sendMessage(chat_id=update.message.chat_id, text='Недостаточно данных для авторизации.\nОтправьте сообщения по типу:\n\n/login your_login / email\n/pass your_password', parse_mode=telegram.ParseMode.HTML)
+		form_data = {'email': getUsersData('login', uid), 'pass': getUsersData('pass', uid), 'remember': True, 'submit': 'submit'}
+		response = session.post('https://freelance.ua/user/login', data=form_data).json()
 		if response['data']['success'] == True:
 			print('Successful auth')
-			bot.sendMessage(chat_id=uid, text='Успешная авторизация', parse_mode=telegram.ParseMode.MARKDOWN)
+			updUsersData('cookie', str(session.cookies.get_dict()), uid)
+			bot.sendMessage(chat_id=uid, text='Успешная авторизация, cookie сохранены', parse_mode=telegram.ParseMode.MARKDOWN)
 		elif response['data']['success'] == False:
 			print('Auth error: ' + str(response['errors']))
 			bot.sendMessage(chat_id=uid, text='Ошибка авторизации: ' + str(response['errors']), parse_mode=telegram.ParseMode.MARKDOWN)
 			#getLogin()
 	except:
 		print('Error request to site ' + str(response.status_code))
-	print(str(session.cookies.get_dict()))
-	addUsersData('cookie', str(session.cookies.get_dict()), uid)
 	#print(rp.text)
 	
 def loginFlance(uid):
 	jar = requests.cookies.RequestsCookieJar()
-	cook = getSubDB(uid, 'cookie')
-	for i in cook:
-		jar.set(i, cook[i])
-	response = request.get('https://freelance.ua/', cookies=jar).json()
-	print(str(response.status_code))
+	try:
+		cook = [authFlance(uid),ast.literal_eval(getUsersData('cookie', uid))][ast.literal_eval(getUsersData('cookie', uid))]
+		for i in cook:
+			jar.set(i, cook[i])
+		response = request.get('https://freelance.ua/', cookies=jar).json()
+		bot.sendMessage(chat_id=uid, text='Авторизация успешная, : ' + str(response.status_code), parse_mode=telegram.ParseMode.MARKDOWN)
+	except:
+		print("Error loggining to site")
 	
 # Telegram
 tg_admin = '37772301'
@@ -341,14 +340,14 @@ def tgmHelp(bot, update):
 
 def tgmAuth(bot, update):
 	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-	authFlance(update.message.chat_id)
+	loginFlance(uid)
 	#bot.sendMessage(chat_id=update.message.chat_id, text='Недостаточно данных для авторизации.\nОтправьте сообщения по типу:\n\n/login your_login / email\n/pass your_password', parse_mode=telegram.ParseMode.HTML)
 	
 def tgmLogin(bot, update):
 	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
 	if len(update.message.text) > 10:
 		login = (update.message.text).split(" ")[1]
-		addUsersData('login', login, update.message.chat_id)
+		updUsersData('login', login, update.message.chat_id)
 	else:
 		bot.sendMessage(chat_id=update.message.chat_id, text='Вы не ввели логин.\nСообщение должно иметь вид:\n"/login my_name"', parse_mode=telegram.ParseMode.HTML)
 	
@@ -356,7 +355,7 @@ def tgmPass(bot, update):
 	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING) 
 	if len(update.message.text) > 10:
 		passw = (update.message.text).split(" ")[1]
-		addUsersData('pass', passw, update.message.chat_id)
+		updUsersData('pass', passw, update.message.chat_id)
 	else:
 		bot.sendMessage(chat_id=update.message.chat_id, text='Вы не ввели пароль.\nСообщение должно иметь вид:\n"/pass 1q2w3e4r5t"', parse_mode=telegram.ParseMode.HTML)
 
