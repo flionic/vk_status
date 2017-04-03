@@ -246,6 +246,7 @@ rssUpdDate = 0
 lastPostId = int(readSysDB('lastPostId'))
 
 session = requests.Session()
+
 def parseFlance(fid=''):
 	global rssUpdDate, lastPostId
 	try:
@@ -324,7 +325,29 @@ def loginFlance(uid):
 			authFlance(uid)
 	except:
 		print("Error loggining to site")
+
+def sendOffer(uid, link, desc=''):
+	try:	
+		#link = 'https://freelance.ua/orders/12923-dizajn-sajta-tematika-avtomobili.html'
+		descr = desc if desc else 'Доброго времени суток! Заинтересовало ваше предложение, готов работать!'
 	
+		soup = BeautifulSoup(session.get(link).text, "lxml")
+		order_id = soup.find_all("input", attrs={"type": "hidden"})[2]['value']
+		hash = soup.find("meta", attrs={"name": "csrf_token"})['content']
+	
+		headers = {'Origin': 'https://freelance.ua', 'Accept-Encoding': 'gzip, deflate, br', 'Accept-Language': 'ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'application/json, text/javascript, */*; q=0.01', 'Referer': link, 'X-Requested-With': 'XMLHttpRequest', 'Connection': 'keep-alive'}
+		fdata = {'order_id': order_id, 'price_from': '', 'price_to': '', 'price_curr': '1', 'terms_from': '', 'terms_to': '', 'terms_type': '1', 'descr': descr, 'hash': hash}
+		
+		response = session.post('https://freelance.ua/index.php?bff=ajax&s=orders&ev=offer_add&hash=' + hash + '&lng=ru&act=add', data=fdata, headers=headers)
+		
+		if response['data']['success'] == True:
+			bot.sendMessage(chat_id=uid, text='Запрос успешно добавлен. Отслеживать можно тут:\n' + link, parse_mode=telegram.ParseMode.MARKDOWN)
+		elif response['data']['success'] == False:
+			print('Auth error: ' + str(response['errors']))
+			bot.sendMessage(chat_id=uid, text='Ошибка авторизации: ' + str(response['errors'][0]) + '\n\nОтправьте сообщения по типу:\n\n/login your_login / email\n/pass your_password', parse_mode=telegram.ParseMode.HTML)
+	except:
+		bot.sendMessage(chat_id=uid, text='Что-то пошло не так...', parse_mode=telegram.ParseMode.HTML)
+
 # Telegram
 tg_admin = '37772301'
 bot = telegram.Bot(token=tg_token)
@@ -413,6 +436,14 @@ def tgmRsDb(bot, update):
 	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
 	rsDataBase()
 	bot.sendMessage(chat_id=update.message.chat_id, text='Отправлена команда переподключения к серверу базы данных', parse_mode=telegram.ParseMode.HTML)
+	
+def tgmAddOffer(bot, update):
+	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
+	try:
+		pid = (update.message.text).split(" ")[1]
+		sendOffer(update.message.chat_id, link, (update.message.text).split(" ")[2])
+	except:
+		bot.sendMessage(chat_id=update.message.chat_id, text='ID поста не указан', parse_mode=telegram.ParseMode.HTML)
 	
 dispatcher.add_handler(CommandHandler('start', tgmStart))
 dispatcher.add_handler(CommandHandler('help', tgmHelp))
