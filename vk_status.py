@@ -147,8 +147,13 @@ def addSubDB(uid):
 def addAuthDB(name, value, uid):
 	try:
 		with sqldbc.cursor() as cursor:
-			sql = "UPDATE users SET {}=(%s) WHERE id=(%s)".format(name)
-			cursor.execute(sql, (value, uid))
+			sql_f = "select id from users where id={}".format(uid)
+			sql_a = "INSERT INTO users (id) VALUES ({})".format(uid)
+			sql_u = "UPDATE users SET {}=(%s) WHERE id=(%s)".format(name)
+			cursor.execute(sql_f)
+			for i in cursor:
+				print(str(i))
+			cursor.execute(sql_u, (value, uid))
 			print('Added account data: ' + name)
 			bot.sendMessage(chat_id=uid, text="К вашему аккаунту добавлен " + name, parse_mode=telegram.ParseMode.HTML)
 	except:
@@ -229,7 +234,7 @@ dispatcher = updater.dispatcher
 
 def tgmStart(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-    bot.sendMessage(chat_id=update.message.chat_id, text="Привет! Это бот сайта freelance.ua. Здесь вы можете отслеживать ленту заказов в реальном времени, получая уведомления прямо на свой телефон. Список команд: [/help](/help 123)", parse_mode=telegram.ParseMode.MARKDOWN)
+    bot.sendMessage(chat_id=update.message.chat_id, text="Привет! Это бот сайта freelance.ua. Здесь вы можете отслеживать ленту заказов в реальном времени, получая уведомления прямо на свой телефон. Список команд: /help", parse_mode=telegram.ParseMode.HTML)
 	
 def tgmHelp(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
