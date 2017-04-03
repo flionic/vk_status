@@ -346,6 +346,6 @@ updater.start_polling()
 
 while True:
 	status = getSteam() + getLastFm()
-	['', setStatus(status)][status != vkStatus]
+	setStatus(status) if status != vkStatus
 	parseFeed()
 	time.sleep(3)
