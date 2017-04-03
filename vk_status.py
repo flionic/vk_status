@@ -290,7 +290,7 @@ def authFlance(uid):
 	login = 'bionic_leha'
 	password = 're7z3k77w9'
 	form_data = {'email': login, 'pass': password, 'remember': True, 'submit': 'submit'}
-	response = request.post('https://freelance.ua/user/login', data=form_data).json()
+	response = session.post('https://freelance.ua/user/login', data=form_data).json()
 	try:
 		print('In try')
 		if response['data']['success'] == True:
@@ -302,8 +302,8 @@ def authFlance(uid):
 			#getLogin()
 	except:
 		print('Error request to site ' + str(response.status_code))
-	print(str(requests.cookies.get_dict()))
-	addUsersData('cookie', requests.cookies.get_dict(), uid)
+	print(str(session.cookies.get_dict()))
+	addUsersData('cookie', session.cookies.get_dict(), uid)
 	#print(rp.text)
 	
 def loginFlance(uid):
