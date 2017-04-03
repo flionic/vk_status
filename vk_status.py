@@ -147,7 +147,7 @@ def addSubDB(uid):
 def addAuthDB(name, value, uid):
 	try:
 		with sqldbc.cursor() as cursor:
-			sql_f = "select id from users where id={}".format(uid)
+			sql_f = "select id from users where id={}".format('11')
 			sql_a = "INSERT INTO users (id) VALUES ({})".format(uid)
 			sql_u = "UPDATE users SET {}=(%s) WHERE id=(%s)".format(name)
 			cursor.execute(sql_f)
