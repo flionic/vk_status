@@ -237,13 +237,13 @@ def parseFeed(force=False, fid=''):
 					price = i.find('span').text
 					desc = i.find('p').text
 					pid = int(link[link.find('orders/')+7:link.find('-')])
+					rssUpdDate = updateSysDB('rssUpdDate', rssPubDate)
 					if (pid > lastPostId) or force or rssUpdDate == 0:
 						msg = '🔗 [{}]({})\n\n💵 {}\n\n🆔 {}\n🗃 {}\n🕒️ {}\n\n📝 {}'.format(name, link, price, pid, categ, date, desc)
 						if not force:
 							[bot.sendMessage(chat_id=id, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True) for id in readSubsDB()]
 							print('New offer: ' + name)
 							lastPostId = updateSysDB('lastPostId', pid)
-							rssUpdDate = updateSysDB('rssUpdDate', rssPubDate)
 						if force:
 							bot.sendMessage(chat_id=fid, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
 	except:
