@@ -105,20 +105,19 @@ def getSteam():
 sqldbc = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True, charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor) 
 
 def rsDataBase():
-	sqldbc.connect()
 	sqldbc.close()
-	#sqldbc.connect()
+	sqldbc.connect()
 	print('Reconnecting to database')
 
 def readSysDB(name):
 	try:
-		sqldbc.connect()
+		#sqldbc.connect()
 		with sqldbc.cursor() as cursor:
 			sql = "SELECT value FROM sysvars where name=(%s)"
 			cursor.execute(sql, (name))
 			for row in cursor:
 				return row['value']
-		sqldbc.close()
+		#sqldbc.close()
 	except:
 		print('Error getting sysvars from db')
 		rsDataBase()
@@ -127,44 +126,44 @@ def readSysDB(name):
 		
 def updateSysDB(name, value):
 	try:
-		sqldbc.connect()
+		#sqldbc.connect()
 		with sqldbc.cursor() as cursor:
 			sql = "UPDATE `sysvars` SET `value`=%s WHERE `name`=%s"
 			data = (value, name)
 			cursor.execute(sql, data)
 			return value
-		sqldbc.close()
+		#sqldbc.close()
 	except:
 		print('Error updating sysvars in db')
 		rsDataBase()
 		
 def createSysDB(name, value):
 	try:
-		sqldbc.connect()
+		#sqldbc.connect()
 		with sqldbc.cursor() as cursor:
 			sql = "INSERT INTO `sysvars` (`name`, `value`) VALUES (%s, %s)"
 			cursor.execute(sql, (name, value))
-		sqldbc.close()
+		#sqldbc.close()
 	except:
 		print('Error create sysvar in db')
 		rsDataBase()
 		
 def ifAuthDB(uid):
 	try:
-		sqldbc.connect()
+		#sqldbc.connect()
 		with sqldbc.cursor() as cursor:
 			sql_f = "select id from users where id={}".format(uid)
 			cursor.execute(sql_f)
 			for i in cursor:
 				return True
-		sqldbc.close()
+		#sqldbc.close()
 	except:
 		print('Error checking account')
 		rsDataBase()
 		
 def addSubDB(uid):
 	try:
-		sqldbc.connect()
+		#sqldbc.connect()
 		with sqldbc.cursor() as cursor:
 			sql = "INSERT INTO `users` (`id`) VALUES (%s)"
 			if not ifAuthDB(uid):
@@ -173,7 +172,7 @@ def addSubDB(uid):
 				bot.sendMessage(chat_id=uid, text="Подписка оформлена", parse_mode=telegram.ParseMode.HTML)
 			else:
 				bot.sendMessage(chat_id=uid, text="По нашим сведениям, вы уже подписаны :)", parse_mode=telegram.ParseMode.HTML)
-		sqldbc.close()
+		#sqldbc.close()
 	except:
 		print('Error writing Sub ID')
 		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка. Повторите попытку еще раз.", parse_mode=telegram.ParseMode.HTML)
@@ -181,7 +180,7 @@ def addSubDB(uid):
 		
 def delSubDB(uid):
 	try:
-		sqldbc.connect()
+		#sqldbc.connect()
 		with sqldbc.cursor() as cursor:
 			sql = "DELETE FROM `users` WHERE `id`=(%s)"
 			if ifAuthDB(uid):
@@ -190,7 +189,7 @@ def delSubDB(uid):
 				bot.sendMessage(chat_id=uid, text="Подписка отменена, а так же удалены все данные", parse_mode=telegram.ParseMode.HTML)
 			else:
 				bot.sendMessage(chat_id=uid, text="Вы еще не являетесь подписчиком.\nПодписаться - /subscribe", parse_mode=telegram.ParseMode.HTML)
-		sqldbc.close()
+		#sqldbc.close()
 	except:
 		print('Error deleting Sub ID')
 		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка. Повторите попытку еще раз.", parse_mode=telegram.ParseMode.HTML)
@@ -198,13 +197,13 @@ def delSubDB(uid):
 
 def readSubsDB():
 	try:
-		sqldbc.connect()
+		#sqldbc.connect()
 		with sqldbc.cursor() as cursor:
 			cursor.execute("SELECT id FROM users;")
 			ids = []
 			[ids.append(str(row['id'])) for row in cursor]
 			return ids
-		sqldbc.close()
+		#sqldbc.close()
 	except:
 		print('Error reading subs from db')
 		rsDataBase()
@@ -212,7 +211,7 @@ def readSubsDB():
 
 def addAuthDB(name, value, uid):
 	try:
-		sqldbc.connect()
+		#sqldbc.connect()
 		with sqldbc.cursor() as cursor:
 			sql_u = "UPDATE users SET {}=(%s) WHERE id=(%s)".format(name)
 			if ifAuthDB(uid):
@@ -221,7 +220,7 @@ def addAuthDB(name, value, uid):
 				bot.sendMessage(chat_id=uid, text="К вашему аккаунту успешно добавлен " + name, parse_mode=telegram.ParseMode.HTML)					
 			else:
 				bot.sendMessage(chat_id=uid, text="Для начала вы должны быть подписчиком бота.\nПодписаться - /subscribe", parse_mode=telegram.ParseMode.HTML)
-		sqldbc.close()
+		#sqldbc.close()
 	except:
 		print('Error writing account')
 		bot.sendMessage(chat_id=uid, text="Ошибка отправки " + name, parse_mode=telegram.ParseMode.HTML)
