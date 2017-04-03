@@ -164,7 +164,7 @@ def delSubDB(uid):
 			if ifAuthDB(uid):
 				cursor.execute(sql, (uid))
 				print('Deleted subscriber, id: ' + str(uid))
-				bot.sendMessage(chat_id=uid, text="Подписка отменена", parse_mode=telegram.ParseMode.HTML)
+				bot.sendMessage(chat_id=uid, text="Подписка отменена, а так же удалены все данные", parse_mode=telegram.ParseMode.HTML)
 			else:
 				bot.sendMessage(chat_id=uid, text="Вы еще не являетесь подписчиком.\nПодписаться - /subscribe", parse_mode=telegram.ParseMode.HTML)
 	except:
