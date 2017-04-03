@@ -252,12 +252,12 @@ def parseFlance(fid=''):
 			print('Parsing freelance.ua...')
 			soup = BeautifulSoup(session.get('https://freelance.ua/').text, "lxml")
 			orders = soup.find_all("li", class_="j-order")
-			for i in reversed(orders):
-				if not i.find_all('i', class_='fa fa-thumb-tack c-icon-fixed'):
-					name = i.find('a').text
-					link = i.find('a').get('href')
+			for order in reversed(orders):
+				if not order.find_all('i', class_='fa fa-thumb-tack c-icon-fixed'):
+					name = order.find('a').text
+					link = order.find('a').get('href')
 					for item in rss.iter('item'):
-						if item.find('link').text == i.find('a').get('href'):
+						if item.find('link').text == order.find('a').get('href'):
 							categ = item.find('category').text
 							pdate = item.find('pubDate').text
 							locale.setlocale(locale.LC_TIME, "en_US.UTF-8")
@@ -265,8 +265,8 @@ def parseFlance(fid=''):
 							postTimeStamp = int(postTime.timestamp())
 							locale.setlocale(locale.LC_TIME, "ru_RU.UTF-8")
 							date = postTime.strftime('%a, %d %b %Y %H:%M:%S')
-					price = i.find('span').text
-					desc = i.find('p').text
+					price = order.find('span').text
+					desc = order.find('p').text
 					pid = int(link[link.find('orders/')+7:link.find('-')])
 					rssUpdDate = updateSysDB('rssUpdDate', rssPubDate)
 					if (pid > lastPostId) or fid or rssUpdDate == 0:
