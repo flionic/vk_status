@@ -89,17 +89,12 @@ def getSteam():
 			timeStr = ''
 			if timeInt[0] > 0:
 				timeStr += str(timeInt[0]) + ' дн. '
-
-			if timeInt[1] > 0:
+			if timeInt[1] > 0 and timeInt[0] < 5:
 				timeStr += str(timeInt[1]) + ' ч. '
-
-			print(str(timeInt[1]))
 			if timeInt[2] > 0 and timeInt[0] == 0:
 				timeStr += str(timeInt[2]) + ' мин. '
-
 			if timeInt[3] > 0 and timeInt[2] == 0 and timeInt[1] == 0:
 				timeStr += str(timeInt[3]) + ' сек. '
-
 			stStatus = 'Steam: ' + 'был в сети ' + timeStr + 'назад'
 		return stStatus
 	except:
@@ -218,7 +213,7 @@ def parseFeed(force=False, fid=''):
 tg_admin = '37772301'
 bot = telegram.Bot(token=tg_token)
 updater = Updater(token=tg_token)
-print('Telegram auth: {} as {}, id: {}'.format(bot.getMe().first_name, bot.getMe().username, bot.getMe().id))
+print('Telegram auth: {} as @{}, id: {}'.format(bot.getMe().first_name, bot.getMe().username, bot.getMe().id))
 dispatcher = updater.dispatcher
 
 def tgmStart(bot, update):
