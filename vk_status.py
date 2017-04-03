@@ -229,16 +229,15 @@ def tgmAuth(bot, update):
     bot.sendMessage(chat_id=update.message.chat_id, text='Недостаточно данных для авторизации.\nДля авторизации на сайте отправьте сообщения по типу:\n\n/login your_login/email\n/pass your_password', parse_mode=telegram.ParseMode.HTML)\
 	
 def tgmLogin(bot, update):
-    bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING) 
-	login = update.message.text
-	login = login.split(" ")[1]
-    bot.sendMessage(chat_id=update.message.chat_id, text='Логин сохранен ' + login, parse_mode=telegram.ParseMode.HTML)
+	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING) 
+	login = (update.message.text).split(" ")[1]
+	bot.sendMessage(chat_id=update.message.chat_id, text='Логин сохранен ' + login, parse_mode=telegram.ParseMode.HTML)
 	
 def tgmPass(bot, update):
-    bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING) 
+	bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING) 
 	passw = update.message.text
 	passw = passw.split(" ")[1]
-    bot.sendMessage(chat_id=update.message.chat_id, text='Пароль сохранен ' + passw, parse_mode=telegram.ParseMode.HTML)
+	bot.sendMessage(chat_id=update.message.chat_id, text='Пароль сохранен ' + passw, parse_mode=telegram.ParseMode.HTML)
 
 def tgmGetOffers(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
