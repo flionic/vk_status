@@ -25,7 +25,7 @@ def setStatus(stat):
 		r = requests.get(vk_l + 'status.set?text=' + stat + token).json()
 		try:
 			if r['response'] == 1:
-				print('Status is set')
+				print('Status updated\n' + stat)
 		except:
 			try:
 				print("VK returned error: " + r['error']['error_msg'])
@@ -345,7 +345,6 @@ updater.start_polling()
 while True:
 	status = getSteam() + getLastFm()
 	if status != vkStatus:
-		print(status)
 		setStatus(status)
 		vkStatus = status
 	parseFeed()
