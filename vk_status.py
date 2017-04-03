@@ -282,7 +282,15 @@ def tgmStart(bot, update):
 	
 def tgmHelp(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-    bot.sendMessage(chat_id=update.message.chat_id, text='Команды: \n/get_offers - получить список заказов с 1 страницы.\n/subscribe - позволяет получать заказы в реальном времени\n/unsubscribe  - отписаться от получения заказов.\n/auth - авторизация на сайте.\n/help - помощь по командам.\n/login - авторизоваться на сайте.\n/offer [id] - предложить свою кандидатуру.\n/offermsg [text] - сообщение предложения', parse_mode=telegram.ParseMode.HTML)
+    bot.sendMessage(chat_id=update.message.chat_id, text="""
+	Команды: \n
+	/get_offers - получить список заказов с 1 страницы.\n
+	/subscribe - позволяет получать заказы в реальном времени\n
+	/unsubscribe  - отписаться от получения заказов.\n
+	/auth - авторизация на сайте.\n
+	/offer [id] - предложить свою кандидатуру.\n
+	/offermsg [text] - сообщение предложения
+	""", parse_mode=telegram.ParseMode.HTML)
 
 def tgmAuth(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
