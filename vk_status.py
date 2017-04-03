@@ -153,20 +153,18 @@ def createSysDB(name, value):
 		
 def userExist(uid):
 	try:
-		#sqldbc.connect()
+		rsDataBase()
 		with sqldbc.cursor() as cursor:
 			sql_f = "select id from users where id={}".format(uid)
 			cursor.execute(sql_f)
 			for i in cursor:
 				return True
-		#sqldbc.close()
 	except:
 		print('Error checking account')
 		rsDataBase()
 		
 def addSubDB(uid):
 	try:
-		#sqldbc.connect()
 		with sqldbc.cursor() as cursor:
 			sql = "INSERT INTO `users` (`id`) VALUES (%s)"
 			if not userExist(uid):
@@ -175,7 +173,6 @@ def addSubDB(uid):
 				bot.sendMessage(chat_id=uid, text="Подписка оформлена", parse_mode=telegram.ParseMode.HTML)
 			else:
 				bot.sendMessage(chat_id=uid, text="По нашим сведениям, вы уже подписаны :)", parse_mode=telegram.ParseMode.HTML)
-		#sqldbc.close()
 	except:
 		print('Error writing Sub ID')
 		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка. Повторите попытку еще раз.", parse_mode=telegram.ParseMode.HTML)
@@ -184,21 +181,21 @@ def addSubDB(uid):
 def getUsersData(name, uid):
 	try:
 		rsDataBase()
-		with sqldbc.cursor() as cursor:
+		if userExist(uid):
+			with sqldbc.cursor() as cursor:
 			sql = "select {} from users where id={}".format(name, uid)
-			if userExist(uid):
-				cursor.execute(sql)
-				for row in cursor:
-					return str(row[name])
-			else:
-				bot.sendMessage(chat_id=uid, text="Для продолжения, вы должны быть подписчиком.\nПодписаться - /subscribe", parse_mode=telegram.ParseMode.HTML)
+			cursor.execute(sql)
+			for row in cursor:
+				return str(row[name])
+		else:
+			bot.sendMessage(chat_id=uid, text="Для продолжения, вы должны быть подписчиком.\nПодписаться - /subscribe", parse_mode=telegram.ParseMode.HTML)
 	except:
 		print('Error getting from users table')
 		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка. Повторите попытку еще раз.", parse_mode=telegram.ParseMode.HTML)
 		
 def delSubDB(uid):
 	try:
-		#sqldbc.connect()
+		rsDataBase()
 		with sqldbc.cursor() as cursor:
 			sql = "DELETE FROM `users` WHERE `id`=(%s)"
 			if userExist(uid):
@@ -207,7 +204,6 @@ def delSubDB(uid):
 				bot.sendMessage(chat_id=uid, text="Подписка отменена, а так же удалены все данные", parse_mode=telegram.ParseMode.HTML)
 			else:
 				bot.sendMessage(chat_id=uid, text="Для продолжения, вы должны быть подписчиком.\nПодписаться - /subscribe", parse_mode=telegram.ParseMode.HTML)
-		#sqldbc.close()
 	except:
 		print('Error removing sub')
 		bot.sendMessage(chat_id=uid, text="К сожалению, произошла ошибка. Повторите попытку еще раз.", parse_mode=telegram.ParseMode.HTML)
@@ -229,7 +225,6 @@ def getSubs():
 
 def updUsersData(name, value, uid):
 	try:
-		rsDataBase()
 		with sqldbc.cursor() as cursor:
 			sql = 'UPDATE users SET {}="{}" WHERE id={}'.format(name, value, uid)
 			if userExist(uid):
