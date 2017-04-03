@@ -189,7 +189,6 @@ def getUsersData(name, uid):
 			if userExist(uid):
 				cursor.execute(sql)
 				for row in cursor:
-					bot.sendMessage(chat_id=uid, text="Данные из БД получены", parse_mode=telegram.ParseMode.HTML)
 					return str(row[name])
 			else:
 				bot.sendMessage(chat_id=uid, text="Для продолжения, вы должны быть подписчиком.\nПодписаться - /subscribe", parse_mode=telegram.ParseMode.HTML)
@@ -306,8 +305,7 @@ def loginFlance(uid):
 	try:
 		jar = requests.cookies.RequestsCookieJar()
 		#cook = [authFlance(uid),ast.literal_eval(getUsersData('cookie', uid))][ast.literal_eval(getUsersData('cookie', uid))]
-		print(getUsersData('cookie', uid))
-		cook = ast.literal_eval(getUsersData('cookie', uid))
+		cook = [authFlance(uid),ast.literal_eval(getUsersData('cookie', uid))][ast.literal_eval(getUsersData('cookie', uid))]
 		for i in cook:
 			jar.set(i, cook[i])
 		response = request.get('https://freelance.ua/', cookies=jar).json()
