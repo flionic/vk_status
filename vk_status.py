@@ -170,7 +170,6 @@ def readSubsDB():
 		print('Error reading subs from db')
 		return 0
 
-subs = readSubsDB()
 rssUpdDate = int(readSysDB('rssUpdDate'))
 lastPostId = int(readSysDB('lastPostId'))
 
@@ -205,10 +204,10 @@ def parseFeed(force=False, fid=''):
 					if (pid > lastPostId) or force or lastPostId == 0 or rssUpdDate == 0:
 						msg = '🔗 [{}]({})\n\n💵 {}\n\n🆔 {}\n🗃 {}\n🕒️ {}\n\n📝 {}'.format(name, link, price, pid, categ, date, desc)
 						if not force:
-							[bot.sendMessage(chat_id=id, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True) for id in subs]
+							[bot.sendMessage(chat_id=id, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True) for id in readSubsDB()]
 							print('New offer: ' + name)
 							lastPostId = updateSysDB('lastPostId', pid)
-							rssUpdDate = updateSysDB('lastPostId', rssPubDate)
+							rssUpdDate = updateSysDB('rssUpdDate', rssPubDate)
 						if force:
 							bot.sendMessage(chat_id=fid, text=msg, parse_mode=telegram.ParseMode.MARKDOWN, disable_web_page_preview=True)
 	except:
