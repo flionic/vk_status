@@ -103,9 +103,11 @@ def getSteam():
 		
 # MySQL
 sqldbc = pymysql.connect(host='us-cdbr-iron-east-03.cleardb.net', user='b0c8671f5877e8', password='1798e26c', db='heroku_6c46a1f67ca0243', autocommit=True, charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor) 
+
 def rsDataBase():
-	sqldbc.close()
 	sqldbc.connect()
+	sqldbc.close()
+	#sqldbc.connect()
 	print('Reconnecting to database')
 
 def readSysDB(name):
