@@ -319,6 +319,7 @@ tg_admin = '37772301'
 bot = telegram.Bot(token=tg_token)
 updater = Updater(token=tg_token)
 print('Telegram auth: {} as @{}, id: {}'.format(bot.getMe().first_name, bot.getMe().username, bot.getMe().id))
+bot.sendMessage(tg_admin, 'Bot restarted')
 dispatcher = updater.dispatcher
 
 def tgmStart(bot, update):
