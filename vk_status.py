@@ -303,8 +303,8 @@ def authFlance(uid):
 	#print(rp.text)
 	
 def loginFlance(uid):
-	jar = requests.cookies.RequestsCookieJar()
 	try:
+		jar = requests.cookies.RequestsCookieJar()
 		cook = [authFlance(uid),ast.literal_eval(getUsersData('cookie', uid))][ast.literal_eval(getUsersData('cookie', uid))]
 		for i in cook:
 			jar.set(i, cook[i])
