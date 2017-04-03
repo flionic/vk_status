@@ -230,12 +230,12 @@ def tgmAuth(bot, update):
 	
 def tgmLogin(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING) 
-	login = update.message.text.split(" ")[0]
+	login = (update.message.text).split(" ")[0]
     bot.sendMessage(chat_id=update.message.chat_id, text='Логин сохранен ' + login, parse_mode=telegram.ParseMode.HTML)
 	
 def tgmPass(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING) 
-	passw = update.message.text.split(" ")[0]
+	passw = (update.message.text).split(" ")[0]
     bot.sendMessage(chat_id=update.message.chat_id, text='Пароль сохранен ' + passw, parse_mode=telegram.ParseMode.HTML)
 
 def tgmGetOffers(bot, update):
