@@ -113,7 +113,7 @@ def readSysDB(name):
 		with sqldbc.cursor() as cursor:
 			sql = "SELECT value FROM sysvars where name=(%s)"
 			cursor.execute(sql, (name))
-			[return row['value'] for row in cursor]
+			return cursor[0]['value']
 	except:
 		print('Error getting sysvars from db')
 	#finally:
