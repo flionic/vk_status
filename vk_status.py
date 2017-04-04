@@ -305,7 +305,7 @@ def parseFlance(fid=''):
         if (rssPubDate > rssUpdDate) or fid:
             print('Parsing freelance.ua...')
             get_site = session.get('https://freelance.ua/')
-            err = get_site.status_code + ' ' + get_site.json()
+            err = get_site.status_code + ' ' + get_site.text
             soup = BeautifulSoup(get_site.text, "lxml")
             orders = soup.find_all("li", class_="j-order")
             for order in reversed(orders):
