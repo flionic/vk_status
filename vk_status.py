@@ -338,7 +338,7 @@ def parseFlance(fid=''):
                             bot.sendMessage(chat_id=fid, text=msg, parse_mode=telegram.ParseMode.MARKDOWN,
                                             disable_web_page_preview=True)
     except:
-        print('Error parse freelance.ua ' + err)
+        print('Error parse freelance.ua ' + str(err))
 
 
 def authFlance(uid, ulogin='', upassw=''):
