@@ -342,7 +342,7 @@ def parseFlance(fid=''):
         print('Error parse freelance.ua ' + str(err))
 
 
-def authFlance(uid, ulogin='', upassw=''):
+def authFlance(uid, ulogin, upassw):
     try:
         form_data = {'email': ulogin, 'pass': upassw, 'remember': True, 'submit': 'submit'}
         response = session.post('https://freelance.ua/user/login', data=form_data).json()
@@ -367,13 +367,14 @@ def loginFlance(uid):
             soup = BeautifulSoup(response.text, "lxml")
             try:
                 uname = soup.find("li", class_="hidden-xs").text
-                bot.sendMessage(chat_id=uid, text='Авторизация успешная. Привет, {}!'.format(uname),
+                bot.sendMessage(chat_id=uid, text='Вы авторизированы как {}'.format(uname),
                                 parse_mode=telegram.ParseMode.HTML)
             except:
-                bot.sendMessage(chat_id=uid, text='Что-то пошло не так...Возможно сессия устарела?',
+                bot.sendMessage(chat_id=uid, text='Данные для авторизации более не действительны',
                                 parse_mode=telegram.ParseMode.HTML)
         else:
-            authFlance(uid)
+            bot.sendMessage(chat_id=uid, text='Проверьте правильность данных, вы что-то упустили.\nВаше сообщение должно выглядеть так:\n"/fauth login password"',
+                            parse_mode=telegram.ParseMode.HTML)
     except:
         print("Error loggining to site")
 
@@ -465,9 +466,7 @@ def tgmAuth(bot, update):
         passw = update.message.text.split(" ")[2]
         authFlance(update.message.chat_id, login, passw)
     except:
-        bot.sendMessage(chat_id=update.message.chat_id,
-                        text='Проверьте правильность данных, вы что-то упустили.\nВаше сообщение должно выглядеть так:\n"/fauth login password"',
-                        parse_mode=telegram.ParseMode.HTML)
+        loginFlance(update.message.chat_id)
 
 
 def tgmLogin(bot, update):
