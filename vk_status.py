@@ -1,16 +1,17 @@
-import requests
-import time
+import ast
+import locale
 import os
+import platform
+import time
+import xml.etree.ElementTree as ET
 from datetime import datetime
 from math import floor
-from bs4 import BeautifulSoup
-import xml.etree.ElementTree as ET
-import locale
-import platform
-import ast
+
+import pymysql.cursors
+import requests
 import telegram
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-import pymysql, pymysql.cursors
+from bs4 import BeautifulSoup
+from telegram.ext import Updater, CommandHandler
 
 tg_token = os.environ.get('tg_token')
 vk_token = os.environ.get('vk_token')
@@ -23,10 +24,13 @@ vkStatus = ''
 
 print(platform.system())
 
+lang = []
 if platform.system() == 'Windows':
-    langs = ['usa_usa', 'rus_rus.UTF-8']
+    langs = ['usa_usa.UTF-8', 'rus_rus.UTF-8']
 elif platform.system() == 'Linux':
-    langs = ['en_US', 'ru_RU.UTF-8']
+    langs = ['en_US.UTF-8', 'ru_RU.UTF-8']
+
+print(str(langs))
 
 def setStatus(stat):
     global vkStatus
@@ -365,7 +369,7 @@ def authFlance(uid, ulogin='', upassw=''):
                             text='Недостаточно данных для авторизации.\nОтправьте сообщения по типу:\n\n/login your_login / email\n/pass your_password',
                             parse_mode=telegram.ParseMode.HTML)
     except:
-        print('Error auth on Flance' + str(response.status_code))
+        print('Error auth on Flance')
         # print(rp.text)
 
 
