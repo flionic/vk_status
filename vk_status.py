@@ -332,8 +332,8 @@ def parseFlance(fid=''):
                                                                                              categ, date, desc)
                         if not fid:
                             addPostInfo(pid, link)
-                            [bot.sendMessage(chat_id=id, text=msg, parse_mode=telegram.ParseMode.MARKDOWN,
-                                             disable_web_page_preview=True) for id in getSubs()]
+                            [bot.sendMessage(chat_id=sid, text=msg, parse_mode=telegram.ParseMode.MARKDOWN,
+                                             disable_web_page_preview=True) for sid in getSubs()]
                             print('New offer: ' + name)
                             lastPostId = updateSysDB('lastPostId', pid)
                         else:
