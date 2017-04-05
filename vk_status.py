@@ -6,6 +6,7 @@ from math import floor
 from bs4 import BeautifulSoup
 import xml.etree.ElementTree as ET
 import locale
+import platform
 import ast
 import telegram
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
@@ -20,6 +21,10 @@ steam_api_key = os.environ.get('steam_key')
 
 vkStatus = ''
 
+if platform.system() == 'Windows':
+    langs = ['usa_usa', 'rus_rus.UTF-8']
+elif platform.system() == 'linux' or platform.system() == 'linux2':
+    langs = ['en_US', 'ru_RU.UTF-8']
 
 def setStatus(stat):
     global vkStatus
@@ -184,20 +189,17 @@ def getPostLink(pid):
                 return i
     except:
         print('Error checking account')
-        rsDataBase()
 
 
 def userExist(uid):
     try:
         rsDataBase()
         with sqldbc.cursor() as cursor:
-            sql_f = "select id from users where id={}".format(uid)
-            cursor.execute(sql_f)
-            for i in cursor:
+            sql = "select id from users where id={}".format(uid)
+            if cursor.execute(sql):
                 return True
     except:
         print('Error checking account')
-        rsDataBase()
 
 
 def addSubDB(uid):
@@ -248,7 +250,7 @@ def delSubDB(uid):
                                 parse_mode=telegram.ParseMode.HTML)
             else:
                 bot.sendMessage(chat_id=uid,
-                                text="Для продолжения, вы должны быть подписчиком.\nПодписаться - /subscribe",
+                                text="В данный момент вы не являетесь подписчиком.\nПодписаться - /subscribe",
                                 parse_mode=telegram.ParseMode.HTML)
     except:
         print('Error removing sub')
@@ -296,30 +298,28 @@ lastPostId = int(readSysDB('lastPostId'))
 session = requests.Session()
 err = ''
 
+
 def parseFlance(fid=''):
     global rssUpdDate, lastPostId, err
     try:
         rss = ET.fromstring(requests.get('https://freelance.ua/orders/rss').text.encode('utf-8'))
-        locale.setlocale(locale.LC_TIME, "en_US.UTF-8")
+        locale.setlocale(locale.LC_TIME, langs[0])
         rssPubDate = datetime.strptime(rss[0][5].text, '%a, %d %b %Y %H:%M:%S %z').timestamp() + 10700
         if (rssPubDate > rssUpdDate) or fid:
             print('Parsing freelance.ua...')
-            get_site = session.get('https://freelance.ua/')
-            err = get_site.status_code + ' ' + get_site.text
-            soup = BeautifulSoup(get_site.text, "lxml")
+            soup = BeautifulSoup(session.get('https://freelance.ua/').text, "lxml")
             orders = soup.find_all("li", class_="j-order")
             for order in reversed(orders):
-                if not order.find_all('i', class_='fa fa-thumb-tack c-icon-fixed'):
+                if not order.find('i', class_='fa fa-thumb-tack c-icon-fixed'):
                     name = order.find('a').text
                     link = order.find('a').get('href')
                     for item in rss.iter('item'):
                         if item.find('link').text == order.find('a').get('href'):
                             categ = item.find('category').text
                             pdate = item.find('pubDate').text
-                            locale.setlocale(locale.LC_TIME, "en_US.UTF-8")
+                            locale.setlocale(locale.LC_TIME, langs[0])
                             postTime = datetime.strptime(pdate, '%a, %d %b %Y %H:%M:%S %z')
-                            postTimeStamp = int(postTime.timestamp())
-                            locale.setlocale(locale.LC_TIME, "ru_RU.UTF-8")
+                            locale.setlocale(locale.LC_TIME, langs[1])
                             date = postTime.strftime('%a, %d %b %Y %H:%M:%S')
                     price = order.find('span').text
                     desc = order.find('p').text
@@ -442,17 +442,17 @@ def tgmStart(bot, update):
 def tgmHelp(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
     bot.sendMessage(chat_id=update.message.chat_id, text="""
-	Команды:
-	/get_offers - получить список заказов с 1 страницы
-	/subscribe - подписка на заказы в реальном времени
-	/unsubscribe  - отписаться от получения заказов
-	/auth - авторизация на сайте
-	/fauth [login] [pass] - авторизация на сайте, сохранятся только cookie)
-	/help_auth - информация про авторизацию
-	/offer [id] - предложить свою кандидатуру шаблоном
-	/offer [id][text] - предложить свою кандидатуру с сообщением [text]
-	/offermsg [text] - шаблон сообщения предложения
-	""", parse_mode=telegram.ParseMode.HTML)
+Команды:
+/get_offers - получить список заказов с 1 страницы
+/subscribe - подписка на заказы в реальном времени
+/unsubscribe  - отписаться от получения заказов
+/auth - авторизация на сайте
+/fauth [login] [pass] - авторизация на сайте, сохранятся только cookie)
+/help_auth - информация про авторизацию
+/offer [id] - предложить свою кандидатуру шаблоном
+/offer [id][text] - предложить свою кандидатуру с сообщением [text]
+/offermsg [text] - шаблон сообщения предложения
+""", parse_mode=telegram.ParseMode.HTML)
 
 
 def tgmHelpSec(bot, update):
@@ -468,7 +468,7 @@ def tgmHelpSec(bot, update):
 Позволяет войти на сайт без сохранения пароля. Ваши логин и пароль единоразово уходят на сервер, в ответ бот получает куки, и уже их сохраняет. В этом случае в базе данных бота логин и пароль сохранятся не будет!
 Пример такой авторизации:
 "/fauth user_name password"
-	""", parse_mode=telegram.ParseMode.HTML)
+""", parse_mode=telegram.ParseMode.HTML)
 
 
 def tgmAuth(bot, update):
@@ -492,7 +492,7 @@ def tgmAuthForce(bot, update):
 def tgmLogin(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
     if len(update.message.text) > 10:
-        login = (update.message.text).split(" ")[1]
+        login = update.message.text.split(" ")[1]
         updUsersData('login', login, update.message.chat_id)
     else:
         bot.sendMessage(chat_id=update.message.chat_id,
@@ -503,7 +503,7 @@ def tgmLogin(bot, update):
 def tgmPass(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
     if len(update.message.text) > 10:
-        passw = (update.message.text).split(" ")[1]
+        passw = update.message.text.split(" ")[1]
         updUsersData('pass', passw, update.message.chat_id)
     else:
         bot.sendMessage(chat_id=update.message.chat_id,
@@ -536,7 +536,7 @@ def tgmRsDb(bot, update):
 def tgmAddOffer(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
     try:
-        pid = (update.message.text).split(" ")[1]
+        pid = update.message.text.split(" ")[1]
         bot.sendMessage(chat_id=update.message.chat_id, text='ID: {}\n\n{}'.format(pid, getPostLink(pid)),
                         parse_mode=telegram.ParseMode.HTML)
     # sendOffer(update.message.chat_id, link, (update.message.text).split(" ")[2])
