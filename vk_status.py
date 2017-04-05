@@ -345,27 +345,16 @@ def parseFlance(fid=''):
 
 def authFlance(uid, ulogin='', upassw=''):
     try:
-        login = [getUsersData('login', uid), ulogin][len(ulogin) > 0]
-        passw = [getUsersData('pass', uid), upassw][len(upassw) > 0]
-        if type(login) is str and type(passw) is str:
-            form_data = {'email': login, 'pass': passw, 'remember': True, 'submit': 'submit'}
-            response = session.post('https://freelance.ua/user/login', data=form_data).json()
-            if response['data']['success']:
-                updUsersData('cookie', str(session.cookies.get_dict()), uid)
-                bot.sendMessage(chat_id=uid, text='Успешная авторизация', parse_mode=telegram.ParseMode.MARKDOWN)
-            elif not response['data']['success']:
-                print('Auth error: ' + str(response['errors']))
-                bot.sendMessage(chat_id=uid, text='Ошибка авторизации: ' + str(response['errors'][
-                                                                                   0]) + '\n\nОтправьте сообщения по типу:\n\n/login your_login / email\n/pass your_password',
-                                parse_mode=telegram.ParseMode.HTML)
-                # getLogin()
-        else:
-            bot.sendMessage(chat_id=update.message.chat_id,
-                            text='Недостаточно данных для авторизации.\nОтправьте сообщения по типу:\n\n/login your_login / email\n/pass your_password',
-                            parse_mode=telegram.ParseMode.HTML)
+        form_data = {'email': ulogin, 'pass': upassw, 'remember': True, 'submit': 'submit'}
+        response = session.post('https://freelance.ua/user/login', data=form_data).json()
+        if response['data']['success']:
+            updUsersData('cookie', str(session.cookies.get_dict()), uid)
+            bot.sendMessage(chat_id=uid, text='Успешная авторизация', parse_mode=telegram.ParseMode.MARKDOWN)
+        elif not response['data']['success']:
+            print('Auth error: ' + str(response['errors']))
+            bot.sendMessage(chat_id=uid, text='Ошибка авторизации: ' + str(response['errors'][0]),parse_mode=telegram.ParseMode.HTML)
     except:
         print('Error auth on Flance')
-        # print(rp.text)
 
 
 def loginFlance(uid):
