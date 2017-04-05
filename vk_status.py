@@ -351,7 +351,6 @@ def authFlance(uid, ulogin='', upassw=''):
             form_data = {'email': login, 'pass': passw, 'remember': True, 'submit': 'submit'}
             response = session.post('https://freelance.ua/user/login', data=form_data).json()
             if response['data']['success']:
-                print('Successful auth')
                 updUsersData('cookie', str(session.cookies.get_dict()), uid)
                 bot.sendMessage(chat_id=uid, text='Успешная авторизация', parse_mode=telegram.ParseMode.MARKDOWN)
             elif not response['data']['success']:
@@ -371,7 +370,6 @@ def authFlance(uid, ulogin='', upassw=''):
 
 def loginFlance(uid):
     try:
-        # cook = [authFlance(uid),ast.literal_eval(getUsersData('cookie', uid))][ast.literal_eval(getUsersData('cookie', uid))]
         cook = ast.literal_eval(getUsersData('cookie', uid))
         if cook:
             jar = requests.cookies.RequestsCookieJar()
@@ -448,8 +446,7 @@ def tgmHelp(bot, update):
 /get_offers - получить список заказов с 1 страницы
 /subscribe - подписка на заказы в реальном времени
 /unsubscribe  - отписаться от получения заказов
-/auth - авторизация на сайте
-/fauth [login] [pass] - авторизация на сайте, сохранятся только cookie)
+/auth [login] [pass] - авторизация на сайте
 /help_auth - информация про авторизацию
 /offer [id] - предложить свою кандидатуру шаблоном
 /offer [id][text] - предложить свою кандидатуру с сообщением [text]
@@ -474,12 +471,6 @@ def tgmHelpSec(bot, update):
 
 
 def tgmAuth(bot, update):
-    bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-    loginFlance(update.message.chat_id)
-    # authFlance(update.message.chat_id)
-
-
-def tgmAuthForce(bot, update):
     bot.sendChatAction(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
     try:
         login = update.message.text.split(" ")[1]
@@ -553,7 +544,6 @@ dispatcher.add_handler(CommandHandler('get_offers', tgmGetOffers))
 dispatcher.add_handler(CommandHandler('subscribe', tgmSubs))
 dispatcher.add_handler(CommandHandler('unsubscribe', tgmUnsub))
 dispatcher.add_handler(CommandHandler('auth', tgmAuth))
-dispatcher.add_handler(CommandHandler('fauth', tgmAuthForce))
 dispatcher.add_handler(CommandHandler('login', tgmLogin))
 dispatcher.add_handler(CommandHandler('pass', tgmPass))
 dispatcher.add_handler(CommandHandler('reset_db', tgmRsDb))
