@@ -323,22 +323,21 @@ def parseFlance(fid=''):
                             postTime = datetime.strptime(pdate, '%a, %d %b %Y %H:%M:%S %z')
                             locale.setlocale(locale.LC_TIME, langs[1])
                             date = postTime.strftime('%a, %d %b %Y %H:%M:%S')
-                    price = order.find('span').text
-                    desc = order.find('p').text
-                    pid = int(link[link.find('orders/') + 7:link.find('-')])
-                    rssUpdDate = updateSysDB('rssUpdDate', rssPubDate)
-                    if (pid > lastPostId) or fid or rssUpdDate == 0:
-                        msg = '🔗 [{}]({})\n\n💵 {}\n\n🆔 {}\n🗃 {}\n🕒️ {}\n\n📝 {}'.format(name, link, price, pid,
-                                                                                             categ, date, desc)
-                        if not fid:
-                            addPostInfo(pid, link)
-                            [bot.sendMessage(chat_id=sid, text=msg, parse_mode=telegram.ParseMode.MARKDOWN,
-                                             disable_web_page_preview=True) for sid in getSubs()]
-                            print('New offer: ' + name)
-                            lastPostId = updateSysDB('lastPostId', pid)
-                        else:
-                            bot.sendMessage(chat_id=fid, text=msg, parse_mode=telegram.ParseMode.MARKDOWN,
-                                            disable_web_page_preview=True)
+                            price = order.find('span').text
+                            desc = order.find('p').text
+                            pid = int(link[link.find('orders/') + 7:link.find('-')])
+                            rssUpdDate = updateSysDB('rssUpdDate', rssPubDate)
+                            if (pid > lastPostId) or fid or rssUpdDate == 0:
+                                msg = f'🔗 [{name}]({link})\n\n💵 {price}\n\n🆔 {pid}\n🗃 {categ}\n🕒️ {date}\n\n📝 {desc}'
+                                if not fid:
+                                    addPostInfo(pid, link)
+                                    [bot.sendMessage(chat_id=sid, text=msg, parse_mode=telegram.ParseMode.MARKDOWN,
+                                                     disable_web_page_preview=True) for sid in getSubs()]
+                                    print('New offer: ' + name)
+                                    lastPostId = updateSysDB('lastPostId', pid)
+                                else:
+                                    bot.sendMessage(chat_id=fid, text=msg, parse_mode=telegram.ParseMode.MARKDOWN,
+                                                    disable_web_page_preview=True)
     except:
         print('Error parse freelance.ua ' + str(err))
 
