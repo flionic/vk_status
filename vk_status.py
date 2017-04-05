@@ -21,9 +21,11 @@ steam_api_key = os.environ.get('steam_key')
 
 vkStatus = ''
 
+print(platform.system())
+
 if platform.system() == 'Windows':
     langs = ['usa_usa', 'rus_rus.UTF-8']
-elif platform.system() == 'linux' or platform.system() == 'linux2':
+elif platform.system() == 'Linux':
     langs = ['en_US', 'ru_RU.UTF-8']
 
 def setStatus(stat):
